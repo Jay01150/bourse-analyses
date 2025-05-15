@@ -226,7 +226,7 @@ async function fetchETFPrices(ticker) {
     const data = await response.json();
 
     const closes = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
-    return closes.filter(p => typeof p === 'number'); // uniquement les prix valides
+    return closes.filter(p => typeof p === 'number');
   } catch (err) {
     console.warn(`❌ Erreur Yahoo pour ${ticker} :`, err.message);
     return [];
@@ -241,7 +241,7 @@ async function analyseAllETFs() {
   document.getElementById("progress-text").textContent = "0 %";
 
   for (let i = 0; i < ETF_LIST.length; i++) {
-  const { symbol: ticker, name } = ETF_LIST[i];
+    const { symbol: ticker, name } = ETF_LIST[i];
     let prices = [];
 
     try {
@@ -250,18 +250,17 @@ async function analyseAllETFs() {
       console.warn("Erreur sur", ticker, e.message);
     }
 
-    // ✅ Mise à jour de la progression même si fetch échoue
     let percent = Math.round(((i + 1) / ETF_LIST.length) * 100);
     document.getElementById("progress-bar").style.width = percent + "%";
     document.getElementById("progress-text").textContent = percent + " %";
 
     if (prices.length < 50) {
-  console.warn(`⛔ Données insuffisantes pour ${ticker} → ${prices.length} points`);
-  continue;
-}
+      console.warn(`⛔ Données insuffisantes pour ${ticker} → ${prices.length} points`);
+      continue;
+    }
 
     const highs = prices.map(p => p * 1.01);
-    const lows = prices.map(p => p * 0.99);
+    const lows  = prices.map(p => p * 0.99);
 
     const indicateurs = {
       RSI_7: calculateRSI(prices, 7),
@@ -284,7 +283,10 @@ async function analyseAllETFs() {
     results.push({ ticker, name, score, indicateurs });
   }
 
-  // 🔝 Affichage final
+  results.sort((a, b) => b.score - a.score);
+
+  document.querySelector("#top3-list").innerHTML = results.slice(0, 3).map((r, i) => `<li>${r.name} (Score: ${r.score})</li>`).join("");
+
   let table = '<table style="width:100%; border-collapse: collapse;">';
   table += `
     <thead>
@@ -299,7 +301,6 @@ async function analyseAllETFs() {
   `;
 
   results.forEach((r, i) => {
-    const prob = Math.min(100, r.score).toFixed(0) + "%";
     table += `
       <tr style="border-bottom:1px solid #ccc;">
         <td><b>${r.name}</b><br><small>${r.ticker}</small></td>
@@ -310,7 +311,7 @@ async function analyseAllETFs() {
         </td>
       </tr>
       <tr id="details-${i}" class="hidden">
-        <td colspan="5">
+        <td colspan="4">
           <div style="padding: 10px; background:#f9f9f9; font-size: 0.9em;">
             <b>MACD :</b> ${r.indicateurs.MACD?.bullish ? '✅ haussier' : '❌ baissier'}<br>
             <b>TRIX :</b> ${r.indicateurs.TRIX?.toFixed(2)}<br>
@@ -321,22 +322,12 @@ async function analyseAllETFs() {
     `;
   });
 
- table += '</tbody></table>';
+  table += '</tbody></table>';
 
-// 🧮 Compteur de résultats
-const compteurETF = document.createElement("p");
-compteurETF.textContent = `📊 ${results.length} ETF analysés`;
-compteurETF.style = "font-weight: bold; margin-bottom: 10px;";
-
-// 🧱 Réinitialise la zone d'affichage
-const containerETF = document.getElementById("etf-results");
-// 🧮 Compteur de résultats
-document.getElementById("compteur-etf").textContent = `📊 ${results.length} ETF analysés`;
-
-// 🧱 Affichage du tableau
-document.getElementById("etf-results").innerHTML = table;
+  document.getElementById("compteur-etf").textContent = `📊 ${results.length} ETF analysés`;
   document.getElementById("etf-results").innerHTML = table;
-} // ← FIN de analyseAllETFs
+}
+ // ← FIN de analyseAllETFs
 
 document.querySelectorAll('.tab-btn').forEach(button => {
   button.addEventListener('click', () => {
