@@ -591,9 +591,9 @@ const data = await fetch(url).then(r => r.json());
 
       if (data.s !== 'ok' || data.c.length < 50) continue;
 
-      const prices = data.c;
-      const highs = data.h;
-      const lows = data.l;
+      const prices = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
+const highs = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.high || [];
+const lows = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.low || [];
 
       const indicateurs = {
         RSI_7: calculateRSI(prices, 7),
