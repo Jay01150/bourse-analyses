@@ -85,7 +85,7 @@ section.active { display: block; }
 
   <div id="actions-loader" style="display: none; margin: 1em 0;">⏳ Chargement des données économiques...</div>
 
-  <button onclick="analyserEconomies()">🔍 Lancer l’analyse économique</button>
+  <button onclick="analyseActionsMonde()">🌍 Lancer l’analyse mondiale</button>
 
   <div id="actions-result" style="margin-top: 1.5em;"></div>
 </section>
@@ -680,6 +680,83 @@ function analyserEconomies() {
       <ol>${actionsPotentielles.map(item => `<li>${item}</li>`).join('')}</ol>
     `;
   }, 1500);
+}
+  async function analyseActionsMonde() {
+  const loader = document.getElementById('actions-loader');
+  const result = document.getElementById('actions-result');
+
+  loader.style.display = 'block';
+  result.innerHTML = '';
+
+  const API_KEY = 'd0g3slpr01qr6dbv9p80d0g3slpr01qr6dbv9p8g';
+  const exchanges = ['US', 'TO', 'V', 'STO', 'PA', 'AS', 'F', 'L', 'HK']; // Nasdaq, NYSE, TSX, Euronext, Londres, Hong Kong...
+  const allSymbols = [];
+
+  // 🔁 Récupère les symboles depuis plusieurs bourses
+  for (let ex of exchanges) {
+    const url = `https://finnhub.io/api/v1/stock/symbol?exchange=${ex}&token=${API_KEY}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      allSymbols.push(...data);
+    } catch (e) {
+      console.warn(`Erreur sur ${ex} :`, e.message);
+    }
+  }
+
+  // 🧹 Filtrage : actions uniquement, no warrant, no ETF, no ADR...
+  const filtered = allSymbols.filter(sym =>
+    sym.type === 'Common Stock' &&
+    /^[A-Z0-9.-]{2,10}$/.test(sym.symbol)
+  );
+
+  const limit = Math.floor(filtered.length * 0.9); // 90% de ce que Finnhub accepte
+  const toAnalyse = filtered.slice(0, Math.min(180, limit));
+
+  const results = [];
+
+  for (let i = 0; i < toAnalyse.length; i++) {
+    const { symbol, description } = toAnalyse[i];
+
+    try {
+      const url = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&count=100&token=${API_KEY}`;
+      const data = await fetch(url).then(r => r.json());
+
+      if (data.s !== 'ok' || data.c.length < 50) continue;
+
+      const prices = data.c;
+      const highs = data.h;
+      const lows = data.l;
+
+      const indicateurs = {
+        RSI_7: calculateRSI(prices, 7),
+        RSI_14: calculateRSI(prices, 14),
+        RSI_21: calculateRSI(prices, 21),
+        MACD: calculateMACD(prices),
+        TRIX: calculateTRIX(prices),
+        DMI: calculateDMI(prices, highs, lows),
+      };
+
+      const score = calculerScoreV2(indicateurs);
+      results.push({ symbol, name: description, score, indicateurs });
+
+    } catch (e) {
+      console.warn(`❌ ${symbol} :`, e.message);
+    }
+  }
+
+  // 🥇 Trie et affiche
+  results.sort((a, b) => b.score - a.score);
+  const top5 = results.slice(0, 5);
+
+  let html = `<h3>🌍 TOP 5 Actions du monde (score interne)</h3><ol>`;
+  for (let stock of top5) {
+    html += `<li><b>${stock.name}</b> (${stock.symbol}) – Score : ${stock.score}</li>`;
+  }
+  html += `</ol>`;
+
+  loader.style.display = 'none';
+  result.innerHTML = html;
 }
 </script>
 </body>
