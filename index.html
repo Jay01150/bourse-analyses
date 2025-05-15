@@ -586,8 +586,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const { symbol, description } = toAnalyse[i];
 
     try {
-      const url = `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&count=100&token=${API_KEY}`;
-      const data = await fetch(url).then(r => r.json());
+      const url = `https://v0-yahoo-finance-proxy.vercel.app/v8/finance/chart/${symbol}?range=6mo&interval=1d`;
+const data = await fetch(url).then(r => r.json());
 
       if (data.s !== 'ok' || data.c.length < 50) continue;
 
