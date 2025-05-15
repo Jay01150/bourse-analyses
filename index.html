@@ -555,45 +555,42 @@ document.addEventListener("DOMContentLoaded", () => {
   loader.style.display = 'block';
   result.innerHTML = '';
 
-  const API_KEY = 'd0j4oshr01ql09hq6gvgd0j4oshr01ql09hq6h00';
-  const exchanges = ['US', 'TO', 'V', 'STO', 'PA', 'AS', 'F', 'L', 'HK']; // Nasdaq, NYSE, TSX, Euronext, Londres, Hong Kong...
+  const exchanges = ['US', 'TO', 'V', 'STO', 'PA', 'AS', 'F', 'L', 'HK']; // Nasdaq, TSX, Euronext, etc.
   const allSymbols = [];
 
-  // 🔁 Récupère les symboles depuis plusieurs bourses
+  // 🔁 Récupération des symboles depuis Yahoo via ton proxy
   for (let ex of exchanges) {
-    const url = `https://finnhub.io/api/v1/stock/symbol?exchange=${ex}&token=${API_KEY}`;
     try {
+      const url = `https://v0-yahoo-finance-proxy.vercel.app/v1/finance/lookup?region=${ex}`;
       const response = await fetch(url);
       const data = await response.json();
-      allSymbols.push(...data);
+      allSymbols.push(...(data?.quotes || []));
     } catch (e) {
       console.warn(`Erreur sur ${ex} :`, e.message);
     }
   }
 
-  // 🧹 Filtrage : actions uniquement, no warrant, no ETF, no ADR...
+  // 🧹 Filtrage : uniquement les tickers classiques
   const filtered = allSymbols.filter(sym =>
-    sym.type === 'Common Stock' &&
     /^[A-Z0-9.-]{2,10}$/.test(sym.symbol)
   );
 
-  const limit = Math.floor(filtered.length * 0.9); // 90% de ce que Finnhub accepte
+  const limit = Math.floor(filtered.length * 0.9);
   const toAnalyse = filtered.slice(0, Math.min(180, limit));
-
   const results = [];
 
   for (let i = 0; i < toAnalyse.length; i++) {
-    const { symbol, description } = toAnalyse[i];
+    const { symbol, shortname: name } = toAnalyse[i];
 
     try {
       const url = `https://v0-yahoo-finance-proxy.vercel.app/v8/finance/chart/${symbol}?range=6mo&interval=1d`;
-const data = await fetch(url).then(r => r.json());
-
-      if (data.s !== 'ok' || data.c.length < 50) continue;
+      const data = await fetch(url).then(r => r.json());
 
       const prices = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
-const highs = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.high || [];
-const lows = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.low || [];
+      const highs = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.high || [];
+      const lows  = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.low  || [];
+
+      if (prices.length < 50) continue;
 
       const indicateurs = {
         RSI_7: calculateRSI(prices, 7),
@@ -605,12 +602,25 @@ const lows = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.low || [];
       };
 
       const score = calculerScoreV2(indicateurs);
-      results.push({ symbol, name: description, score, indicateurs });
+      results.push({ symbol, name, score, indicateurs });
 
     } catch (e) {
       console.warn(`❌ ${symbol} :`, e.message);
     }
   }
+
+  results.sort((a, b) => b.score - a.score);
+  const top5 = results.slice(0, 5);
+
+  let html = `<h3>🌍 TOP 5 Actions du monde (score interne)</h3><ol>`;
+  for (let stock of top5) {
+    html += `<li><b>${stock.name}</b> (${stock.symbol}) – Score : ${stock.score}</li>`;
+  }
+  html += `</ol>`;
+
+  loader.style.display = 'none';
+  result.innerHTML = html;
+}
 
   // 🥇 Trie et affiche
   results.sort((a, b) => b.score - a.score);
