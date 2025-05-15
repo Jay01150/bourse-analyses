@@ -226,7 +226,7 @@ function calculerScoreV2(ind, meta = {}) {
 }
 
 async function fetchETFPrices(ticker) {
-  const API_KEY = 'd0g3slpr01qr6dbv9p80d0g3slpr01qr6dbv9p8g';
+  const API_KEY = 'd0j4oshr01ql09hq6gvgd0j4oshr01ql09hq6h00';
   try {
     const url = `https://finnhub.io/api/v1/stock/candle?symbol=${ticker}&resolution=D&count=100&token=${API_KEY}`;
     const response = await fetch(url);
@@ -561,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loader.style.display = 'block';
   result.innerHTML = '';
 
-  const API_KEY = 'd0g3slpr01qr6dbv9p80d0g3slpr01qr6dbv9p8g';
+  const API_KEY = 'd0j4oshr01ql09hq6gvgd0j4oshr01ql09hq6h00';
   const exchanges = ['US', 'TO', 'V', 'STO', 'PA', 'AS', 'F', 'L', 'HK']; // Nasdaq, NYSE, TSX, Euronext, Londres, Hong Kong...
   const allSymbols = [];
 
