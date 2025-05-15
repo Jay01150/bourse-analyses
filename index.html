@@ -327,8 +327,7 @@ function calculerScoreV2(ind, meta = {}) {
 async function fetchETFPrices(ticker) {
   try {
     const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
-    const response = await fetch(proxyUrl);
+    const response = await fetch(yahooUrl);
     const data = await response.json();
     return data.chart.result[0].indicators.quote[0].close.filter(p => p);
   } catch (err) {
