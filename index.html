@@ -326,12 +326,13 @@ function calculerScoreV2(ind, meta = {}) {
 
 async function fetchETFPrices(ticker) {
   try {
-    const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
-    const response = await fetch(yahooUrl);
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
+    const response = await fetch(url);
     const data = await response.json();
-    return data.chart.result[0].indicators.quote[0].close.filter(p => p);
+    const closePrices = data.chart.result[0].indicators.quote[0].close;
+    return closePrices.filter(p => typeof p === "number");
   } catch (err) {
-    console.warn(`❌ Échec pour ${ticker} →`, err.message);
+    console.warn(`❌ Erreur pour ${ticker} : ${err.message}`);
     return [];
   }
 }
