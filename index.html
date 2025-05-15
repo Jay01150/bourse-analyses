@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bourses FRATELLI</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f7f9fc; color: #333; margin: 0; padding: 0; }
+    header { background: #FF6F00; color: white; padding: 15px; text-align: center; font-size: 1.8em; font-weight: bold; }
+    nav { display: flex; justify-content: center; background-color: #1976d2; }
+    nav button { background-color: transparent; color: white; padding: 10px 20px; border: none; cursor: pointer; transition: background 0.3s ease; }
+    nav button:hover, nav button.active { background-color: #1565c0; }
+    main { padding: 20px; max-width: 1200px; margin: auto; }
+    .hidden { display: none; }
+    .card { background: white; padding: 15px; margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px; }
+    .top-title { font-size: 1.4em; margin-bottom: 15px; }
+    footer { text-align: center; padding: 10px; background: #eeeeee; margin-top: 20px; font-size: 0.9em; }
+section { display: none; }
+section.active { display: block; }
+  </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<header>Les Bons plans du jour📈</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="etf">🏦 ETF</button>
+  <button class="tab-btn" data-tab="crypto">💎 Crypto</button>
+<button class="tab-btn" data-tab="tab-actions">📊 Actions</button>
+</nav>
+<div id="progress-container" style="display: none; text-align: center; margin: 1rem 0;">
+  <div style="width: 25%; margin: 0 auto; background: #eee; height: 12px; border-radius: 6px; position: relative;">
+    <div id="progress-bar" style="height: 100%; background: #FF6F00; width: 0%; border-radius: 6px; transition: width 0.2s;"></div>
+  </div>
+  <div id="progress-text" style="margin-top: 8px; font-weight: bold; color: #444;"></div>
+</div>
+
+<main>
+  <section id="etf">
+  <!-- 🎯 Bouton analyse ETF -->
+<div style="display: flex; justify-content: center; margin: 1rem;">
+  <button id="btn-analyse-etf" style="padding: 10px 20px; font-size: 16px; background-color: #00796b; color: white; border: none; border-radius: 8px; cursor: pointer;">
+    🔍 Lancer l’analyse ETF
+  </button>
+</div>
+<!-- 📊 Compteur ETF -->
+<div id="compteur-etf" style="text-align:center; font-weight: bold; margin-bottom: 10px;"></div>
+<div class="card">
+  <div class="top-title"><i class="fas fa-trophy"></i> TOP 3 ETF du jour</div>
+  <ol id="top3-list">
+    <li>ETF 1 (Score: ...)</li>
+    <li>ETF 2 (Score: ...)</li>
+    <li>ETF 3 (Score: ...)</li>
+  </ol>
+</div>
+
+  <div class="card" id="etf-results">Zone pour afficher le tableau complet des ETF analysés.</div>
+</section>
+  <section id="crypto">
+  <!-- 🎯 Bouton analyse Crypto -->
+<div style="display: flex; justify-content: center; margin: 1rem;">
+  <button id="btn-analyse-crypto" style="padding:10px 20px; font-size:16px; background:#9c27b0; color:white; border:none; border-radius:8px; cursor:pointer;">
+    🚀 Lancer l’analyse Crypto
+  </button>
+</div>
+
+<!-- 🔗 Compteur Crypto -->
+<div id="compteur-crypto" style="text-align:center; font-weight: bold; margin-bottom: 10px;"></div>
+<div class="card">
+  <div class="top-title">🏆 TOP 3 Crypto du jour</div>
+  <ol id="top3-list-crypto">
+    <li>Crypto 1 (Score: ...)</li>
+    <li>Crypto 2 (Score: ...)</li>
+    <li>Crypto 3 (Score: ...)</li>
+  </ol>
+</div>
+
+  <div class="card">Zone pour afficher le tableau complet des Cryptos analysées.</div>
+</section>
+<section id="tab-actions" class="tab-content hidden">
+  <h2>📊 Analyse Actions & Économie Mondiale</h2>
+  <p>Voici les données macro et microéconomiques clés qui influencent actuellement les marchés.<br>
+  Objectif : identifier 5 actions à très fort potentiel grâce à une approche Pareto 80/20.</p>
+
+  <div id="actions-loader" style="display: none; margin: 1em 0;">⏳ Chargement des données économiques...</div>
+
+  <button onclick="analyserEconomies()">🔍 Lancer l’analyse économique</button>
+
+  <div id="actions-result" style="margin-top: 1.5em;"></div>
+</section>
+
+</main>
+
+<footer>
+  Bourse Manu & Jérôme
+</footer>
+
+<script>
+const ETF_TICKERS = [
+  "DAXEX.GR", "4BRZ.GR", "LYSX.GR", "ESD.FP", "ESE.FP", "S500.FP", "IUIT.LN", "SPXS.LN",
+  "SPYI.GR", "IWDE.LN", "SPYY.GR", "IUFS.LN", "IMAE.NA", "IEMA.NA", "IWDA.NA", "IJPA.NA",
+  "SXR1.GR", "IESG.LN", "CSUKX.SW", "CSSX5E.SW", "CSEMU.IM", "CSNDX.SW", "CSSPX.SW",
+  "CEBL.GR", "SMSUS.EO", "SMSWLD.GR", "IAUP.LN", "ISAC.LN", "MVOL.LN", "JREG.LN", "JREU.LN",
+  "JREE.LN", "WSML.LN", "XZMU.GR", "VUAA.LN", "SAEU.LN", "SASU.LN", "SAWD.LN", "SAEM.LN",
+  "SPPW.GR", "EQAC.SW", "XZMJ.GR", "XMAW.GR", "XAIX.GR", "XDWD.GR", "XD9U.GR", "ZPRR.GR",
+  "ICHN.NA", "ESGU.LN", "VWRA.LN", "VHVE.LN", "EMIM.LN", "SPXE.LN", "XDEV.GR", "XDEW.GR",
+  "XDWH.GR", "XDWT.GR", "I500.NA", "IWQU.LN", "IWMO.LN", "IWVL.LN", "E500.GR", "ISPY.LN",
+  "SUSM.LN", "SUAS.LN", "SUSW.LN", "RBOT.LN", "XZW0.GR", "NDIA.LN", "EDM4.GR", "EDM2.GR",
+  "EDMW.GR", "EDMU.GR", "XMWO.IM", "XMEU.IM", "XMJP.IM", "XMUS.GR", "XDAX.X2", "XSX6.GR",
+  "XESC.IM", "D5BM.GR", "MEUDEUR.XV", "UCAP.SW", "LYP7.GR", "EEUE.FP", "CEU2.FP", "AEME.FP",
+  "CEU.FP", "CW8.FP", "AEEM.FP", "C50.FP", "500.FP", "500U.FP", "LCUJ.GR", "UST.FP", "EPAB.FP"
+];
+
+const ETF_NOMS = {
+  "DAXEX.GR": "iShares Core DAX® UCITS ETF (DE) :contentReference[oaicite:0]{index=0}",
+  "4BRZ.GR": "iShares MSCI Brazil UCITS ETF (DE) :contentReference[oaicite:1]{index=1}",
+  "LYSX.GR": "Amundi EURO STOXX 50 II UCITS ETF :contentReference[oaicite:2]{index=2}",
+  "ESD.FP": "BNP Paribas Easy S&P 500 UCITS ETF :contentReference[oaicite:3]{index=3}",
+  "ESE.FP": "BNP Paribas Easy S&P 500 UCITS ETF :contentReference[oaicite:4]{index=4}",
+  "S500.FP": "Amundi S&P 500 Screened UCITS ETF :contentReference[oaicite:5]{index=5}",
+  "IUIT.LN": "iShares S&P 500 Information Technology Sector UCITS ETF :contentReference[oaicite:6]{index=6}",
+  "SPXS.LN": "Invesco S&P 500 UCITS ETF :contentReference[oaicite:7]{index=7}",
+  "SPYI.GR": "NEOS S&P 500 High Income ETF :contentReference[oaicite:8]{index=8}",
+  "IWDE.LN": "iShares MSCI World EUR Hedged UCITS ETF :contentReference[oaicite:9]{index=9}",
+  "SPYY.GR": "SPDR MSCI All Country World UCITS ETF :contentReference[oaicite:10]{index=10}",
+  "IUFS.LN": "iShares S&P 500 Financials Sector UCITS ETF :contentReference[oaicite:11]{index=11}",
+  "IMAE.NA": "iShares Core MSCI Europe UCITS ETF :contentReference[oaicite:12]{index=12}",
+  "IEMA.NA": "iShares MSCI EM UCITS ETF :contentReference[oaicite:13]{index=13}",
+  "IWDA.NA": "iShares Core MSCI World UCITS ETF :contentReference[oaicite:14]{index=14}",
+  "IJPA.NA": "iShares MSCI Japan UCITS ETF",
+  "SXR1.GR": "iShares Core DAX® UCITS ETF (DE) :contentReference[oaicite:15]{index=15}",
+  "IESG.LN": "iShares MSCI Europe SRI UCITS ETF",
+  "CSUKX.SW": "iShares FTSE 100 UCITS ETF",
+  "CSSX5E.SW": "iShares EURO STOXX 50 UCITS ETF",
+  "CSEMU.IM": "iShares MSCI EMU UCITS ETF",
+  "CSNDX.SW": "iShares NASDAQ 100 UCITS ETF",
+  "CSSPX.SW": "iShares Core S&P 500 UCITS ETF",
+  "CEBL.GR": "iShares Euro Government Bond 1-3yr UCITS ETF",
+  "SMSUS.EO": "SPDR MSCI USA Small Cap Value Weighted UCITS ETF",
+  "SMSWLD.GR": "SPDR MSCI World Small Cap Value Weighted UCITS ETF",
+  "IAUP.LN": "iShares Gold Producers UCITS ETF",
+  "ISAC.LN": "iShares MSCI ACWI UCITS ETF",
+  "MVOL.LN": "iShares Edge MSCI World Minimum Volatility UCITS ETF",
+  "JREG.LN": "JPMorgan Europe Research Enhanced Index Equity (ESG) UCITS ETF",
+  "JREU.LN": "JPMorgan US Research Enhanced Index Equity (ESG) UCITS ETF",
+  "JREE.LN": "JPMorgan Emerging Markets Research Enhanced Index Equity (ESG) UCITS ETF",
+  "WSML.LN": "iShares MSCI World Small Cap UCITS ETF",
+  "XZMU.GR": "Xtrackers MSCI USA UCITS ETF",
+  "VUAA.LN": "Vanguard S&P 500 UCITS ETF",
+  "SAEU.LN": "SPDR MSCI Europe UCITS ETF",
+  "SASU.LN": "SPDR MSCI USA UCITS ETF",
+  "SAWD.LN": "SPDR MSCI World UCITS ETF",
+  "SAEM.LN": "SPDR MSCI Emerging Markets UCITS ETF",
+  "SPPW.GR": "SPDR S&P 500 UCITS ETF",
+  "EQAC.SW": "Lyxor MSCI World UCITS ETF",
+  "XZMJ.GR": "Xtrackers MSCI Japan UCITS ETF",
+  "XMAW.GR": "Xtrackers MSCI AC World UCITS ETF",
+  "XAIX.GR": "Xtrackers Artificial Intelligence & Big Data UCITS ETF",
+  "XDWD.GR": "Xtrackers MSCI World UCITS ETF",
+  "XD9U.GR": "Xtrackers MSCI Emerging Markets UCITS ETF",
+  "ZPRR.GR": "SPDR MSCI Europe Small Cap Value Weighted UCITS ETF",
+  "ICHN.NA": "iShares MSCI China UCITS ETF",
+  "ESGU.LN": "iShares MSCI USA ESG Screened UCITS ETF",
+  "VWRA.LN": "Vanguard FTSE All-World UCITS ETF",
+  "VHVE.LN": "Vanguard FTSE Developed Europe UCITS ETF",
+  "EMIM.LN": "iShares Core MSCI Emerging Markets IMI UCITS ETF",
+  "SPXE.LN": "SPDR S&P 500 ESG Screened UCITS ETF",
+  "XDEV.GR": "Xtrackers MSCI Europe UCITS ETF",
+  "XDEW.GR": "Xtrackers MSCI Europe Small Cap UCITS ETF",
+  "XDWH.GR": "Xtrackers MSCI World Health Care UCITS ETF",
+  "XDWT.GR": "Xtrackers MSCI World Information Technology UCITS ETF",
+  "I500.NA": "iShares S&P 500 UCITS ETF",
+  "IWQU.LN": "iShares MSCI World Quality Factor UCITS ETF",
+  "IWMO.LN": "iShares MSCI World Momentum Factor UCITS ETF",
+  "IWVL.LN": "iShares MSCI World Value Factor UCITS ETF",
+  "E500.GR": "iShares S&P 500 UCITS ETF",
+  "ISPY.LN": "iShares MSCI USA Quality Factor UCITS ETF",
+  "SUSM.LN": "SPDR MSCI USA Small Cap Value Weighted UCITS ETF",
+  "SUAS.LN": "SPDR MSCI USA UCITS ETF",
+  "SUSW.LN": "SPDR MSCI World UCITS ETF",
+  "RBOT.LN": "iShares Automation & Robotics UCITS ETF",
+  "XZW0.GR": "Xtrackers MSCI World UCITS ETF",
+  "NDIA.LN": "iShares MSCI India UCITS ETF",
+  "EDM4.GR": "iShares MSCI Emerging Markets UCITS ETF",
+  "EDM2.GR": "iShares MSCI Emerging Markets UCITS ETF",
+  "EDMW.GR": "iShares MSCI World UCITS ETF",
+  "EDMU.GR": "iShares MSCI USA UCITS ETF",
+  "XMWO.IM": "Xtrackers MSCI World UCITS ETF",
+  "XMEU.IM": "Xtrackers MSCI Europe UCITS ETF",
+  "XMJP.IM": "Xtrackers MSCI Japan UCITS ETF",
+  "XMUS.GR": "Xtrackers MSCI USA UCITS ETF",
+  "XDAX.X2": "Xtrackers DAX UCITS ETF",
+  "XSX6.GR": "Xtrackers S&P 500 UCITS ETF",
+  "XESC.IM": "Xtrackers MSCI Emerging Markets UCITS ETF",
+  "D5BM.GR": "iShares MSCI World UCITS ETF",
+  "MEUDEUR.XV": "Lyxor MSCI Europe UCITS ETF",
+  "UCAP.SW": "UBS MSCI ACWI UCITS ETF",
+  "LYP7.GR": "Lyxor MSCI World UCITS ETF",
+  "EEUE.FP": "Amundi MSCI Europe UCITS ETF",
+  "CEU2.FP": "Amundi MSCI Europe UCITS ETF",
+  "AEME.FP": "Amundi MSCI Emerging Markets UCITS ETF",
+  "CEU.FP": "Amundi MSCI Europe UCITS ETF",
+  "CW8.FP": "Amundi MSCI World UCITS ETF",
+  "AEEM.FP": "Amundi MSCI Emerging Markets UCITS ETF",
+  "C50.FP": "Amundi S&P 500 UCITS ETF",
+  "500.FP": "Amundi S&P 500 UCITS ETF",
+  "500U.FP": "Amundi S&P 500 UCITS ETF",
+  "LCUJ.GR": "Lyxor MSCI USA UCITS ETF",
+  "UST.FP": "Amundi US Treasury 7-10 UCITS ETF",
+  "EPAB.FP": "Amundi MSCI Pacific ex Japan UCITS ETF"
+};
+
+const PONDERATIONS = { RSI_7: 10, RSI_14: 10, RSI_21: 10, MACD: 30, TRIX: 20, DMI_ADX: 20 };
+
+function calculateEMA(prices, period) {
+  const k = 2 / (period + 1);
+  let ema = prices.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  const result = [ema];
+  for (let i = period; i < prices.length; i++) {
+    ema = prices[i] * k + ema * (1 - k);
+    result.push(ema);
+  }
+  return result;
+}
+
+function calculateRSI(prices, period = 14) {
+  if (prices.length < period + 1) return null;
+  let gains = 0, losses = 0;
+  for (let i = 1; i <= period; i++) {
+    const delta = prices[i] - prices[i - 1];
+    if (delta > 0) gains += delta;
+    else losses -= delta;
+  }
+  const rs = gains / (losses || 1);
+  return +(100 - (100 / (1 + rs))).toFixed(2);
+}
+
+function calculateMACD(prices) {
+  if (prices.length < 35) return null;
+  const ema12 = calculateEMA(prices, 12);
+  const ema26 = calculateEMA(prices, 26);
+  const macdLine = ema12.slice(ema12.length - ema26.length).map((v, i) => v - ema26[i]);
+  const signalLine = calculateEMA(macdLine, 9);
+  const lastMACD = macdLine.at(-1);
+  const lastSignal = signalLine.at(-1);
+  return { bullish: lastMACD > lastSignal };
+}
+function calculateTRIX(prices, period = 15) {
+  const ema1 = calculateEMA(prices, period);
+  const ema2 = calculateEMA(ema1, period);
+  const ema3 = calculateEMA(ema2, period);
+  const trix = [];
+  for (let i = 1; i < ema3.length; i++) {
+    const value = ((ema3[i] - ema3[i - 1]) / ema3[i - 1]) * 100;
+    trix.push(value);
+  }
+  return trix.at(-1); // dernier TRIX
+}
+
+function calculateDMI(prices, highs, lows, period = 14) {
+  const plusDM = [];
+  const minusDM = [];
+  const TR = [];
+
+  for (let i = 1; i < prices.length; i++) {
+    const upMove = highs[i] - highs[i - 1];
+    const downMove = lows[i - 1] - lows[i];
+    plusDM.push(upMove > downMove && upMove > 0 ? upMove : 0);
+    minusDM.push(downMove > upMove && downMove > 0 ? downMove : 0);
+
+    const highLow = highs[i] - lows[i];
+    const highClose = Math.abs(highs[i] - prices[i - 1]);
+    const lowClose = Math.abs(lows[i] - prices[i - 1]);
+    TR.push(Math.max(highLow, highClose, lowClose));
+  }
+
+  const sumTR = TR.slice(-period).reduce((a, b) => a + b, 0);
+  const sumPlusDM = plusDM.slice(-period).reduce((a, b) => a + b, 0);
+  const sumMinusDM = minusDM.slice(-period).reduce((a, b) => a + b, 0);
+
+  const plusDI = 100 * (sumPlusDM / sumTR);
+  const minusDI = 100 * (sumMinusDM / sumTR);
+  const DX = 100 * Math.abs(plusDI - minusDI) / (plusDI + minusDI);
+  return { plusDI: plusDI.toFixed(2), minusDI: minusDI.toFixed(2), ADX: DX.toFixed(2) };
+}
+
+function calculerScoreV2(ind, meta = {}) {
+  let score = 0;
+
+  // 1. TECHNIQUE (60%)
+  if (ind.RSI_7 < 30) score += 10;
+  else if (ind.RSI_7 < 40) score += 5;
+
+  if (ind.RSI_14 < 35) score += 10;
+  else if (ind.RSI_14 < 45) score += 5;
+
+  if (ind.RSI_21 < 40) score += 10;
+  else if (ind.RSI_21 < 50) score += 5;
+
+  if (ind.MACD?.bullish) score += 15;
+
+  if (ind.TRIX > 0.1) score += 10;
+  else if (ind.TRIX > 0.05) score += 5;
+
+  if (ind.DMI && ind.DMI.plusDI > ind.DMI.minusDI && ind.DMI.ADX > 20) score += 15;
+  else if (ind.DMI?.ADX > 15) score += 5;
+
+  // 2. PERFORMANCE RÉCENTE (20%)
+  if (meta.performance) {
+    const { j1, s1, s2, m1 } = meta.performance;
+    if (j1 > 0) score += 2;
+    if (s1 > 0) score += 3;
+    if (s2 > 0) score += 3;
+    if (m1 > 0) score += 4;
+  }
+
+  // 3. QUALITÉ ETF (20%)
+  if (meta.liquidite > 80) score += 5;
+  if (meta.diversification > 50) score += 5;
+  if (meta.anciennete > 3) score += 5;
+  if (meta.frais < 0.4) score += 5;
+
+  return Math.round(score); // Score final sur 100
+}
+
+async function fetchETFPrices(ticker) {
+  try {
+    const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
+    const response = await fetch(proxyUrl);
+    const data = await response.json();
+    return data.chart.result[0].indicators.quote[0].close.filter(p => p);
+  } catch (err) {
+    console.warn(`❌ Échec pour ${ticker} →`, err.message);
+    return [];
+  }
+}
+
+async function analyseAllETFs() {
+  const results = [];
+
+  document.getElementById("progress-container").style.display = "block";
+  document.getElementById("progress-bar").style.width = "0%";
+  document.getElementById("progress-text").textContent = "0 %";
+
+  for (let i = 0; i < ETF_TICKERS.length; i++) {
+    const ticker = ETF_TICKERS[i];
+    let prices = [];
+
+    try {
+      prices = await fetchETFPrices(ticker);
+    } catch (e) {
+      console.warn("Erreur sur", ticker, e.message);
+    }
+
+    // ✅ Mise à jour de la progression même si fetch échoue
+    let percent = Math.round(((i + 1) / ETF_TICKERS.length) * 100);
+    document.getElementById("progress-bar").style.width = percent + "%";
+    document.getElementById("progress-text").textContent = percent + " %";
+
+    if (prices.length < 50) {
+  console.warn(`⛔ Données insuffisantes pour ${ticker} → ${prices.length} points`);
+  continue;
+}
+
+    const highs = prices.map(p => p * 1.01);
+    const lows = prices.map(p => p * 0.99);
+
+    const indicateurs = {
+      RSI_7: calculateRSI(prices, 7),
+      RSI_14: calculateRSI(prices, 14),
+      RSI_21: calculateRSI(prices, 21),
+      MACD: calculateMACD(prices),
+      TRIX: calculateTRIX(prices),
+      DMI: calculateDMI(prices, highs, lows)
+    };
+
+    const fakeMeta = {
+      performance: { j1: 1.2, s1: 2.5, s2: -0.5, m1: 4.0 },
+      liquidite: 90,
+      diversification: 70,
+      anciennete: 5,
+      frais: 0.3
+    };
+
+    const score = calculerScoreV2(indicateurs, fakeMeta);
+    results.push({ ticker, name: ETF_NOMS[ticker] || ticker, score, indicateurs });
+  }
+
+  // 🔝 Affichage final
+  let table = '<table style="width:100%; border-collapse: collapse;">';
+  table += `
+    <thead>
+      <tr style="background:#ddd;">
+        <th>ETF</th>
+        <th>Score</th>
+        <th>RSI</th>
+        <th>Détails</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  results.forEach((r, i) => {
+    const prob = Math.min(100, r.score).toFixed(0) + "%";
+    table += `
+      <tr style="border-bottom:1px solid #ccc;">
+        <td><b>${r.name}</b><br><small>${r.ticker}</small></td>
+        <td style="text-align:center;">${r.score}</td>
+        <td style="text-align:center;">${r.indicateurs.RSI_7} / ${r.indicateurs.RSI_14} / ${r.indicateurs.RSI_21}</td>
+        <td style="text-align:center;">
+          <button onclick="toggleDetails('details-${i}')">👁️</button>
+        </td>
+      </tr>
+      <tr id="details-${i}" class="hidden">
+        <td colspan="5">
+          <div style="padding: 10px; background:#f9f9f9; font-size: 0.9em;">
+            <b>MACD :</b> ${r.indicateurs.MACD?.bullish ? '✅ haussier' : '❌ baissier'}<br>
+            <b>TRIX :</b> ${r.indicateurs.TRIX?.toFixed(2)}<br>
+            <b>DMI+ / DMI- :</b> ${r.indicateurs.DMI?.plusDI} / ${r.indicateurs.DMI?.minusDI} — <b>ADX :</b> ${r.indicateurs.DMI?.ADX}
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+ table += '</tbody></table>';
+
+// 🧮 Compteur de résultats
+const compteurETF = document.createElement("p");
+compteurETF.textContent = `📊 ${results.length} ETF analysés`;
+compteurETF.style = "font-weight: bold; margin-bottom: 10px;";
+
+// 🧱 Réinitialise la zone d'affichage
+const containerETF = document.getElementById("etf-results");
+// 🧮 Compteur de résultats
+document.getElementById("compteur-etf").textContent = `📊 ${results.length} ETF analysés`;
+
+// 🧱 Affichage du tableau
+document.getElementById("etf-results").innerHTML = table;
+  document.getElementById("etf-results").innerHTML = table;
+} // ← FIN de analyseAllETFs
+
+document.querySelectorAll('.tab-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    // Onglets visuels
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
+
+    // Sections visibles
+    document.querySelectorAll('main > section').forEach(s => s.classList.remove('active'));
+    const targetId = button.getAttribute("data-tab");
+    document.getElementById(targetId).classList.add('active');
+  });
+});
+
+document.getElementById("btn-analyse-etf").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-analyse-etf");
+  btn.disabled = true;
+  btn.innerText = "⏳ Analyse en cours...";
+  await analyseAllETFs();
+  btn.innerText = "🔍 Relancer l’analyse ETF";
+  btn.disabled = false;
+});
+  document.getElementById("btn-analyse-crypto").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-analyse-crypto");
+  btn.disabled = true;
+  btn.innerText = "⏳ Analyse Crypto en cours...";
+  await analyseAllCryptos();
+  btn.innerText = "🚀 Relancer l’analyse Crypto";
+  btn.disabled = false;
+});
+function toggleDetails(id) {
+  const row = document.getElementById(id);
+  row.classList.toggle("hidden");
+}
+
+// 📉 Bollinger Bandwidth (20)
+function calculateBollingerBandwidth(prices, period = 20) {
+  if (prices.length < period) return null;
+  const slice = prices.slice(-period);
+  const mean = slice.reduce((a, b) => a + b, 0) / period;
+  const variance = slice.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / period;
+  const stdDev = Math.sqrt(variance);
+  const upper = mean + (2 * stdDev);
+  const lower = mean - (2 * stdDev);
+  return ((upper - lower) / mean).toFixed(4);
+}
+
+// 🧠 Score Crypto scalping
+function calculerScoreCrypto(ind, meta) {
+  let score = 0;
+  if (ind.RSI_7 < 30) score += 10;
+  else if (ind.RSI_7 < 40) score += 5;
+  if (ind.RSI_14 < 35) score += 5;
+  if (ind.RSI_7 > ind.RSI_14 && ind.RSI_14 > ind.RSI_21) score += 10;
+  if (ind.MACD?.bullish) score += 10;
+  if (ind.TRIX > 0.1) score += 10;
+  if (ind.DMI && ind.DMI.plusDI > ind.DMI.minusDI && ind.DMI.ADX > 20) score += 10;
+  else if (ind.DMI?.ADX > 15) score += 5;
+  if (meta.ratioVol > 0.10) score += 10;
+  if (meta.variation_1h > 0) score += 5;
+  if (meta.variation_24h > 0) score += 5;
+  if (meta.variation_7d > 0) score += 5;
+  if (meta.volatilite > 0.10) score += 5;
+  if (ind.BBW && ind.BBW > 0.2) score += 5;
+  return Math.min(100, Math.round(score));
+}
+
+// 📊 Analyse Crypto
+async function analyseAllCryptos() {
+  const results = [];
+
+  document.getElementById("progress-container").style.display = "block";
+  document.getElementById("progress-bar").style.width = "0%";
+  document.getElementById("progress-text").textContent = "0 %";
+
+  const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h,24h,7d";
+  const list = await fetch(url).then(r => r.json());
+
+  for (let i = 0; i < Math.min(50, list.length); i++) {
+  const coin = list[i];
+
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
+  const url = `https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=usd&days=30&interval=daily`;
+const proxyUrl = `https://allorigins.win/raw?url=${encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/chart/" + ticker + "?range=6mo&interval=1d")}`;
+
+  let prices = [];
+  try {
+    const data = await fetch(proxyUrl).then(r => r.json());
+    prices = data.prices.map(p => p[1]);
+  } catch (err) {
+    console.warn(`❌ Erreur de récupération pour ${coin.name} (${coin.id}) : ${err.message}`);
+  }
+
+  // suite de ton traitement (RSI, score, etc.)
+}
+
+    let percent = Math.round(((i + 1) / list.length) * 100);
+    document.getElementById("progress-bar").style.width = percent + "%";
+    document.getElementById("progress-text").textContent = percent + " %";
+
+     if (prices.length < 30) {
+    console.warn(`Crypto ignorée : ${coin.name} (${coin.id}) → pas assez de données (${prices.length})`);
+  } else {
+    const highs = prices.map(p => p * 1.02);
+    const lows = prices.map(p => p * 0.98);
+
+    const indicateurs = {
+      RSI_7: calculateRSI(prices, 7),
+      RSI_14: calculateRSI(prices, 14),
+      RSI_21: calculateRSI(prices, 21),
+      MACD: calculateMACD(prices),
+      TRIX: calculateTRIX(prices, 9),
+      DMI: calculateDMI(prices, highs, lows),
+      BBW: +calculateBollingerBandwidth(prices)
+    };
+
+    const variations = {
+      variation_1h: coin.price_change_percentage_1h_in_currency || 0,
+      variation_24h: coin.price_change_percentage_24h_in_currency || 0,
+      variation_7d: coin.price_change_percentage_7d_in_currency || 0
+    };
+
+    const marketCap = coin.market_cap || 1;
+    const volume = coin.total_volume || 0;
+    const ratioVol = volume / marketCap;
+
+    const variationJ = prices.map((v, i, arr) => i === 0 ? 0 : (v - arr[i - 1]) / arr[i - 1]);
+    const mean = variationJ.reduce((a, b) => a + b, 0) / variationJ.length;
+    const variance = variationJ.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / variationJ.length;
+    const stddev = Math.sqrt(variance);
+
+    const meta = {
+      ...variations,
+      ratioVol,
+      volatilite: stddev
+    };
+
+    const score = calculerScoreCrypto(indicateurs, meta);
+    results.push({ name: coin.name, symbol: coin.symbol.toUpperCase(), score, indicateurs });
+  }
+
+
+  results.sort((a, b) => b.score - a.score);
+
+  document.querySelector("#crypto ol").innerHTML = results.slice(0, 3).map(c => `<li>${c.name} (Score: ${c.score})</li>`).join("");
+
+  let table = '<table style="width:100%; border-collapse: collapse;">';
+  table += `<thead><tr style="background:#ddd;"><th>Crypto</th><th>Score</th><th>RSI</th><th>Détails</th></tr></thead><tbody>`;
+  results.forEach((c, i) => {
+    table += `<tr style="border-bottom:1px solid #ccc;">
+      <td><b>${c.name}</b><br><small>${c.symbol}</small></td>
+      <td style="text-align:center;">${c.score}</td>
+      <td style="text-align:center;">${c.indicateurs.RSI_7} / ${c.indicateurs.RSI_14} / ${c.indicateurs.RSI_21}</td>
+      <td style="text-align:center;"><button onclick="toggleDetails('crypto-details-${i}')">👁️</button></td>
+    </tr><tr id="crypto-details-${i}" class="hidden">
+      <td colspan="4">
+        <div style="padding:10px; background:#f9f9f9; font-size: 0.9em;">
+          <b>MACD:</b> ${c.indicateurs.MACD?.bullish ? "✅ haussier" : "❌ baissier"}<br>
+          <b>TRIX:</b> ${c.indicateurs.TRIX?.toFixed(3)}<br>
+          <b>DMI+ / DMI- / ADX:</b> ${c.indicateurs.DMI?.plusDI} / ${c.indicateurs.DMI?.minusDI} / ${c.indicateurs.DMI?.ADX}<br>
+          <b>BBW:</b> ${c.indicateurs.BBW}
+        </div>
+      </td>
+    </tr>`;
+  });
+  table += "</tbody></table>";
+
+// 🧮 Affiche le compteur juste sous le bouton
+document.getElementById("compteur-crypto").textContent = `🔗 ${results.length} cryptos analysées`;
+
+// 🧱 Affiche le tableau dans la zone prévue
+document.querySelector("#crypto .card:last-child").innerHTML = table;
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      // Onglets visuels
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+
+      // Sections visibles
+      document.querySelectorAll('main > section').forEach(s => s.classList.remove('active'));
+      const targetId = button.getAttribute("data-tab");
+      document.getElementById(targetId).classList.add('active');
+    });
+  });
+
+  document.getElementById("btn-analyse-etf").addEventListener("click", async () => {
+    const btn = document.getElementById("btn-analyse-etf");
+    btn.disabled = true;
+    btn.innerText = "⏳ Analyse en cours...";
+    await analyseAllETFs();
+    btn.innerText = "🔍 Relancer l’analyse ETF";
+    btn.disabled = false;
+  });
+
+  document.getElementById("btn-analyse-crypto").addEventListener("click", async () => {
+    const btn = document.getElementById("btn-analyse-crypto");
+    btn.disabled = true;
+    btn.innerText = "⏳ Analyse Crypto en cours...";
+    await analyseAllCryptos();
+    btn.innerText = "🚀 Relancer l’analyse Crypto";
+    btn.disabled = false;
+  });
+});
+function analyserEconomies() {
+  const loader = document.getElementById('actions-loader');
+  const result = document.getElementById('actions-result');
+
+  loader.style.display = 'block';
+  result.innerHTML = '';
+
+  setTimeout(() => {
+    loader.style.display = 'none';
+
+    const macroTrends = [
+      "📉 Inflation US en recul : regain d'intérêt pour les valeurs tech",
+      "🛢️ Hausse du pétrole : secteur énergie sous tension (TotalEnergies, Exxon)",
+      "🇨🇳 Redémarrage partiel de la Chine : BTP et matières premières en hausse",
+      "🏥 Rebond du secteur santé après des décotes injustifiées",
+      "💡 Forte activité M&A dans la tech et IA"
+    ];
+
+    const actionsPotentielles = [
+      "Nvidia (NVDA)",
+      "Palantir (PLTR)",
+      "TotalEnergies (TTE.PA)",
+      "Novo Nordisk (NVO)",
+      "Caterpillar (CAT)"
+    ];
+
+    result.innerHTML = `
+      <h3>🌍 Tendances Macroéconomiques</h3>
+      <ul>${macroTrends.map(item => `<li>${item}</li>`).join('')}</ul>
+      <h3>🚀 5 Actions à fort potentiel</h3>
+      <ol>${actionsPotentielles.map(item => `<li>${item}</li>`).join('')}</ol>
+    `;
+  }, 1500);
+}
+</script>
+</body>
+</html>
