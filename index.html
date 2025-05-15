@@ -647,40 +647,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.disabled = false;
   });
 });
-function analyserEconomies() {
-  const loader = document.getElementById('actions-loader');
-  const result = document.getElementById('actions-result');
-
-  loader.style.display = 'block';
-  result.innerHTML = '';
-
-  setTimeout(() => {
-    loader.style.display = 'none';
-
-    const macroTrends = [
-      "📉 Inflation US en recul : regain d'intérêt pour les valeurs tech",
-      "🛢️ Hausse du pétrole : secteur énergie sous tension (TotalEnergies, Exxon)",
-      "🇨🇳 Redémarrage partiel de la Chine : BTP et matières premières en hausse",
-      "🏥 Rebond du secteur santé après des décotes injustifiées",
-      "💡 Forte activité M&A dans la tech et IA"
-    ];
-
-    const actionsPotentielles = [
-      "Nvidia (NVDA)",
-      "Palantir (PLTR)",
-      "TotalEnergies (TTE.PA)",
-      "Novo Nordisk (NVO)",
-      "Caterpillar (CAT)"
-    ];
-
-    result.innerHTML = `
-      <h3>🌍 Tendances Macroéconomiques</h3>
-      <ul>${macroTrends.map(item => `<li>${item}</li>`).join('')}</ul>
-      <h3>🚀 5 Actions à fort potentiel</h3>
-      <ol>${actionsPotentielles.map(item => `<li>${item}</li>`).join('')}</ol>
-    `;
-  }, 1500);
-}
   async function analyseActionsMonde() {
   const loader = document.getElementById('actions-loader');
   const result = document.getElementById('actions-result');
