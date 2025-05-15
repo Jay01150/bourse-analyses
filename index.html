@@ -262,7 +262,7 @@ async function analyseAllETFs() {
     }
 
     // ✅ Mise à jour de la progression même si fetch échoue
-    let percent = Math.round(((i + 1) / ETF_TICKERS.length) * 100);
+    let percent = Math.round(((i + 1) / ETF_LIST.length) * 100);
     document.getElementById("progress-bar").style.width = percent + "%";
     document.getElementById("progress-text").textContent = percent + " %";
 
