@@ -99,16 +99,11 @@ section.active { display: block; }
 <script>
 // 🎯 Liste Finnhub – ETF valides et extensibles
 const ETF_LIST = [
-  { symbol: "SPY", name: "SPDR S&P 500 ETF Trust" },
+  { symbol: "SPY", name: "SPDR S&P 500" },
   { symbol: "QQQ", name: "Invesco QQQ Trust" },
-  { symbol: "VTI", name: "Vanguard Total Stock Market ETF" },
-  { symbol: "VOO", name: "Vanguard S&P 500 ETF" },
+  { symbol: "VTI", name: "Vanguard Total Market" },
   { symbol: "GLD", name: "SPDR Gold Shares" },
-  { symbol: "TLT", name: "iShares 20+ Year Treasury Bond ETF" },
-  { symbol: "XLF", name: "Financial Select Sector SPDR Fund" },
-  { symbol: "XLK", name: "Technology Select Sector SPDR Fund" },
-  { symbol: "XLE", name: "Energy Select Sector SPDR Fund" },
-  { symbol: "DIA", name: "SPDR Dow Jones Industrial Average ETF" }
+  { symbol: "XLF", name: "Financial Select Sector" }
 ];
 
 const PONDERATIONS = { RSI_7: 10, RSI_14: 10, RSI_21: 10, MACD: 30, TRIX: 20, DMI_ADX: 20 };
@@ -226,7 +221,7 @@ function calculerScoreV2(ind, meta = {}) {
 
 async function fetchETFPrices(ticker) {
   try {
-    const url = `https://v0-yahoo-finance-proxy.vercel.app/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
+    const url = `https://yahoo-proxy-jgpt.vercel.app/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
     const response = await fetch(url);
     const data = await response.json();
 
