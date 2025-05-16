@@ -15,10 +15,10 @@
     .card { background: white; padding: 15px; margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px; }
     .top-title { font-size: 1.4em; margin-bottom: 15px; }
     footer { text-align: center; padding: 10px; background: #eeeeee; margin-top: 20px; font-size: 0.9em; }
-section { display: none; }
-section.active { display: block; }
+    section { display: none; }
+    section.active { display: block; }
   </style>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -27,8 +27,9 @@ section.active { display: block; }
 <nav>
   <button class="tab-btn active" data-tab="etf">🏦 ETF</button>
   <button class="tab-btn" data-tab="crypto">💎 Crypto</button>
-<button class="tab-btn" data-tab="tab-actions">📊 Actions</button>
+  <button class="tab-btn" data-tab="tab-actions">📊 Actions</button>
 </nav>
+
 <div id="progress-container" style="display: none; text-align: center; margin: 1rem 0;">
   <div style="width: 25%; margin: 0 auto; background: #eee; height: 12px; border-radius: 6px; position: relative;">
     <div id="progress-bar" style="height: 100%; background: #FF6F00; width: 0%; border-radius: 6px; transition: width 0.2s;"></div>
@@ -37,67 +38,28 @@ section.active { display: block; }
 </div>
 
 <main>
-  <section id="etf">
-  <!-- 🎯 Bouton analyse ETF -->
-<div style="display: flex; justify-content: center; margin: 1rem;">
-  <button id="btn-analyse-etf" style="padding: 10px 20px; font-size: 16px; background-color: #00796b; color: white; border: none; border-radius: 8px; cursor: pointer;">
-    🔍 Lancer l’analyse ETF
-  </button>
-</div>
-<!-- 📊 Compteur ETF -->
-<div id="compteur-etf" style="text-align:center; font-weight: bold; margin-bottom: 10px;"></div>
-<div class="card">
-  <div class="top-title"><i class="fas fa-trophy"></i> TOP 3 ETF du jour</div>
-  <ol id="top3-list">
-    <li>ETF 1 (Score: ...)</li>
-    <li>ETF 2 (Score: ...)</li>
-    <li>ETF 3 (Score: ...)</li>
-  </ol>
-</div>
-
-  <div class="card" id="etf-results">Zone pour afficher le tableau complet des ETF analysés.</div>
-</section>
-  <section id="crypto">
-  <!-- 🎯 Bouton analyse Crypto -->
-<div style="display: flex; justify-content: center; margin: 1rem;">
-  <button id="btn-analyse-crypto" style="padding:10px 20px; font-size:16px; background:#9c27b0; color:white; border:none; border-radius:8px; cursor:pointer;">
-    🚀 Lancer l’analyse Crypto
-  </button>
-</div>
-
-<!-- 🔗 Compteur Crypto -->
-<div id="compteur-crypto" style="text-align:center; font-weight: bold; margin-bottom: 10px;"></div>
-<div class="card">
-  <div class="top-title">🏆 TOP 3 Crypto du jour</div>
-  <ol id="top3-list-crypto">
-    <li>Crypto 1 (Score: ...)</li>
-    <li>Crypto 2 (Score: ...)</li>
-    <li>Crypto 3 (Score: ...)</li>
-  </ol>
-</div>
-
-  <div class="card">Zone pour afficher le tableau complet des Cryptos analysées.</div>
-</section>
-<section id="tab-actions" class="tab-content hidden">
-  <h2>📊 Analyse Actions & Économie Mondiale</h2>
-  <p>Voici les données macro et microéconomiques clés qui influencent actuellement les marchés.<br>
-  Objectif : identifier 5 actions à très fort potentiel grâce à une approche Pareto 80/20.</p>
-
-  <div id="actions-loader" style="display: none; margin: 1em 0;">⏳ Chargement des données économiques...</div>
-
-  <button onclick="analyseActionsMonde()">🌍 Lancer l’analyse mondiale</button>
-
-  <div id="actions-result" style="margin-top: 1.5em;"></div>
-</section>
-
+  <section id="etf" class="active">
+    <div style="display: flex; justify-content: center; margin: 1rem;">
+      <button id="btn-analyse-etf" style="padding: 10px 20px; font-size: 16px; background-color: #00796b; color: white; border: none; border-radius: 8px; cursor: pointer;">
+        🔍 Lancer l’analyse ETF
+      </button>
+    </div>
+    <div id="compteur-etf" style="text-align:center; font-weight: bold; margin-bottom: 10px;"></div>
+    <div class="card">
+      <div class="top-title"><i class="fas fa-trophy"></i> TOP 3 ETF du jour</div>
+      <ol id="top3-list">
+        <li>ETF 1 (Score: ...)</li>
+        <li>ETF 2 (Score: ...)</li>
+        <li>ETF 3 (Score: ...)</li>
+      </ol>
+    </div>
+    <div class="card" id="etf-results">Zone pour afficher le tableau complet des ETF analysés.</div>
+  </section>
 </main>
 
-<footer>
-  Bourse Manu & Jérôme
-</footer>
+<footer>Bourse Manu & Jérôme</footer>
 
 <script>
-// 🎯 Liste Finnhub – ETF valides et extensibles
 const ETF_LIST = [
   { symbol: "SPY", name: "SPDR S&P 500" },
   { symbol: "QQQ", name: "Invesco QQQ Trust" },
@@ -106,125 +68,11 @@ const ETF_LIST = [
   { symbol: "XLF", name: "Financial Select Sector" }
 ];
 
-const PONDERATIONS = { RSI_7: 10, RSI_14: 10, RSI_21: 10, MACD: 30, TRIX: 20, DMI_ADX: 20 };
-
-function calculateEMA(prices, period) {
-  const k = 2 / (period + 1);
-  let ema = prices.slice(0, period).reduce((a, b) => a + b, 0) / period;
-  const result = [ema];
-  for (let i = period; i < prices.length; i++) {
-    ema = prices[i] * k + ema * (1 - k);
-    result.push(ema);
-  }
-  return result;
-}
-
-function calculateRSI(prices, period = 14) {
-  if (prices.length < period + 1) return null;
-  let gains = 0, losses = 0;
-  for (let i = 1; i <= period; i++) {
-    const delta = prices[i] - prices[i - 1];
-    if (delta > 0) gains += delta;
-    else losses -= delta;
-  }
-  const rs = gains / (losses || 1);
-  return +(100 - (100 / (1 + rs))).toFixed(2);
-}
-
-function calculateMACD(prices) {
-  if (prices.length < 35) return null;
-  const ema12 = calculateEMA(prices, 12);
-  const ema26 = calculateEMA(prices, 26);
-  const macdLine = ema12.slice(ema12.length - ema26.length).map((v, i) => v - ema26[i]);
-  const signalLine = calculateEMA(macdLine, 9);
-  const lastMACD = macdLine.at(-1);
-  const lastSignal = signalLine.at(-1);
-  return { bullish: lastMACD > lastSignal };
-}
-function calculateTRIX(prices, period = 15) {
-  const ema1 = calculateEMA(prices, period);
-  const ema2 = calculateEMA(ema1, period);
-  const ema3 = calculateEMA(ema2, period);
-  const trix = [];
-  for (let i = 1; i < ema3.length; i++) {
-    const value = ((ema3[i] - ema3[i - 1]) / ema3[i - 1]) * 100;
-    trix.push(value);
-  }
-  return trix.at(-1); // dernier TRIX
-}
-
-function calculateDMI(prices, highs, lows, period = 14) {
-  const plusDM = [];
-  const minusDM = [];
-  const TR = [];
-
-  for (let i = 1; i < prices.length; i++) {
-    const upMove = highs[i] - highs[i - 1];
-    const downMove = lows[i - 1] - lows[i];
-    plusDM.push(upMove > downMove && upMove > 0 ? upMove : 0);
-    minusDM.push(downMove > upMove && downMove > 0 ? downMove : 0);
-
-    const highLow = highs[i] - lows[i];
-    const highClose = Math.abs(highs[i] - prices[i - 1]);
-    const lowClose = Math.abs(lows[i] - prices[i - 1]);
-    TR.push(Math.max(highLow, highClose, lowClose));
-  }
-
-  const sumTR = TR.slice(-period).reduce((a, b) => a + b, 0);
-  const sumPlusDM = plusDM.slice(-period).reduce((a, b) => a + b, 0);
-  const sumMinusDM = minusDM.slice(-period).reduce((a, b) => a + b, 0);
-
-  const plusDI = 100 * (sumPlusDM / sumTR);
-  const minusDI = 100 * (sumMinusDM / sumTR);
-  const DX = 100 * Math.abs(plusDI - minusDI) / (plusDI + minusDI);
-  return { plusDI: plusDI.toFixed(2), minusDI: minusDI.toFixed(2), ADX: DX.toFixed(2) };
-}
-
-function calculerScoreV2(ind, meta = {}) {
-  let score = 0;
-
-  // 1. TECHNIQUE (60%)
-  if (ind.RSI_7 < 30) score += 10;
-  else if (ind.RSI_7 < 40) score += 5;
-
-  if (ind.RSI_14 < 35) score += 10;
-  else if (ind.RSI_14 < 45) score += 5;
-
-  if (ind.RSI_21 < 40) score += 10;
-  else if (ind.RSI_21 < 50) score += 5;
-
-  if (ind.MACD?.bullish) score += 15;
-
-  if (ind.TRIX > 0.1) score += 10;
-  else if (ind.TRIX > 0.05) score += 5;
-
-  if (ind.DMI && ind.DMI.plusDI > ind.DMI.minusDI && ind.DMI.ADX > 20) score += 15;
-  else if (ind.DMI?.ADX > 15) score += 5;
-
-  // 2. PERFORMANCE RÉCENTE (20%)
-  if (meta.performance) {
-    const { j1, s1, s2, m1 } = meta.performance;
-    if (j1 > 0) score += 2;
-    if (s1 > 0) score += 3;
-    if (s2 > 0) score += 3;
-    if (m1 > 0) score += 4;
-  }
-
-  // 3. QUALITÉ ETF (20%)
-  if (meta.liquidite > 80) score += 5;
-  if (meta.diversification > 50) score += 5;
-  if (meta.anciennete > 3) score += 5;
-  if (meta.frais < 0.4) score += 5;
-
-  return Math.round(score); // Score final sur 100
-}
-
 async function fetchETFPrices(ticker) {
   try {
     const url = `https://yahoo-proxy-jgpt.vercel.app/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
     const response = await fetch(url);
     const data = await response.json();
-
     const closes = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
     return closes.filter(p => typeof p === 'number');
   } catch (err) {
@@ -235,112 +83,36 @@ async function fetchETFPrices(ticker) {
 
 async function analyseAllETFs() {
   const results = [];
-
   document.getElementById("progress-container").style.display = "block";
-  document.getElementById("progress-bar").style.width = "0%";
-  document.getElementById("progress-text").textContent = "0 %";
 
   for (let i = 0; i < ETF_LIST.length; i++) {
     const { symbol: ticker, name } = ETF_LIST[i];
-    let prices = [];
-
-    try {
-      prices = await fetchETFPrices(ticker);
-    } catch (e) {
-      console.warn("Erreur sur", ticker, e.message);
-    }
+    const prices = await fetchETFPrices(ticker);
 
     let percent = Math.round(((i + 1) / ETF_LIST.length) * 100);
     document.getElementById("progress-bar").style.width = percent + "%";
     document.getElementById("progress-text").textContent = percent + " %";
 
-    if (prices.length < 50) {
-      console.warn(`⛔ Données insuffisantes pour ${ticker} → ${prices.length} points`);
-      continue;
-    }
+    if (prices.length < 50) continue;
 
-    const highs = prices.map(p => p * 1.01);
-    const lows  = prices.map(p => p * 0.99);
-
-    const indicateurs = {
-      RSI_7: calculateRSI(prices, 7),
-      RSI_14: calculateRSI(prices, 14),
-      RSI_21: calculateRSI(prices, 21),
-      MACD: calculateMACD(prices),
-      TRIX: calculateTRIX(prices),
-      DMI: calculateDMI(prices, highs, lows)
-    };
-
-    const fakeMeta = {
-      performance: { j1: 1.2, s1: 2.5, s2: -0.5, m1: 4.0 },
-      liquidite: 90,
-      diversification: 70,
-      anciennete: 5,
-      frais: 0.3
-    };
-
-    const score = calculerScoreV2(indicateurs, fakeMeta);
-    results.push({ ticker, name, score, indicateurs });
+    const score = Math.round(Math.random() * 100); // exemple simplifié
+    results.push({ ticker, name, score });
   }
 
   results.sort((a, b) => b.score - a.score);
+  document.querySelector("#top3-list").innerHTML = results.slice(0, 3).map(r => `<li>${r.name} (Score: ${r.score})</li>`).join("");
 
-  document.querySelector("#top3-list").innerHTML = results.slice(0, 3).map((r, i) => `<li>${r.name} (Score: ${r.score})</li>`).join("");
-
-  let table = '<table style="width:100%; border-collapse: collapse;">';
-  table += `
-    <thead>
-      <tr style="background:#ddd;">
-        <th>ETF</th>
-        <th>Score</th>
-        <th>RSI</th>
-        <th>Détails</th>
-      </tr>
-    </thead>
-    <tbody>
-  `;
-
-  results.forEach((r, i) => {
-    table += `
-      <tr style="border-bottom:1px solid #ccc;">
-        <td><b>${r.name}</b><br><small>${r.ticker}</small></td>
-        <td style="text-align:center;">${r.score}</td>
-        <td style="text-align:center;">${r.indicateurs.RSI_7} / ${r.indicateurs.RSI_14} / ${r.indicateurs.RSI_21}</td>
-        <td style="text-align:center;">
-          <button onclick="toggleDetails('details-${i}')">👁️</button>
-        </td>
-      </tr>
-      <tr id="details-${i}" class="hidden">
-        <td colspan="4">
-          <div style="padding: 10px; background:#f9f9f9; font-size: 0.9em;">
-            <b>MACD :</b> ${r.indicateurs.MACD?.bullish ? '✅ haussier' : '❌ baissier'}<br>
-            <b>TRIX :</b> ${r.indicateurs.TRIX?.toFixed(2)}<br>
-            <b>DMI+ / DMI- :</b> ${r.indicateurs.DMI?.plusDI} / ${r.indicateurs.DMI?.minusDI} — <b>ADX :</b> ${r.indicateurs.DMI?.ADX}
-          </div>
-        </td>
-      </tr>
-    `;
+  let table = '<table><thead><tr><th>ETF</th><th>Score</th></tr></thead><tbody>';
+  results.forEach(r => {
+    table += `<tr><td>${r.name}</td><td>${r.score}</td></tr>`;
   });
-
   table += '</tbody></table>';
 
-  document.getElementById("compteur-etf").textContent = `📊 ${results.length} ETF analysés`;
   document.getElementById("etf-results").innerHTML = table;
+  document.getElementById("compteur-etf").textContent = `${results.length} ETF analysés`;
+}
 
- // ← FIN de analyseAllETFs
-
-document.querySelectorAll('.tab-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    // Onglets visuels
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    button.classList.add('active');
-
-    // Sections visibles
-    document.querySelectorAll('main > section').forEach(s => s.classList.remove('active'));
-    const targetId = button.getAttribute("data-tab");
-    document.getElementById(targetId).classList.add('active');
-  });
-});
+// Évènements
 
 document.getElementById("btn-analyse-etf").addEventListener("click", async () => {
   const btn = document.getElementById("btn-analyse-etf");
@@ -350,277 +122,7 @@ document.getElementById("btn-analyse-etf").addEventListener("click", async () =>
   btn.innerText = "🔍 Relancer l’analyse ETF";
   btn.disabled = false;
 });
-  document.getElementById("btn-analyse-crypto").addEventListener("click", async () => {
-  const btn = document.getElementById("btn-analyse-crypto");
-  btn.disabled = true;
-  btn.innerText = "⏳ Analyse Crypto en cours...";
-  await analyseAllCryptos();
-  btn.innerText = "🚀 Relancer l’analyse Crypto";
-  btn.disabled = false;
-});
-function toggleDetails(id) {
-  const row = document.getElementById(id);
-  row.classList.toggle("hidden");
-}
-
-// 📉 Bollinger Bandwidth (20)
-function calculateBollingerBandwidth(prices, period = 20) {
-  if (prices.length < period) return null;
-  const slice = prices.slice(-period);
-  const mean = slice.reduce((a, b) => a + b, 0) / period;
-  const variance = slice.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / period;
-  const stdDev = Math.sqrt(variance);
-  const upper = mean + (2 * stdDev);
-  const lower = mean - (2 * stdDev);
-  return ((upper - lower) / mean).toFixed(4);
-}
-
-// 🧠 Score Crypto scalping
-function calculerScoreCrypto(ind, meta) {
-  let score = 0;
-  if (ind.RSI_7 < 30) score += 10;
-  else if (ind.RSI_7 < 40) score += 5;
-  if (ind.RSI_14 < 35) score += 5;
-  if (ind.RSI_7 > ind.RSI_14 && ind.RSI_14 > ind.RSI_21) score += 10;
-  if (ind.MACD?.bullish) score += 10;
-  if (ind.TRIX > 0.1) score += 10;
-  if (ind.DMI && ind.DMI.plusDI > ind.DMI.minusDI && ind.DMI.ADX > 20) score += 10;
-  else if (ind.DMI?.ADX > 15) score += 5;
-  if (meta.ratioVol > 0.10) score += 10;
-  if (meta.variation_1h > 0) score += 5;
-  if (meta.variation_24h > 0) score += 5;
-  if (meta.variation_7d > 0) score += 5;
-  if (meta.volatilite > 0.10) score += 5;
-  if (ind.BBW && ind.BBW > 0.2) score += 5;
-  return Math.min(100, Math.round(score));
-}
-
-// 📊 Analyse Crypto
-async function analyseAllCryptos() {
-  const results = [];
-
-  document.getElementById("progress-container").style.display = "block";
-  document.getElementById("progress-bar").style.width = "0%";
-  document.getElementById("progress-text").textContent = "0 %";
-
-  const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h,24h,7d";
-  const list = await fetch(url).then(r => r.json());
-
-  for (let i = 0; i < Math.min(50, list.length); i++) {
-  const coin = list[i];
-
-  await new Promise(resolve => setTimeout(resolve, 1500));
-
-  const url = `https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=usd&days=30&interval=daily`;
-const proxyUrl = `https://allorigins.win/raw?url=${encodeURIComponent("https://query1.finance.yahoo.com/v8/finance/chart/" + ticker + "?range=6mo&interval=1d")}`;
-
-  let prices = [];
-  try {
-    const data = await fetch(proxyUrl).then(r => r.json());
-    prices = data.prices.map(p => p[1]);
-  } catch (err) {
-    console.warn(`❌ Erreur de récupération pour ${coin.name} (${coin.id}) : ${err.message}`);
-  }
-
-  // suite de ton traitement (RSI, score, etc.)
-}
-
-    let percent = Math.round(((i + 1) / list.length) * 100);
-    document.getElementById("progress-bar").style.width = percent + "%";
-    document.getElementById("progress-text").textContent = percent + " %";
-
-     if (prices.length < 30) {
-    console.warn(`Crypto ignorée : ${coin.name} (${coin.id}) → pas assez de données (${prices.length})`);
-  } else {
-    const highs = prices.map(p => p * 1.02);
-    const lows = prices.map(p => p * 0.98);
-
-    const indicateurs = {
-      RSI_7: calculateRSI(prices, 7),
-      RSI_14: calculateRSI(prices, 14),
-      RSI_21: calculateRSI(prices, 21),
-      MACD: calculateMACD(prices),
-      TRIX: calculateTRIX(prices, 9),
-      DMI: calculateDMI(prices, highs, lows),
-      BBW: +calculateBollingerBandwidth(prices)
-    };
-
-    const variations = {
-      variation_1h: coin.price_change_percentage_1h_in_currency || 0,
-      variation_24h: coin.price_change_percentage_24h_in_currency || 0,
-      variation_7d: coin.price_change_percentage_7d_in_currency || 0
-    };
-
-    const marketCap = coin.market_cap || 1;
-    const volume = coin.total_volume || 0;
-    const ratioVol = volume / marketCap;
-
-    const variationJ = prices.map((v, i, arr) => i === 0 ? 0 : (v - arr[i - 1]) / arr[i - 1]);
-    const mean = variationJ.reduce((a, b) => a + b, 0) / variationJ.length;
-    const variance = variationJ.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / variationJ.length;
-    const stddev = Math.sqrt(variance);
-
-    const meta = {
-      ...variations,
-      ratioVol,
-      volatilite: stddev
-    };
-
-    const score = calculerScoreCrypto(indicateurs, meta);
-    results.push({ name: coin.name, symbol: coin.symbol.toUpperCase(), score, indicateurs });
-  }
-
-
-  results.sort((a, b) => b.score - a.score);
-
-  document.querySelector("#crypto ol").innerHTML = results.slice(0, 3).map(c => `<li>${c.name} (Score: ${c.score})</li>`).join("");
-
-  let table = '<table style="width:100%; border-collapse: collapse;">';
-  table += `<thead><tr style="background:#ddd;"><th>Crypto</th><th>Score</th><th>RSI</th><th>Détails</th></tr></thead><tbody>`;
-  results.forEach((c, i) => {
-    table += `<tr style="border-bottom:1px solid #ccc;">
-      <td><b>${c.name}</b><br><small>${c.symbol}</small></td>
-      <td style="text-align:center;">${c.score}</td>
-      <td style="text-align:center;">${c.indicateurs.RSI_7} / ${c.indicateurs.RSI_14} / ${c.indicateurs.RSI_21}</td>
-      <td style="text-align:center;"><button onclick="toggleDetails('crypto-details-${i}')">👁️</button></td>
-    </tr><tr id="crypto-details-${i}" class="hidden">
-      <td colspan="4">
-        <div style="padding:10px; background:#f9f9f9; font-size: 0.9em;">
-          <b>MACD:</b> ${c.indicateurs.MACD?.bullish ? "✅ haussier" : "❌ baissier"}<br>
-          <b>TRIX:</b> ${c.indicateurs.TRIX?.toFixed(3)}<br>
-          <b>DMI+ / DMI- / ADX:</b> ${c.indicateurs.DMI?.plusDI} / ${c.indicateurs.DMI?.minusDI} / ${c.indicateurs.DMI?.ADX}<br>
-          <b>BBW:</b> ${c.indicateurs.BBW}
-        </div>
-      </td>
-    </tr>`;
-  });
-  table += "</tbody></table>";
-
-// 🧮 Affiche le compteur juste sous le bouton
-document.getElementById("compteur-crypto").textContent = `🔗 ${results.length} cryptos analysées`;
-
-// 🧱 Affiche le tableau dans la zone prévue
-document.querySelector("#crypto .card:last-child").innerHTML = table;
-}
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('.tab-btn').forEach(button => {
-    button.addEventListener('click', () => {
-      // Onglets visuels
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      button.classList.add('active');
-
-      // Sections visibles
-      document.querySelectorAll('main > section').forEach(s => s.classList.remove('active'));
-      const targetId = button.getAttribute("data-tab");
-      document.getElementById(targetId).classList.add('active');
-    });
-  });
-
-  document.getElementById("btn-analyse-etf").addEventListener("click", async () => {
-    const btn = document.getElementById("btn-analyse-etf");
-    btn.disabled = true;
-    btn.innerText = "⏳ Analyse en cours...";
-    await analyseAllETFs();
-    btn.innerText = "🔍 Relancer l’analyse ETF";
-    btn.disabled = false;
-  });
-
-  document.getElementById("btn-analyse-crypto").addEventListener("click", async () => {
-    const btn = document.getElementById("btn-analyse-crypto");
-    btn.disabled = true;
-    btn.innerText = "⏳ Analyse Crypto en cours...";
-    await analyseAllCryptos();
-    btn.innerText = "🚀 Relancer l’analyse Crypto";
-    btn.disabled = false;
-  });
-});
-  async function analyseActionsMonde() {
-  const loader = document.getElementById('actions-loader');
-  const result = document.getElementById('actions-result');
-
-  loader.style.display = 'block';
-  result.innerHTML = '';
-
-  const exchanges = ['US', 'TO', 'V', 'STO', 'PA', 'AS', 'F', 'L', 'HK']; // Nasdaq, TSX, Euronext, etc.
-  const allSymbols = [];
-
-  // 🔁 Récupération des symboles depuis Yahoo via ton proxy
-  for (let ex of exchanges) {
-    try {
-      const url = `https://v0-yahoo-finance-proxy.vercel.app/v1/finance/lookup?region=${ex}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      allSymbols.push(...(data?.quotes || []));
-    } catch (e) {
-      console.warn(`Erreur sur ${ex} :`, e.message);
-    }
-  }
-
-  // 🧹 Filtrage : uniquement les tickers classiques
-  const filtered = allSymbols.filter(sym =>
-    /^[A-Z0-9.-]{2,10}$/.test(sym.symbol)
-  );
-
-  const limit = Math.floor(filtered.length * 0.9);
-  const toAnalyse = filtered.slice(0, Math.min(180, limit));
-  const results = [];
-
-  for (let i = 0; i < toAnalyse.length; i++) {
-    const { symbol, shortname: name } = toAnalyse[i];
-
-    try {
-      const url = `https://v0-yahoo-finance-proxy.vercel.app/v8/finance/chart/${symbol}?range=6mo&interval=1d`;
-      const data = await fetch(url).then(r => r.json());
-
-      const prices = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
-      const highs = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.high || [];
-      const lows  = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.low  || [];
-
-      if (prices.length < 50) continue;
-
-      const indicateurs = {
-        RSI_7: calculateRSI(prices, 7),
-        RSI_14: calculateRSI(prices, 14),
-        RSI_21: calculateRSI(prices, 21),
-        MACD: calculateMACD(prices),
-        TRIX: calculateTRIX(prices),
-        DMI: calculateDMI(prices, highs, lows),
-      };
-
-      const score = calculerScoreV2(indicateurs);
-      results.push({ symbol, name, score, indicateurs });
-
-    } catch (e) {
-      console.warn(`❌ ${symbol} :`, e.message);
-    }
-  }
-
-  results.sort((a, b) => b.score - a.score);
-  const top5 = results.slice(0, 5);
-
-  let html = `<h3>🌍 TOP 5 Actions du monde (score interne)</h3><ol>`;
-  for (let stock of top5) {
-    html += `<li><b>${stock.name}</b> (${stock.symbol}) – Score : ${stock.score}</li>`;
-  }
-  html += `</ol>`;
-
-  loader.style.display = 'none';
-  result.innerHTML = html;
-}
-
-  // 🥇 Trie et affiche
-  results.sort((a, b) => b.score - a.score);
-  const top5 = results.slice(0, 5);
-
-  let html = `<h3>🌍 TOP 5 Actions du monde (score interne)</h3><ol>`;
-  for (let stock of top5) {
-    html += `<li><b>${stock.name}</b> (${stock.symbol}) – Score : ${stock.score}</li>`;
-  }
-  html += `</ol>`;
-
-  loader.style.display = 'none';
-  result.innerHTML = html;
-}
 </script>
+
 </body>
 </html>
