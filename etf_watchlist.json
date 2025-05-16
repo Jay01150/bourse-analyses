@@ -1,302 +1,49 @@
 [
-  {
-    "Nom": "Amundi Euro Stoxx Banks UCITS ETF Acc",
-    "ISIN": "LU1829219390",
-    "Ticker": "BNKE",
-    "WKN": "LYX0Z5"
-  },
-  {
-    "Nom": "Amundi MSCI Semiconductors UCITS ETF Acc",
-    "ISIN": "LU1900066033",
-    "Ticker": "CHIP",
-    "WKN": "LYX018"
-  },
-  {
-    "Nom": "SPDR MSCI Europe Financials UCITS ETF",
-    "ISIN": "IE00BKWQ0G16",
-    "Ticker": "STZ",
-    "WKN": "A1191R"
-  },
-  {
-    "Nom": "iShares S&P 500 Information Technology Sector UCITS ETF USD (Acc)",
-    "ISIN": "IE00B3WJKG14",
-    "Ticker": "QDVE",
-    "WKN": "A142N1"
-  },
-  {
-    "Nom": "iShares S&P 500 Energy Sector UCITS ETF (Acc)",
-    "ISIN": "IE00B42NKQ00",
-    "Ticker": "QDVF",
-    "WKN": "A142NX"
-  },
-  {
-    "Nom": "Xtrackers MSCI World Financials UCITS ETF 1C",
-    "ISIN": "IE00BM67HL84",
-    "Ticker": "XDWF",
-    "WKN": "A113FE"
-  },
-  {
-    "Nom": "Xtrackers Artificial Intelligence & Big Data UCITS ETF 1C",
-    "ISIN": "IE00BGV5VN51",
-    "Ticker": "XAIX",
-    "WKN": "A2N6LC"
-  },
-  {
-    "Nom": "SPDR MSCI Europe Industrials UCITS ETF",
-    "ISIN": "IE00BKWQ0J47",
-    "Ticker": "STQ",
-    "WKN": "A1191T"
-  },
-  {
-    "Nom": "iShares S&P 500 Financials Sector UCITS ETF (Acc)",
-    "ISIN": "IE00B4JNQZ49",
-    "Ticker": "QDVH",
-    "WKN": "A142NY"
-  },
-  {
-    "Nom": "SPDR S&P U.S. Financials Select Sector UCITS ETF USD",
-    "ISIN": "IE00BWBXM500",
-    "Ticker": "ZPDF",
-    "WKN": "A14QB1"
-  },
-  {
-    "Nom": "Xtrackers MSCI World Information Technology UCITS ETF 1C",
-    "ISIN": "IE00BM67HT60",
-    "Ticker": "XDWT",
-    "WKN": "A113FM"
-  },
-  {
-    "Nom": "SPDR MSCI World Technology UCITS ETF",
-    "ISIN": "IE00BYTRRD19",
-    "Ticker": "SS47",
-    "WKN": "A2AE57"
-  },
-  {
-    "Nom": "SPDR S&P U.S. Technology Select Sector UCITS ETF USD",
-    "ISIN": "IE00BWBXM948",
-    "Ticker": "ZPDT",
-    "WKN": "A14QB5"
-  },
-  {
-    "Nom": "Xtrackers MSCI World Energy UCITS ETF 1C",
-    "ISIN": "IE00BM67HM91",
-    "Ticker": "XDW0",
-    "WKN": "A113FF"
-  },
-  {
-    "Nom": "iShares MSCI India UCITS ETF USD (Acc)",
-    "ISIN": "IE00BZCQB185",
-    "Ticker": "QDV5",
-    "WKN": "A2AFCY"
-  },
-  {
-    "Nom": "Franklin FTSE India UCITS ETF",
-    "ISIN": "IE00BHZRQZ17",
-    "Ticker": "FLXI",
-    "WKN": "A2PB5W"
-  },
-  {
-    "Nom": "Invesco EQQQ Nasdaq-100 UCITS ETF Acc",
-    "ISIN": "IE00BFZXGZ54",
-    "Ticker": "EQQB",
-    "WKN": "A2N6RV"
-  },
-  {
-    "Nom": "iShares Nasdaq 100 UCITS ETF (Acc)",
-    "ISIN": "IE00B53SZB19",
-    "Ticker": "SXRV",
-    "WKN": "A0YEDL"
-  },
-  {
-    "Nom": "iShares Core EURO STOXX 50 UCITS ETF EUR (Acc)",
-    "ISIN": "IE00B53L3W79",
-    "Ticker": "SXRT",
-    "WKN": "A0YEDJ"
-  },
-  {
-    "Nom": "Xtrackers EURO STOXX 50 UCITS ETF 1C",
-    "ISIN": "LU0380865021",
-    "Ticker": "XESC",
-    "WKN": "DBX1ET"
-  },
-  {
-    "Nom": "Amundi Russell 1000 Growth UCITS ETF Acc",
-    "ISIN": "IE0005E8B9S4",
-    "Ticker": "MWOW",
-    "WKN": "ETF201"
-  },
-  {
-    "Nom": "BNP Paribas Easy EURO STOXX 50 UCITS ETF",
-    "ISIN": "FR0012739431",
-    "Ticker": "ETDD",
-    "WKN": "A14UTE"
-  },
-  {
-    "Nom": "VanEck Video Gaming and eSports UCITS ETF",
-    "ISIN": "IE00BYWQWR46",
-    "Ticker": "ESPO",
-    "WKN": "A2PLDF"
-  },
-  {
-    "Nom": "Amundi EURO STOXX 50 UCITS ETF EUR (C)",
-    "ISIN": "LU1681047236",
-    "Ticker": "C50",
-    "WKN": "A2H59L"
-  },
-  {
-    "Nom": "Amundi EURO STOXX 50 II UCITS ETF Acc",
-    "ISIN": "FR0007054358",
-    "Ticker": "MSE",
-    "WKN": "798328"
-  },
-  {
-    "Nom": "iShares Core MSCI EMU UCITS ETF USD Hedged (Acc)",
-    "ISIN": "IE00BKBF6616",
-    "Ticker": "SNAY",
-    "WKN": "A2PKUR"
-  },
-  {
-    "Nom": "Xtrackers DAX UCITS ETF 1C",
-    "ISIN": "LU0274211480",
-    "Ticker": "DBXD",
-    "WKN": "DBX1DA"
-  },
-  {
-    "Nom": "Amundi ETF DAX UCITS ETF DR",
-    "ISIN": "FR0010655712",
-    "Ticker": "CG1",
-    "WKN": "A0REJQ"
-  },
-  {
-    "Nom": "Amundi DAX III UCITS ETF Acc",
-    "ISIN": "LU0252633754",
-    "Ticker": "DAX",
-    "WKN": "LYX0AC"
-  },
-  {
-    "Nom": "Invesco Quantitative Strategies ESG Global Equity Multi-Factor UCITS ETF Acc",
-    "ISIN": "IE00BJQRDN15",
-    "Ticker": "IQSA",
-    "WKN": "A2PHJT"
-  },
-  {
-    "Nom": "iShares Core DAX\u00ae UCITS ETF (DE) EUR (Acc)",
-    "ISIN": "DE0005933931",
-    "Ticker": "EXS1",
-    "WKN": "593393"
-  },
-  {
-    "Nom": "iShares MSCI USA Screened UCITS ETF USD (Acc)",
-    "ISIN": "IE00BFNM3G45",
-    "Ticker": "SGAS",
-    "WKN": "A2N6TB"
-  },
-  {
-    "Nom": "JPMorgan US Research Enhanced Index Equity (ESG) UCITS ETF USD (acc)",
-    "ISIN": "IE00BF4G7076",
-    "Ticker": "JREU",
-    "WKN": "A2DWM7"
-  },
-  {
-    "Nom": "SPDR S&P 500 Leaders UCITS ETF USD Unhedged (Acc)",
-    "ISIN": "IE00BH4GPZ28",
-    "Ticker": "SPPY",
-    "WKN": "A2PSPE"
-  },
-  {
-    "Nom": "SPDR MSCI Europe Energy UCITS ETF",
-    "ISIN": "IE00BKWQ0F09",
-    "Ticker": "STN",
-    "WKN": "A1191P"
-  },
-  {
-    "Nom": "Amundi CAC 40 ESG UCITS ETF DR - EUR (C)",
-    "ISIN": "LU1681046931",
-    "Ticker": "C40",
-    "WKN": "A2H59J"
-  },
-  {
-    "Nom": "iShares Nasdaq 100 UCITS ETF EUR Hedged Acc",
-    "ISIN": "IE00BYVQ9F29",
-    "Ticker": "NQSE",
-    "WKN": "A2N34W"
-  },
-  {
-    "Nom": "Xtrackers MSCI USA ESG UCITS ETF 1C",
-    "ISIN": "IE00BFMNPS42",
-    "Ticker": "XZMU",
-    "WKN": "A2JHSH"
-  },
-  {
-    "Nom": "UBS S&P 500 Scored & Screened UCITS ETF USD acc",
-    "ISIN": "IE00BHXMHL11",
-    "Ticker": "4UBQ",
-    "WKN": "A2PEVA"
-  },
-  {
-    "Nom": "L&G US Equity UCITS ETF",
-    "ISIN": "IE00BFXR5Q31",
-    "Ticker": "ETLS",
-    "WKN": "A2N4RG"
-  },
-  {
-    "Nom": "iShares Core S&P 500 UCITS ETF USD (Acc)",
-    "ISIN": "IE00B5BMR087",
-    "Ticker": "SXR8",
-    "WKN": "A0YEDG"
-  },
-  {
-    "Nom": "Vanguard S&P 500 UCITS ETF (USD) Accumulating",
-    "ISIN": "IE00BFMXXD54",
-    "Ticker": "VUAA",
-    "WKN": "A2PFN2"
-  },
-  {
-    "Nom": "Xtrackers MSCI USA UCITS ETF 1C",
-    "ISIN": "IE00BJ0KDR00",
-    "Ticker": "XD9U",
-    "WKN": "A1XB5V"
-  },
-  {
-    "Nom": "Amundi MSCI USA UCITS ETF Acc",
-    "ISIN": "IE000FSN19U2",
-    "Ticker": "WEBH",
-    "WKN": "ETF154"
-  },
-  {
-    "Nom": "UBS Core MSCI USA UCITS ETF USD acc",
-    "ISIN": "IE00BD4TXS21",
-    "Ticker": "4UBB",
-    "WKN": "A2ARF7"
-  },
-  {
-    "Nom": "Vanguard FTSE North America UCITS ETF (USD) Accumulating",
-    "ISIN": "IE00BK5BQW10",
-    "Ticker": "VNRA",
-    "WKN": "A2PLBJ"
-  },
-  {
-    "Nom": "iShares MSCI USA UCITS ETF (Acc)",
-    "ISIN": "IE00B52SFT06",
-    "Ticker": "SXR4",
-    "WKN": "A0YEDU"
-  },
-  {
-    "Nom": "Amundi CAC 40 UCITS ETF Acc",
-    "ISIN": "FR0013380607",
-    "Ticker": "CACC",
-    "WKN": "LYX0ZC"
-  },
-  {
-    "Nom": "iShares Core MSCI EMU UCITS ETF EUR (Acc)",
-    "ISIN": "IE00B53QG562",
-    "Ticker": "SXR7",
-    "WKN": "A0YEDX"
-  },
-  {
-    "Nom": "Amundi MSCI EMU ESG Broad Transition UCITS ETF Acc",
-    "ISIN": "LU0908501058",
-    "Ticker": "MFED",
-    "WKN": "LYX0Q1"
-  }
+  {"name":"Amundi Euro Stoxx Banks UCITS ETF Acc","isin":"LU1829219390","ticker":"BNKE","frais":0.3},
+  {"name":"Amundi MSCI Semiconductors UCITS ETF Acc","isin":"LU1900066033","ticker":"CHIP","frais":0.35},
+  {"name":"SPDR MSCI Europe Financials UCITS ETF","isin":"IE00BKWQ0G16","ticker":"STZ","frais":0.3},
+  {"name":"iShares S&P 500 Information Technology Sector UCITS ETF USD (Acc)","isin":"IE00B3WJKG14","ticker":"QDVE","frais":0.15},
+  {"name":"iShares S&P 500 Energy Sector UCITS ETF (Acc)","isin":"IE00B42NKQ00","ticker":"QDVF","frais":0.15},
+  {"name":"Xtrackers MSCI World Financials UCITS ETF 1C","isin":"IE00BM67HL84","ticker":"XDWF","frais":0.25},
+  {"name":"Xtrackers Artificial Intelligence & Big Data UCITS ETF 1C","isin":"IE00BGV5VN51","ticker":"XAIX","frais":0.35},
+  {"name":"SPDR MSCI Europe Industrials UCITS ETF","isin":"IE00BKWQ0J47","ticker":"STQ","frais":0.3},
+  {"name":"iShares S&P 500 Financials Sector UCITS ETF (Acc)","isin":"IE00B4JNQZ49","ticker":"QDVH","frais":0.15},
+  {"name":"SPDR S&P U.S. Financials Select Sector UCITS ETF USD","isin":"IE00BWBXM500","ticker":"ZPDF","frais":0.15},
+  {"name":"Xtrackers MSCI World Information Technology UCITS ETF 1C","isin":"IE00BM67HT60","ticker":"XDWT","frais":0.25},
+  {"name":"SPDR MSCI World Technology UCITS ETF","isin":"IE00BYTRRD19","ticker":"SS47","frais":0.3},
+  {"name":"SPDR S&P U.S. Technology Select Sector UCITS ETF USD","isin":"IE00BWBXM948","ticker":"ZPDT","frais":0.15},
+  {"name":"Xtrackers MSCI World Energy UCITS ETF 1C","isin":"IE00BM67HM91","ticker":"XDW0","frais":0.25},
+  {"name":"iShares MSCI India UCITS ETF USD (Acc)","isin":"IE00BZCQB185","ticker":"QDV5","frais":0.65},
+  {"name":"Franklin FTSE India UCITS ETF","isin":"IE00BHZRQZ17","ticker":"FLXI","frais":0.19},
+  {"name":"Invesco EQQQ Nasdaq-100 UCITS ETF Acc","isin":"IE00BFZXGZ54","ticker":"EQQB","frais":0.3},
+  {"name":"iShares Nasdaq 100 UCITS ETF (Acc)","isin":"IE00B53SZB19","ticker":"SXRV","frais":0.33},
+  {"name":"iShares Core EURO STOXX 50 UCITS ETF EUR (Acc)","isin":"IE00B53L3W79","ticker":"SXRT","frais":0.1},
+  {"name":"Xtrackers EURO STOXX 50 UCITS ETF 1C","isin":"LU0380865021","ticker":"XESC","frais":0.09},
+  {"name":"Amundi Russell 1000 Growth UCITS ETF Acc","isin":"IE0005E8B9S4","ticker":"MWOW","frais":0.35},
+  {"name":"BNP Paribas Easy EURO STOXX 50 UCITS ETF","isin":"FR0012739431","ticker":"ETDD","frais":0.15},
+  {"name":"VanEck Video Gaming and eSports UCITS ETF","isin":"IE00BYWQWR46","ticker":"ESPO","frais":0.55},
+  {"name":"Amundi EURO STOXX 50 UCITS ETF EUR (C)","isin":"LU1681047236","ticker":"C50","frais":0.15},
+  {"name":"Amundi EURO STOXX 50 II UCITS ETF Acc","isin":"FR0007054358","ticker":"MSE","frais":0.15},
+  {"name":"iShares Core MSCI EMU UCITS ETF USD Hedged (Acc)","isin":"IE00BKBF6616","ticker":"SNAY","frais":0.4},
+  {"name":"Xtrackers DAX UCITS ETF 1C","isin":"LU0274211480","ticker":"DBXD","frais":0.09},
+  {"name":"Amundi ETF DAX UCITS ETF DR","isin":"FR0010655712","ticker":"CG1","frais":0.25},
+  {"name":"Amundi DAX III UCITS ETF Acc","isin":"LU0252633754","ticker":"DAX","frais":0.25},
+  {"name":"Invesco Quantitative Strategies ESG Global Equity Multi-Factor UCITS ETF Acc","isin":"IE00BJQRDN15","ticker":"IQSA","frais":0.25},
+  {"name":"iShares Core DAX® UCITS ETF (DE) EUR (Acc)","isin":"DE0005933931","ticker":"EXS1","frais":0.16},
+  {"name":"iShares MSCI USA Screened UCITS ETF USD (Acc)","isin":"IE00BFNM3G45","ticker":"SGAS","frais":0.07},
+  {"name":"JPMorgan US Research Enhanced Index Equity (ESG) UCITS ETF USD (acc)","isin":"IE00BF4G7076","ticker":"JREU","frais":0.25},
+  {"name":"SPDR S&P 500 Leaders UCITS ETF USD Unhedged (Acc)","isin":"IE00BH4GPZ28","ticker":"SPPY","frais":0.15},
+  {"name":"SPDR MSCI Europe Energy UCITS ETF","isin":"IE00BKWQ0F09","ticker":"STN","frais":0.3},
+  {"name":"Amundi CAC 40 ESG UCITS ETF DR - EUR (C)","isin":"LU1681046931","ticker":"C40","frais":0.18},
+  {"name":"iShares Nasdaq 100 UCITS ETF EUR Hedged Acc","isin":"IE00BYVQ9F29","ticker":"NQSE","frais":0.4},
+  {"name":"Xtrackers MSCI USA ESG UCITS ETF 1C","isin":"IE00BFMNPS42","ticker":"XZMU","frais":0.15},
+  {"name":"UBS S&P 500 Scored & Screened UCITS ETF USD acc","isin":"IE00BHXMHL11","ticker":"4UBQ","frais":0.1},
+  {"name":"L&G US Equity UCITS ETF","isin":"IE00BFXR5Q31","ticker":"ETLS","frais":0.1},
+  {"name":"iShares Core S&P 500 UCITS ETF USD (Acc)","isin":"IE00B5BMR087","ticker":"SXR8","frais":0.07},
+  {"name":"Vanguard S&P 500 UCITS ETF (USD) Accumulating","isin":"IE00BFMXXD54","ticker":"VUAA","frais":0.07},
+  {"name":"Xtrackers MSCI USA UCITS ETF 1C","isin":"IE00BJ0KDR00","ticker":"XD9U","frais":0.12},
+  {"name":"Amundi MSCI USA UCITS ETF Acc","isin":"IE000FSN19U2","ticker":"WEBH","frais":0.35},
+  {"name":"UBS Core MSCI USA UCITS ETF USD acc","isin":"IE00BD4TXS21","ticker":"4UBB","frais":0.1},
+  {"name":"Vanguard FTSE North America UCITS ETF (USD) Accumulating","isin":"IE00BK5BQW10","ticker":"VNRA","frais":0.1},
+  {"name":"iShares MSCI USA UCITS ETF (Acc)","isin":"IE00B52SFT06","ticker":"SXR4","frais":0.33}
 ]
