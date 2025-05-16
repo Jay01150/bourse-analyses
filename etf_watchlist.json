@@ -1,296 +1,1374 @@
 [
   {
-    "name": "WisdomTree Physical Bitcoin",
-    "isin": "GB00BJYDH287",
-    "ticker": "WBTC",
-    "frais": 0.15
-  },
-  {
-    "name": "21Shares Bitcoin ETP",
-    "isin": "CH0454664001",
-    "ticker": "ABTC",
-    "frais": 0.5
-  },
-  {
-    "name": "Amundi Euro Stoxx Banks UCITS ETF Acc",
-    "isin": "LU1829219390",
-    "ticker": "BNKE",
-    "frais": 0.25
-  },
-  {
     "name": "Amundi MSCI Semiconductors UCITS ETF Acc",
     "isin": "LU1900066033",
     "ticker": "CHIP",
-    "frais": 0.15
+    "wkn": "LYX018",
+    "frais": null
   },
   {
     "name": "SPDR MSCI Europe Financials UCITS ETF",
     "isin": "IE00BKWQ0G16",
     "ticker": "STZ",
-    "frais": 0.1
+    "wkn": "A1191R",
+    "frais": null
   },
   {
     "name": "iShares S&P 500 Information Technology Sector UCITS ETF USD (Acc)",
     "isin": "IE00B3WJKG14",
     "ticker": "QDVE",
-    "frais": 0.1
+    "wkn": "A142N1",
+    "frais": null
   },
   {
     "name": "iShares S&P 500 Energy Sector UCITS ETF (Acc)",
     "isin": "IE00B42NKQ00",
     "ticker": "QDVF",
-    "frais": 0.07
+    "wkn": "A142NX",
+    "frais": null
   },
   {
     "name": "Xtrackers MSCI World Financials UCITS ETF 1C",
     "isin": "IE00BM67HL84",
     "ticker": "XDWF",
-    "frais": 0.3
+    "wkn": "A113FE",
+    "frais": null
   },
   {
     "name": "Xtrackers Artificial Intelligence & Big Data UCITS ETF 1C",
     "isin": "IE00BGV5VN51",
     "ticker": "XAIX",
-    "frais": 0.25
+    "wkn": "A2N6LC",
+    "frais": null
   },
   {
     "name": "SPDR MSCI Europe Industrials UCITS ETF",
     "isin": "IE00BKWQ0J47",
     "ticker": "STQ",
-    "frais": 0.25
+    "wkn": "A1191T",
+    "frais": null
   },
   {
     "name": "iShares S&P 500 Financials Sector UCITS ETF (Acc)",
     "isin": "IE00B4JNQZ49",
     "ticker": "QDVH",
-    "frais": 0.07
+    "wkn": "A142NY",
+    "frais": null
   },
   {
     "name": "SPDR S&P U.S. Financials Select Sector UCITS ETF USD",
     "isin": "IE00BWBXM500",
     "ticker": "ZPDF",
-    "frais": 0.5
+    "wkn": "A14QB1",
+    "frais": null
   },
   {
     "name": "Xtrackers MSCI World Information Technology UCITS ETF 1C",
     "isin": "IE00BM67HT60",
     "ticker": "XDWT",
-    "frais": 0.3
+    "wkn": "A113FM",
+    "frais": null
   },
   {
     "name": "SPDR MSCI World Technology UCITS ETF",
     "isin": "IE00BYTRRD19",
     "ticker": "SS47",
-    "frais": 0.1
+    "wkn": "A2AE57",
+    "frais": null
   },
   {
     "name": "SPDR S&P U.S. Technology Select Sector UCITS ETF USD",
     "isin": "IE00BWBXM948",
     "ticker": "ZPDT",
-    "frais": 0.1
+    "wkn": "A14QB5",
+    "frais": null
   },
   {
     "name": "Xtrackers MSCI World Energy UCITS ETF 1C",
     "isin": "IE00BM67HM91",
     "ticker": "XDW0",
-    "frais": 0.1
+    "wkn": "A113FF",
+    "frais": null
   },
   {
     "name": "iShares MSCI India UCITS ETF USD (Acc)",
     "isin": "IE00BZCQB185",
     "ticker": "QDV5",
-    "frais": 0.1
+    "wkn": "A2AFCY",
+    "frais": null
   },
   {
     "name": "Franklin FTSE India UCITS ETF",
     "isin": "IE00BHZRQZ17",
     "ticker": "FLXI",
-    "frais": 0.15
+    "wkn": "A2PB5W",
+    "frais": null
   },
   {
     "name": "Invesco EQQQ Nasdaq-100 UCITS ETF Acc",
     "isin": "IE00BFZXGZ54",
     "ticker": "EQQB",
-    "frais": 0.15
+    "wkn": "A2N6RV",
+    "frais": null
   },
   {
     "name": "iShares Nasdaq 100 UCITS ETF (Acc)",
     "isin": "IE00B53SZB19",
     "ticker": "SXRV",
-    "frais": 0.1
+    "wkn": "A0YEDL",
+    "frais": null
   },
   {
     "name": "iShares Core EURO STOXX 50 UCITS ETF EUR (Acc)",
     "isin": "IE00B53L3W79",
     "ticker": "SXRT",
-    "frais": 0.25
+    "wkn": "A0YEDJ",
+    "frais": null
   },
   {
     "name": "Xtrackers EURO STOXX 50 UCITS ETF 1C",
     "isin": "LU0380865021",
     "ticker": "XESC",
-    "frais": 0.07
+    "wkn": "DBX1ET",
+    "frais": null
   },
   {
     "name": "Amundi Russell 1000 Growth UCITS ETF Acc",
     "isin": "IE0005E8B9S4",
     "ticker": "MWOW",
-    "frais": 0.1
+    "wkn": "ETF201",
+    "frais": null
   },
   {
     "name": "BNP Paribas Easy EURO STOXX 50 UCITS ETF",
     "isin": "FR0012739431",
     "ticker": "ETDD",
-    "frais": 0.15
+    "wkn": "A14UTE",
+    "frais": null
   },
   {
     "name": "VanEck Video Gaming and eSports UCITS ETF",
     "isin": "IE00BYWQWR46",
     "ticker": "ESPO",
-    "frais": 0.15
+    "wkn": "A2PLDF",
+    "frais": null
   },
   {
     "name": "Amundi EURO STOXX 50 UCITS ETF EUR (C)",
     "isin": "LU1681047236",
     "ticker": "C50",
-    "frais": 0.25
+    "wkn": "A2H59L",
+    "frais": null
   },
   {
     "name": "Amundi EURO STOXX 50 II UCITS ETF Acc",
     "isin": "FR0007054358",
     "ticker": "MSE",
-    "frais": 0.1
+    "wkn": 798328,
+    "frais": null
   },
   {
     "name": "iShares Core MSCI EMU UCITS ETF USD Hedged (Acc)",
     "isin": "IE00BKBF6616",
     "ticker": "SNAY",
-    "frais": 0.15
+    "wkn": "A2PKUR",
+    "frais": null
   },
   {
     "name": "Xtrackers DAX UCITS ETF 1C",
     "isin": "LU0274211480",
     "ticker": "DBXD",
-    "frais": 0.15
+    "wkn": "DBX1DA",
+    "frais": null
   },
   {
     "name": "Amundi ETF DAX UCITS ETF DR",
     "isin": "FR0010655712",
     "ticker": "CG1",
-    "frais": 0.07
+    "wkn": "A0REJQ",
+    "frais": null
   },
   {
     "name": "Amundi DAX III UCITS ETF Acc",
     "isin": "LU0252633754",
     "ticker": "DAX",
-    "frais": 0.25
+    "wkn": "LYX0AC",
+    "frais": null
   },
   {
     "name": "Invesco Quantitative Strategies ESG Global Equity Multi-Factor UCITS ETF Acc",
     "isin": "IE00BJQRDN15",
     "ticker": "IQSA",
-    "frais": 0.1
+    "wkn": "A2PHJT",
+    "frais": null
   },
   {
-    "name": "iShares Core DAX\u00ae UCITS ETF (DE) EUR (Acc)",
+    "name": "iShares Core DAX® UCITS ETF (DE) EUR (Acc)",
     "isin": "DE0005933931",
     "ticker": "EXS1",
-    "frais": 0.07
+    "wkn": 593393,
+    "frais": null
   },
   {
     "name": "iShares MSCI USA Screened UCITS ETF USD (Acc)",
     "isin": "IE00BFNM3G45",
     "ticker": "SGAS",
-    "frais": 0.4
+    "wkn": "A2N6TB",
+    "frais": null
   },
   {
     "name": "JPMorgan US Research Enhanced Index Equity (ESG) UCITS ETF USD (acc)",
     "isin": "IE00BF4G7076",
     "ticker": "JREU",
-    "frais": 0.5
+    "wkn": "A2DWM7",
+    "frais": null
   },
   {
     "name": "SPDR S&P 500 Leaders UCITS ETF USD Unhedged (Acc)",
     "isin": "IE00BH4GPZ28",
     "ticker": "SPPY",
-    "frais": 0.3
+    "wkn": "A2PSPE",
+    "frais": null
   },
   {
     "name": "SPDR MSCI Europe Energy UCITS ETF",
     "isin": "IE00BKWQ0F09",
     "ticker": "STN",
-    "frais": 0.1
+    "wkn": "A1191P",
+    "frais": null
   },
   {
     "name": "Amundi CAC 40 ESG UCITS ETF DR - EUR (C)",
     "isin": "LU1681046931",
     "ticker": "C40",
-    "frais": 0.07
+    "wkn": "A2H59J",
+    "frais": null
   },
   {
     "name": "iShares Nasdaq 100 UCITS ETF EUR Hedged Acc",
     "isin": "IE00BYVQ9F29",
     "ticker": "NQSE",
-    "frais": 0.25
+    "wkn": "A2N34W",
+    "frais": null
   },
   {
     "name": "Xtrackers MSCI USA ESG UCITS ETF 1C",
     "isin": "IE00BFMNPS42",
     "ticker": "XZMU",
-    "frais": 0.15
+    "wkn": "A2JHSH",
+    "frais": null
   },
   {
     "name": "UBS S&P 500 Scored & Screened UCITS ETF USD acc",
     "isin": "IE00BHXMHL11",
     "ticker": "4UBQ",
-    "frais": 0.07
+    "wkn": "A2PEVA",
+    "frais": null
   },
   {
     "name": "L&G US Equity UCITS ETF",
     "isin": "IE00BFXR5Q31",
     "ticker": "ETLS",
-    "frais": 0.15
+    "wkn": "A2N4RG",
+    "frais": null
   },
   {
     "name": "iShares Core S&P 500 UCITS ETF USD (Acc)",
     "isin": "IE00B5BMR087",
     "ticker": "SXR8",
-    "frais": 0.07
+    "wkn": "A0YEDG",
+    "frais": null
   },
   {
     "name": "Vanguard S&P 500 UCITS ETF (USD) Accumulating",
     "isin": "IE00BFMXXD54",
     "ticker": "VUAA",
-    "frais": 0.4
+    "wkn": "A2PFN2",
+    "frais": null
   },
   {
     "name": "Xtrackers MSCI USA UCITS ETF 1C",
     "isin": "IE00BJ0KDR00",
     "ticker": "XD9U",
-    "frais": 0.1
+    "wkn": "A1XB5V",
+    "frais": null
   },
   {
     "name": "Amundi MSCI USA UCITS ETF Acc",
     "isin": "IE000FSN19U2",
     "ticker": "WEBH",
-    "frais": 0.25
+    "wkn": "ETF154",
+    "frais": null
   },
   {
     "name": "UBS Core MSCI USA UCITS ETF USD acc",
     "isin": "IE00BD4TXS21",
     "ticker": "4UBB",
-    "frais": 0.1
+    "wkn": "A2ARF7",
+    "frais": null
   },
   {
     "name": "Vanguard FTSE North America UCITS ETF (USD) Accumulating",
     "isin": "IE00BK5BQW10",
     "ticker": "VNRA",
-    "frais": 0.15
+    "wkn": "A2PLBJ",
+    "frais": null
   },
   {
     "name": "iShares MSCI USA UCITS ETF (Acc)",
     "isin": "IE00B52SFT06",
     "ticker": "SXR4",
-    "frais": 0.15
+    "wkn": "A0YEDU",
+    "frais": null
+  },
+  {
+    "name": "Amundi CAC 40 UCITS ETF Acc",
+    "isin": "FR0013380607",
+    "ticker": "CACC",
+    "wkn": "LYX0ZC",
+    "frais": null
+  },
+  {
+    "name": "iShares Core MSCI EMU UCITS ETF EUR (Acc)",
+    "isin": "IE00B53QG562",
+    "ticker": "SXR7",
+    "wkn": "A0YEDX",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI EMU ESG Broad Transition UCITS ETF Acc",
+    "isin": "LU0908501058",
+    "ticker": "MFED",
+    "wkn": "LYX0Q1",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy MSCI EMU ESG Filtered Min TE UCITS ETF",
+    "isin": "LU1291098827",
+    "ticker": "EEMU",
+    "wkn": "A2AL1W",
+    "frais": null
+  },
+  {
+    "name": "JPMorgan Global Research Enhanced Index Equity (ESG) UCITS ETF USD (acc)",
+    "isin": "IE00BF4G6Y48",
+    "ticker": "JREG",
+    "wkn": "A2DWM6",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI North America ESG Broad Transition UCITS ETF Acc",
+    "isin": "IE000MYCJA42",
+    "ticker": "NRAM",
+    "wkn": "ETF132",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy MSCI North America ESG Filtered Min TE UCITS ETF",
+    "isin": "LU1291104575",
+    "ticker": "ENAM",
+    "wkn": "A2ADB1",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI USA ESG Enhanced CTB UCITS ETF USD (Acc)",
+    "isin": "IE00BHZPJ908",
+    "ticker": "EDMU",
+    "wkn": "A2PCB3",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers S&P 500 Equal Weight UCITS ETF 1C",
+    "isin": "IE00BLNMYC90",
+    "ticker": "XDEW",
+    "wkn": "A1106A",
+    "frais": null
+  },
+  {
+    "name": "iShares Edge MSCI USA Quality Factor UCITS ETF",
+    "isin": "IE00BD1F4L37",
+    "ticker": "QDVB",
+    "wkn": "A2AP34",
+    "frais": null
+  },
+  {
+    "name": "L&G Global Equity UCITS ETF",
+    "isin": "IE00BFXR5S54",
+    "ticker": "ETLQ",
+    "wkn": "A2N4PQ",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI Canada Screened UCITS ETF 1C",
+    "isin": "LU0476289540",
+    "ticker": "D5BH",
+    "wkn": "DBX0ET",
+    "frais": null
+  },
+  {
+    "name": "L&G Artificial Intelligence UCITS ETF",
+    "isin": "IE00BK5BCD43",
+    "ticker": "XMLD",
+    "wkn": "A2PM50",
+    "frais": null
+  },
+  {
+    "name": "UBS Core MSCI World UCITS ETF USD acc",
+    "isin": "IE00BD4TXV59",
+    "ticker": "UETW",
+    "wkn": "A2PK5J",
+    "frais": null
+  },
+  {
+    "name": "UBS S&P 500 Scored & Screened UCITS ETF hEUR acc",
+    "isin": "IE00BHXMHQ65",
+    "ticker": "S5SG",
+    "wkn": "A2PEJ2",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World ESG UCITS ETF 1C",
+    "isin": "IE00BZ02LR44",
+    "ticker": "XZW0",
+    "wkn": "A2AQST",
+    "frais": null
+  },
+  {
+    "name": "SPDR S&P 500 EUR Hedged UCITS ETF",
+    "isin": "IE00BYYW2V44",
+    "ticker": "SPPE",
+    "wkn": "A2AGXP",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI USA SRI UCITS ETF USD (Acc)",
+    "isin": "IE00BYVJRR92",
+    "ticker": "QDVR",
+    "wkn": "A2AFC0",
+    "frais": null
+  },
+  {
+    "name": "iShares S&P 500 EUR Hedged UCITS ETF (Acc)",
+    "isin": "IE00B3ZW0K18",
+    "ticker": "IBCF",
+    "wkn": "A1C5E9",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Artificial Intelligence UCITS ETF USD Acc",
+    "isin": "IE00BDVPNG13",
+    "ticker": "WTAI",
+    "wkn": "A2N7KX",
+    "frais": null
+  },
+  {
+    "name": "SPDR S&P 400 US Mid Cap UCITS ETF",
+    "isin": "IE00B4YBJ215",
+    "ticker": "SPY4",
+    "wkn": "A1JSHV",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI Canada UCITS ETF (Acc)",
+    "isin": "IE00B52SF786",
+    "ticker": "SXR2",
+    "wkn": "A0YEDS",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Robotics & AI UCITS ETF Acc",
+    "isin": "LU1861132840",
+    "ticker": "GOAI",
+    "wkn": "A2JSC9",
+    "frais": null
+  },
+  {
+    "name": "Vanguard FTSE Developed Europe UCITS ETF (EUR) Accumulating",
+    "isin": "IE00BK5BQX27",
+    "ticker": "VWCG",
+    "wkn": "A2PLBK",
+    "frais": null
+  },
+  {
+    "name": "Vanguard FTSE Developed Europe ex UK UCITS ETF (EUR) Accumulating",
+    "isin": "IE00BK5BQY34",
+    "ticker": "VERE",
+    "wkn": "A2PLBL",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI EMU ESG Leaders Select UCITS ETF DR EUR (C)",
+    "isin": "LU1602144575",
+    "ticker": "CMU",
+    "wkn": "A2DR4R",
+    "frais": null
+  },
+  {
+    "name": "JPMorgan Europe Research Enhanced Index Equity (ESG) UCITS ETF EUR (acc)",
+    "isin": "IE00BF4G7183",
+    "ticker": "JREE",
+    "wkn": "A2DWM4",
+    "frais": null
+  },
+  {
+    "name": "Amundi Index ETF MSCI Europe UCITS ETF DR (C)",
+    "isin": "LU1437015735",
+    "ticker": "CEU2",
+    "wkn": "A2ATYJ",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI Europe UCITS ETF 1C",
+    "isin": "LU0274209237",
+    "ticker": "XMEU",
+    "wkn": "DBX1ME",
+    "frais": null
+  },
+  {
+    "name": "Amundi Stoxx Europe 600 UCITS ETF Acc",
+    "isin": "LU0908500753",
+    "ticker": "MEUD",
+    "wkn": "LYX0Q0",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Europe II UCITS ETF Acc",
+    "isin": "FR0010261198",
+    "ticker": "MEU",
+    "wkn": "A0JDGC",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers STOXX Europe 600 UCITS ETF 1C",
+    "isin": "LU0328475792",
+    "ticker": "XSX6",
+    "wkn": "DBX1A7",
+    "frais": null
+  },
+  {
+    "name": "iShares Dow Jones Global Leaders Screened UCITS ETF USD (Acc)",
+    "isin": "IE00B57X3V84",
+    "ticker": "IUSL",
+    "wkn": "A1H7ZT",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World Momentum UCITS ETF 1C",
+    "isin": "IE00BL25JP72",
+    "ticker": "XDEM",
+    "wkn": "A1103G",
+    "frais": null
+  },
+  {
+    "name": "UBS MSCI United Kingdom UCITS ETF GBP acc",
+    "isin": "LU0950670850",
+    "ticker": "UC64",
+    "wkn": "A1W3AB",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World Quality UCITS ETF 1C",
+    "isin": "IE00BL25JL35",
+    "ticker": "XDEQ",
+    "wkn": "A1103D",
+    "frais": null
+  },
+  {
+    "name": "UBS MSCI ACWI Socially Responsible UCITS ETF USD acc",
+    "isin": "IE00BDR55471",
+    "ticker": "AW1P",
+    "wkn": "A2PL58",
+    "frais": null
+  },
+  {
+    "name": "UBS MSCI World Socially Responsible UCITS ETF USD acc",
+    "isin": "IE00BK72HJ67",
+    "ticker": "4UBH",
+    "wkn": "A2PZBJ",
+    "frais": null
+  },
+  {
+    "name": "Amundi STOXX Europe 600 ESG UCITS ETF DR EUR (C)",
+    "isin": "LU1681040223",
+    "ticker": "C6E",
+    "wkn": "A2H57X",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World Value UCITS ETF 1C",
+    "isin": "IE00BL25JM42",
+    "ticker": "XDEV",
+    "wkn": "A1103E",
+    "frais": null
+  },
+  {
+    "name": "Vanguard FTSE 100 UCITS ETF (GBP) Accumulating",
+    "isin": "IE00BFMXYP42",
+    "ticker": "VUKG",
+    "wkn": "A2PFN4",
+    "frais": null
+  },
+  {
+    "name": "iShares Core FTSE 100 UCITS ETF GBP (Acc)",
+    "isin": "IE00B53HP851",
+    "ticker": "SXRW",
+    "wkn": "A0YEDM",
+    "frais": null
+  },
+  {
+    "name": "iShares S&P 500 Consumer Discretionary Sector UCITS ETF (Acc)",
+    "isin": "IE00B4MCHD36",
+    "ticker": "QDVK",
+    "wkn": "A142NV",
+    "frais": null
+  },
+  {
+    "name": "UBS MSCI World Socially Responsible UCITS ETF USD acc",
+    "isin": "LU0950674332",
+    "ticker": "SEAC",
+    "wkn": "A1W3CQ",
+    "frais": null
+  },
+  {
+    "name": "iShares Physical Silver ETC",
+    "isin": "IE00B4NCWG09",
+    "ticker": "PPFD",
+    "wkn": "A1KWPR",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy MSCI Europe ESG Filtered Min TE UCITS ETF",
+    "isin": "LU1291099718",
+    "ticker": "EEUE",
+    "wkn": "A2AL1V",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Europe ESG Broad Transition UCITS ETF - EUR (C)",
+    "isin": "LU1681042609",
+    "ticker": "CEU",
+    "wkn": "A2H567",
+    "frais": null
+  },
+  {
+    "name": "L&G Europe ESG Exclusions Paris Aligned UCITS ETF EUR Accumulating",
+    "isin": "IE00BKLTRN76",
+    "ticker": "DELF",
+    "wkn": "A2PRHB",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI World SRI UCITS ETF EUR (Acc)",
+    "isin": "IE00BYX2JD69",
+    "ticker": "2B7K",
+    "wkn": "A2DVB9",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI Europe ESG UCITS ETF 1C",
+    "isin": "IE00BFMNHK08",
+    "ticker": "XZEU",
+    "wkn": "A2JHSG",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Physical Silver",
+    "isin": "JE00B1VS3333",
+    "ticker": "PHAG",
+    "wkn": "A0N6XJ",
+    "frais": null
+  },
+  {
+    "name": "UBS MSCI ACWI Socially Responsible UCITS ETF hEUR acc",
+    "isin": "IE00BDR55927",
+    "ticker": "AW1R",
+    "wkn": "A2H5CB",
+    "frais": null
+  },
+  {
+    "name": "iShares Dow Jones Industrial Average UCITS ETF (Acc)",
+    "isin": "IE00B53L4350",
+    "ticker": "SXRU",
+    "wkn": "A0YEDK",
+    "frais": null
+  },
+  {
+    "name": "iShares Edge MSCI USA Momentum Factor UCITS ETF",
+    "isin": "IE00BD1F4N50",
+    "ticker": "QDVA",
+    "wkn": "A2AP36",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI USA SRI Climate Paris Aligned UCITS ETF Acc",
+    "isin": "IE000R85HL30",
+    "ticker": "USRI",
+    "wkn": "ETF134",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Physical Gold - GBP Daily Hedged",
+    "isin": "JE00B7VG2M16",
+    "ticker": "GBSP",
+    "wkn": "A2BGRJ",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Europe ESG Leaders UCITS ETF Acc",
+    "isin": "LU1940199711",
+    "ticker": "ESGE",
+    "wkn": "LYX99A",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy MSCI World SRI S-Series PAB 5% Capped UCITS ETF EUR Acc",
+    "isin": "LU1615092217",
+    "ticker": "EMWE",
+    "wkn": "A2DVEZ",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Physical Swiss Gold",
+    "isin": "JE00B588CD74",
+    "ticker": "GZUR",
+    "wkn": "A1DCTK",
+    "frais": null
+  },
+  {
+    "name": "Amundi Physical Gold ETC (C)",
+    "isin": "FR0013416716",
+    "ticker": "GOLD",
+    "wkn": "A2UJK0",
+    "frais": null
+  },
+  {
+    "name": "iShares Edge MSCI USA Value Factor UCITS ETF",
+    "isin": "IE00BD1F4M44",
+    "ticker": "QDVI",
+    "wkn": "A2AP35",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI Brazil UCITS ETF (DE) USD (Acc)",
+    "isin": "DE000A0Q4R85",
+    "ticker": "4BRZ",
+    "wkn": "A0Q4R8",
+    "frais": null
+  },
+  {
+    "name": "L&G Cyber Security UCITS ETF",
+    "isin": "IE00BYPLS672",
+    "ticker": "USPY",
+    "wkn": "A14WU5",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers Physical Gold ETC (EUR)",
+    "isin": "DE000A1E0HR8",
+    "ticker": "XAD5",
+    "wkn": "A1E0HR",
+    "frais": null
+  },
+  {
+    "name": "Invesco Physical Gold A",
+    "isin": "IE00B579F325",
+    "ticker": "8PSG",
+    "wkn": "A1AA5X",
+    "frais": null
+  },
+  {
+    "name": "iShares Physical Gold ETC",
+    "isin": "IE00B4ND3602",
+    "ticker": "PPFB",
+    "wkn": "A1KWPQ",
+    "frais": null
+  },
+  {
+    "name": "HANetf The Royal Mint Responsibly Sourced Physical Gold ETC",
+    "isin": "XS2115336336",
+    "ticker": "RMAU",
+    "wkn": "A279KU",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Physical Gold",
+    "isin": "JE00B1VS3770",
+    "ticker": "PHAU",
+    "wkn": "A0N6XK",
+    "frais": null
+  },
+  {
+    "name": "Gold Bullion Securities",
+    "isin": "GB00B00FHZ82",
+    "ticker": "GBS",
+    "wkn": "A0CANA",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Europe SRI Climate Paris Aligned UCITS ETF DR (C)",
+    "isin": "LU1861137484",
+    "ticker": "EUSRI",
+    "wkn": "A2JSDC",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI Europe SRI UCITS ETF (Acc)",
+    "isin": "IE00B52VJ196",
+    "ticker": "IUSK",
+    "wkn": "A1H7ZS",
+    "frais": null
+  },
+  {
+    "name": "VanEck S&P Global Mining UCITS ETF A",
+    "isin": "IE00BDFBTQ78",
+    "ticker": "GDIG",
+    "wkn": "A2JDEJ",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy Low Carbon 100 Europe PAB UCITS ETF",
+    "isin": "LU1377382368",
+    "ticker": "ECN",
+    "wkn": "A2DPX9",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers Russell 2000 UCITS ETF 1C",
+    "isin": "IE00BJZ2DD79",
+    "ticker": "XRS2",
+    "wkn": "A1XEJT",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Physical Gold - EUR Daily Hedged",
+    "isin": "JE00B8DFY052",
+    "ticker": "GBSE",
+    "wkn": "A1RX98",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers Physical Gold EUR Hedged ETC",
+    "isin": "DE000A1EK0G3",
+    "ticker": "XAD1",
+    "wkn": "A1EK0G",
+    "frais": null
+  },
+  {
+    "name": "iShares S&P 500 Utilities Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B4KBBD01",
+    "ticker": "2B7A",
+    "wkn": "A142N3",
+    "frais": null
+  },
+  {
+    "name": "Vanguard FTSE 250 UCITS ETF (GBP) Accumulating",
+    "isin": "IE00BFMXVQ44",
+    "ticker": "VMIG",
+    "wkn": "A2PFN5",
+    "frais": null
+  },
+  {
+    "name": "iShares Core MSCI Pacific ex Japan UCITS ETF (Acc)",
+    "isin": "IE00B52MJY50",
+    "ticker": "SXR1",
+    "wkn": "A0YEDR",
+    "frais": null
+  },
+  {
+    "name": "L&G Asia Pacific ex Japan Equity UCITS ETF",
+    "isin": "IE00BFXR5W90",
+    "ticker": "ETLK",
+    "wkn": "A2N4PT",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy MSCI Japan ESG Filtered Min TE UCITS ETF",
+    "isin": "LU1291102447",
+    "ticker": "EJAP",
+    "wkn": "A2ADB6",
+    "frais": null
+  },
+  {
+    "name": "L&G Japan Equity UCITS ETF",
+    "isin": "IE00BFXR5T61",
+    "ticker": "ETLR",
+    "wkn": "A2N4PR",
+    "frais": null
+  },
+  {
+    "name": "UBS MSCI Switzerland 20/35 UCITS ETF CHF acc",
+    "isin": "LU0977261329",
+    "ticker": "FRCF",
+    "wkn": "A1W6DC",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI Japan UCITS ETF 1C",
+    "isin": "LU0274209740",
+    "ticker": "DBXJ",
+    "wkn": "DBX1MJ",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Japan UCITS ETF Acc",
+    "isin": "LU1781541252",
+    "ticker": "LCUJ",
+    "wkn": "LYX0YC",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers Swiss Large Cap UCITS ETF 1C",
+    "isin": "LU0943504760",
+    "ticker": "XSMC",
+    "wkn": "DBX0NU",
+    "frais": null
+  },
+  {
+    "name": "Vanguard FTSE Japan UCITS ETF Accumulating",
+    "isin": "IE00BFMXYX26",
+    "ticker": "VJPA",
+    "wkn": "A2PLS8",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World Minimum Volatility UCITS ETF 1C",
+    "isin": "IE00BL25JN58",
+    "ticker": "XDEB",
+    "wkn": "A1103F",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI Japan UCITS ETF USD (Acc)",
+    "isin": "IE00B53QDK08",
+    "ticker": "SXR5",
+    "wkn": "A0YEDV",
+    "frais": null
+  },
+  {
+    "name": "Vanguard FTSE Emerging Markets UCITS ETF Acc",
+    "isin": "IE00BK5BR733",
+    "ticker": "VFEA",
+    "wkn": "A2PLTC",
+    "frais": null
+  },
+  {
+    "name": "iShares Core MSCI Emerging Markets IMI UCITS ETF (Acc)",
+    "isin": "IE00BKM4GZ66",
+    "ticker": "IS3N",
+    "wkn": "A111X9",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI EM IMI Screened UCITS ETF USD (Acc)",
+    "isin": "IE00BFNM3P36",
+    "ticker": "AYEM",
+    "wkn": "A2N6TH",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World Consumer Staples UCITS ETF 1C",
+    "isin": "IE00BM67HN09",
+    "ticker": "XDWS",
+    "wkn": "A113FG",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI EM SRI UCITS ETF",
+    "isin": "IE00BYVJRP78",
+    "ticker": "QDVS",
+    "wkn": "A2AFCZ",
+    "frais": null
+  },
+  {
+    "name": "L&G ROBO Global Robotics and Automation UCITS ETF",
+    "isin": "IE00BMW3QX54",
+    "ticker": "IROB",
+    "wkn": "A12DB1",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI EM UCITS ETF (Acc)",
+    "isin": "IE00B4L5YC18",
+    "ticker": "EUNM",
+    "wkn": "A0RPWJ",
+    "frais": null
+  },
+  {
+    "name": "SPDR MSCI Emerging Markets UCITS ETF",
+    "isin": "IE00B469F816",
+    "ticker": "EMRG",
+    "wkn": "A1JJTE",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Emerging Markets SRI Climate Paris Aligned UCITS ETF DR (C)",
+    "isin": "LU1861138961",
+    "ticker": "EMSRI",
+    "wkn": "A2JSDD",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI EM ESG Enhanced CTB UCITS ETF USD (Acc)",
+    "isin": "IE00BHZPJ239",
+    "ticker": "EDM2",
+    "wkn": "A2PCB0",
+    "frais": null
+  },
+  {
+    "name": "JPMorgan Global Emerging Markets Research Enhanced Index Equity (ESG) UCITS ETF USD (acc)",
+    "isin": "IE00BF4G6Z54",
+    "ticker": "JREM",
+    "wkn": "A2DWM5",
+    "frais": null
+  },
+  {
+    "name": "Amundi Index MSCI Emerging Markets UCITS ETF DR (C)",
+    "isin": "LU1437017350",
+    "ticker": "AEME",
+    "wkn": "A2ATYY",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI Japan ESG UCITS ETF 1C",
+    "isin": "IE00BG36TC12",
+    "ticker": "XZMJ",
+    "wkn": "A2JHSE",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy MSCI Emerging ESG Filtered Min TE UCITS ETF",
+    "isin": "LU1291097779",
+    "ticker": "EEMK",
+    "wkn": "A2AL1R",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI EM Asia UCITS ETF (Acc)",
+    "isin": "IE00B5L8K969",
+    "ticker": "CEBL",
+    "wkn": "A1C1H5",
+    "frais": null
+  },
+  {
+    "name": "SPDR MSCI EM Asia UCITS ETF",
+    "isin": "IE00B466KX20",
+    "ticker": "SPYA",
+    "wkn": "A1JJTG",
+    "frais": null
+  },
+  {
+    "name": "VanEck Junior Gold Miners UCITS",
+    "isin": "IE00BQQP9G91",
+    "ticker": "GDXJ",
+    "wkn": "A12CCM",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI Japan SRI UCITS ETF USD (Acc)",
+    "isin": "IE00BYX8XC17",
+    "ticker": "SXR6",
+    "wkn": "A2AUE9",
+    "frais": null
+  },
+  {
+    "name": "iShares S&P 500 Health Care Sector UCITS ETF (Acc)",
+    "isin": "IE00B43HR379",
+    "ticker": "QDVG",
+    "wkn": "A142NZ",
+    "frais": null
+  },
+  {
+    "name": "iShares Gold Producers UCITS ETF",
+    "isin": "IE00B6R52036",
+    "ticker": "IS0E",
+    "wkn": "A1JKQJ",
+    "frais": null
+  },
+  {
+    "name": "VanEck Gold Miners UCITS ETF",
+    "isin": "IE00BQQP9F84",
+    "ticker": "GDX",
+    "wkn": "A12CCL",
+    "frais": null
+  },
+  {
+    "name": "iShares TecDAX UCITS ETF (DE)",
+    "isin": "DE0005933972",
+    "ticker": "EXS2",
+    "wkn": 593397,
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI World Health Care UCITS ETF 1C",
+    "isin": "IE00BM67HK77",
+    "ticker": "XDWH",
+    "wkn": "A113FD",
+    "frais": null
+  },
+  {
+    "name": "Franklin FTSE Korea UCITS ETF",
+    "isin": "IE00BHZRR030",
+    "ticker": "FLXK",
+    "wkn": "A2PB5X",
+    "frais": null
+  },
+  {
+    "name": "iShares MDAX UCITS ETF (DE)",
+    "isin": "DE0005933923",
+    "ticker": "EXS3",
+    "wkn": 593392,
+    "frais": null
+  },
+  {
+    "name": "Invesco AT1 Capital Bond UCITS ETF Acc",
+    "isin": "IE00BFZPF322",
+    "ticker": "AT1",
+    "wkn": "A2JK9X",
+    "frais": null
+  },
+  {
+    "name": "SPDR MSCI Europe Health Care UCITS ETF",
+    "isin": "IE00BKWQ0H23",
+    "ticker": "STW",
+    "wkn": "A1191S",
+    "frais": null
+  },
+  {
+    "name": "WisdomTree Physical Platinum",
+    "isin": "JE00B1VS2W53",
+    "ticker": "PHPT",
+    "wkn": "A0N6XG",
+    "frais": null
+  },
+  {
+    "name": "Amundi Euro Government Inflation-Linked Bond UCITS ETF Acc",
+    "isin": "LU1650491282",
+    "ticker": "MTI",
+    "wkn": "LYX0XL",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers FTSE EPRA/NAREIT Developed Europe Real Estate UCITS ETF 1C",
+    "isin": "LU0489337690",
+    "ticker": "D5BK",
+    "wkn": "DBX0F1",
+    "frais": null
+  },
+  {
+    "name": "JPMorgan EUR Ultra-Short Income UCITS ETF - EUR (Acc)",
+    "isin": "IE00BD9MMF62",
+    "ticker": "JEST",
+    "wkn": "A2JG3C",
+    "frais": null
+  },
+  {
+    "name": "Amundi ETF Govies 0-6 Months Euro Investment Grade UCITS ETF EUR (C)",
+    "isin": "FR0010754200",
+    "ticker": "C3M",
+    "wkn": "A0RNWC",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI China A UCITS ETF",
+    "isin": "IE00BQT3WG13",
+    "ticker": "36BZ",
+    "wkn": "A12DPT",
+    "frais": null
+  },
+  {
+    "name": "iShares European Property Yield UCITS ETF EUR (Acc)",
+    "isin": "IE00BGDQ0L74",
+    "ticker": "IPRE",
+    "wkn": "A2N8FS",
+    "frais": null
+  },
+  {
+    "name": "Amundi Euro Government Bond 1-3Y UCITS ETF Acc",
+    "isin": "LU1650487413",
+    "ticker": "MTA",
+    "wkn": "LYX0XH",
+    "frais": null
+  },
+  {
+    "name": "Amundi Italy BTP Government Bond 10Y UCITS ETF Acc",
+    "isin": "LU1598691217",
+    "ticker": "LYT5",
+    "wkn": "LYX0WU",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy EUR Corporate Bond SRI PAB UCITS ETF Acc",
+    "isin": "LU1859444769",
+    "ticker": "SRIC",
+    "wkn": "A2N8AD",
+    "frais": null
+  },
+  {
+    "name": "Amundi Euro Government Bond 3-5Y UCITS ETF Acc",
+    "isin": "LU1650488494",
+    "ticker": "MTB",
+    "wkn": "LYX0XJ",
+    "frais": null
+  },
+  {
+    "name": "Franklin FTSE China UCITS ETF",
+    "isin": "IE00BHZRR147",
+    "ticker": "FLXC",
+    "wkn": "A2PB5V",
+    "frais": null
+  },
+  {
+    "name": "iShares MSCI China UCITS ETF USD (Acc)",
+    "isin": "IE00BJ5JPG56",
+    "ticker": "ICGA",
+    "wkn": "A2PGQN",
+    "frais": null
+  },
+  {
+    "name": "Amundi Euro Government Bond 5-7Y UCITS ETF Acc",
+    "isin": "LU1287023003",
+    "ticker": "MTC",
+    "wkn": "LYX0VG",
+    "frais": null
+  },
+  {
+    "name": "Xtrackers MSCI China UCITS ETF 1C",
+    "isin": "LU0514695690",
+    "ticker": "XCS6",
+    "wkn": "DBX0G2",
+    "frais": null
+  },
+  {
+    "name": "Amundi Euro Government Bond 7-10Y UCITS ETF Acc",
+    "isin": "LU1287023185",
+    "ticker": "MTD",
+    "wkn": "LYX0VH",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy JPM ESG EMU Government Bond IG UCITS ETF",
+    "isin": "LU1481202692",
+    "ticker": "JBEM",
+    "wkn": "A2DH5P",
+    "frais": null
+  },
+  {
+    "name": "Amundi Euro Government Bond 10-15Y UCITS ETF Acc",
+    "isin": "LU1650489385",
+    "ticker": "MTE",
+    "wkn": "LYX0XF",
+    "frais": null
+  },
+  {
+    "name": "UBS BBG Japan Treasury 1-3 UCITS ETF JPY acc",
+    "isin": "LU2098179695",
+    "ticker": "CHSD",
+    "wkn": "A2PX96",
+    "frais": null
+  },
+  {
+    "name": "21Shares Solana Staking ETP",
+    "isin": "CH1114873776",
+    "ticker": "ASOL",
+    "wkn": "A3GSS0",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI Emerging ESG Leaders - UCITS ETF DR (C)",
+    "isin": "LU2109787551",
+    "ticker": "SADM",
+    "wkn": "A2PZDB",
+    "frais": null
+  },
+  {
+    "name": "Amundi MSCI USA ESG Broad Transition UCITS ETF Acc",
+    "isin": "IE0006IP4XZ8",
+    "ticker": "USAC",
+    "wkn": "ETF058",
+    "frais": null
+  },
+  {
+    "name": "Amundi S&P 500 Climate Paris Aligned UCITS ETF Acc",
+    "isin": "IE000O5FBC47",
+    "ticker": "PABU",
+    "wkn": "ETF137",
+    "frais": null
+  },
+  {
+    "name": "Amundi S&P 500 Screened UCITS ETF Acc",
+    "isin": "IE000KXCEXR3",
+    "ticker": "S500",
+    "wkn": "ETF093",
+    "frais": null
+  },
+  {
+    "name": "Amundi S&P 500 Screened UCITS ETF Acc EUR Hedged",
+    "isin": "IE00058MW3M8",
+    "ticker": "S500H",
+    "wkn": "ETF094",
+    "frais": null
+  },
+  {
+    "name": "Amundi S&P Eurozone Climate Paris Aligned UCITS ETF Acc",
+    "isin": "LU2195226068",
+    "ticker": "EPAB",
+    "wkn": "LYX05H",
+    "frais": null
+  },
+  {
+    "name": "Bitwise Physical Bitcoin ETP",
+    "isin": "DE000A27Z304",
+    "ticker": "BTCE",
+    "wkn": "A27Z30",
+    "frais": null
+  },
+  {
+    "name": "BNP Paribas Easy JPM ESG EMU Government Bond IG 3-5Y UCITS ETF",
+    "isin": "LU2244387457",
+    "ticker": "GEMU",
+    "wkn": "A2QMK2",
+    "frais": null
+  },
+  {
+    "name": "CoinShares Physical Bitcoin",
+    "isin": "GB00BLD4ZL17",
+    "ticker": "BITC",
+    "wkn": "A3GPMN",
+    "frais": null
+  },
+  {
+    "name": "Fidelity Emerging Markets Equity Research Enhanced UCITS ETF ACC-USD",
+    "isin": "IE00BLRPN388",
+    "ticker": "FYER",
+    "wkn": "A2P2QA",
+    "frais": null
+  },
+  {
+    "name": "Fidelity Global Corp Bond Research Enhanced PAB UCITS ETF ACC-GBP (hedged)",
+    "isin": "IE00BM9GRN41",
+    "ticker": "FSMP",
+    "wkn": "A2QKYN",
+    "frais": null
+  },
+  {
+    "name": "Fidelity US Equity Research Enhanced UCITS ETF ACC-USD",
+    "isin": "IE00BKSBGS44",
+    "ticker": "FUSR",
+    "wkn": "A2P0ZN",
+    "frais": null
+  },
+  {
+    "name": "First Trust Nasdaq Cybersecurity UCITS ETF Acc",
+    "isin": "IE00BF16M727",
+    "ticker": "CBRS",
+    "wkn": "A2P4HV",
+    "frais": null
+  },
+  {
+    "name": "HSBC USA SCREENED EQUITY UCITS ETF USD",
+    "isin": "IE00BKY40J65",
+    "ticker": "HSUD",
+    "wkn": "A2PXVQ",
+    "frais": null
   }
 ]
