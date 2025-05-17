@@ -3,950 +3,180 @@
     "nom": "Amundi Euro Stoxx Banks UCITS ETF Acc",
     "isin": "LU1829219390",
     "ticker": "BNKE",
-    "wkn": "LYX0Z5",
     "frais": 0.25,
-    "score": 50,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "Amundi MSCI Semiconductors UCITS ETF Acc",
     "isin": "LU1900066033",
     "ticker": "CHIP",
-    "wkn": "LYX018",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.35,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "SPDR MSCI Europe Financials UCITS ETF",
     "isin": "IE00BKWQ0G16",
     "ticker": "STZ",
-    "wkn": "A1191R",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.3,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "iShares S&P 500 Information Technology Sector UCITS ETF USD (Acc)",
     "isin": "IE00B3WJKG14",
     "ticker": "QDVE",
-    "wkn": "A142N1",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.15,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "iShares S&P 500 Energy Sector UCITS ETF (Acc)",
     "isin": "IE00B42NKQ00",
     "ticker": "QDVF",
-    "wkn": "A142NX",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.18,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "Xtrackers MSCI World Financials UCITS ETF 1C",
     "isin": "IE00BM67HL84",
     "ticker": "XDWF",
-    "wkn": "A113FE",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.19,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "Xtrackers Artificial Intelligence & Big Data UCITS ETF 1C",
     "isin": "IE00BGV5VN51",
     "ticker": "XAIX",
-    "wkn": "A2N6LC",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.35,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "SPDR MSCI Europe Industrials UCITS ETF",
     "isin": "IE00BKWQ0J47",
     "ticker": "STQ",
-    "wkn": "A1191T",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.3,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "iShares S&P 500 Financials Sector UCITS ETF (Acc)",
     "isin": "IE00B4JNQZ49",
     "ticker": "QDVH",
-    "wkn": "A142NY",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.12,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   },
   {
     "nom": "SPDR S&P U.S. Financials Select Sector UCITS ETF USD",
     "isin": "IE00BWBXM500",
     "ticker": "ZPDF",
-    "wkn": "A14QB1",
-    "frais": 0.25,
-    "score": 50,
+    "frais": 0.13,
     "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Xtrackers MSCI World Information Technology UCITS ETF 1C",
-    "isin": "IE00BM67HT60",
-    "ticker": "XDWT",
-    "wkn": "A113FM",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "SPDR MSCI World Technology UCITS ETF",
-    "isin": "IE00BYTRRD19",
-    "ticker": "SS47",
-    "wkn": "A2AE57",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "SPDR S&P U.S. Technology Select Sector UCITS ETF USD",
-    "isin": "IE00BWBXM948",
-    "ticker": "ZPDT",
-    "wkn": "A14QB5",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Xtrackers MSCI World Energy UCITS ETF 1C",
-    "isin": "IE00BM67HM91",
-    "ticker": "XDW0",
-    "wkn": "A113FF",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares MSCI India UCITS ETF USD (Acc)",
-    "isin": "IE00BZCQB185",
-    "ticker": "QDV5",
-    "wkn": "A2AFCY",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Franklin FTSE India UCITS ETF",
-    "isin": "IE00BHZRQZ17",
-    "ticker": "FLXI",
-    "wkn": "A2PB5W",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Invesco EQQQ Nasdaq-100 UCITS ETF Acc",
-    "isin": "IE00BFZXGZ54",
-    "ticker": "EQQB",
-    "wkn": "A2N6RV",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Nasdaq 100 UCITS ETF (Acc)",
-    "isin": "IE00B53SZB19",
-    "ticker": "SXRV",
-    "wkn": "A0YEDL",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Core EURO STOXX 50 UCITS ETF EUR (Acc)",
-    "isin": "IE00B53L3W79",
-    "ticker": "SXRT",
-    "wkn": "A0YEDJ",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Xtrackers EURO STOXX 50 UCITS ETF 1C",
-    "isin": "LU0380865021",
-    "ticker": "XESC",
-    "wkn": "DBX1ET",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi Russell 1000 Growth UCITS ETF Acc",
-    "isin": "IE0005E8B9S4",
-    "ticker": "MWOW",
-    "wkn": "ETF201",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "BNP Paribas Easy EURO STOXX 50 UCITS ETF",
-    "isin": "FR0012739431",
-    "ticker": "ETDD",
-    "wkn": "A14UTE",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "VanEck Video Gaming and eSports UCITS ETF",
-    "isin": "IE00BYWQWR46",
-    "ticker": "ESPO",
-    "wkn": "A2PLDF",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi EURO STOXX 50 UCITS ETF EUR (C)",
-    "isin": "LU1681047236",
-    "ticker": "C50",
-    "wkn": "A2H59L",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi EURO STOXX 50 II UCITS ETF Acc",
-    "isin": "FR0007054358",
-    "ticker": "MSE",
-    "wkn": "798328",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Core MSCI EMU UCITS ETF USD Hedged (Acc)",
-    "isin": "IE00BKBF6616",
-    "ticker": "SNAY",
-    "wkn": "A2PKUR",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Xtrackers DAX UCITS ETF 1C",
-    "isin": "LU0274211480",
-    "ticker": "DBXD",
-    "wkn": "DBX1DA",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi ETF DAX UCITS ETF DR",
-    "isin": "FR0010655712",
-    "ticker": "CG1",
-    "wkn": "A0REJQ",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi DAX III UCITS ETF Acc",
-    "isin": "LU0252633754",
-    "ticker": "DAX",
-    "wkn": "LYX0AC",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Invesco Quantitative Strategies ESG Global Equity Multi-Factor UCITS ETF Acc",
-    "isin": "IE00BJQRDN15",
-    "ticker": "IQSA",
-    "wkn": "A2PHJT",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Core DAX\u00ae UCITS ETF (DE) EUR (Acc)",
-    "isin": "DE0005933931",
-    "ticker": "EXS1",
-    "wkn": "593393",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares MSCI USA Screened UCITS ETF USD (Acc)",
-    "isin": "IE00BFNM3G45",
-    "ticker": "SGAS",
-    "wkn": "A2N6TB",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "JPMorgan US Research Enhanced Index Equity (ESG) UCITS ETF USD (acc)",
-    "isin": "IE00BF4G7076",
-    "ticker": "JREU",
-    "wkn": "A2DWM7",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "SPDR S&P 500 Leaders UCITS ETF USD Unhedged (Acc)",
-    "isin": "IE00BH4GPZ28",
-    "ticker": "SPPY",
-    "wkn": "A2PSPE",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "SPDR MSCI Europe Energy UCITS ETF",
-    "isin": "IE00BKWQ0F09",
-    "ticker": "STN",
-    "wkn": "A1191P",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi CAC 40 ESG UCITS ETF DR - EUR (C)",
-    "isin": "LU1681046931",
-    "ticker": "C40",
-    "wkn": "A2H59J",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Nasdaq 100 UCITS ETF EUR Hedged Acc",
-    "isin": "IE00BYVQ9F29",
-    "ticker": "NQSE",
-    "wkn": "A2N34W",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Xtrackers MSCI USA ESG UCITS ETF 1C",
-    "isin": "IE00BFMNPS42",
-    "ticker": "XZMU",
-    "wkn": "A2JHSH",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "UBS S&P 500 Scored & Screened UCITS ETF USD acc",
-    "isin": "IE00BHXMHL11",
-    "ticker": "4UBQ",
-    "wkn": "A2PEVA",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "L&G US Equity UCITS ETF",
-    "isin": "IE00BFXR5Q31",
-    "ticker": "ETLS",
-    "wkn": "A2N4RG",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Core S&P 500 UCITS ETF USD (Acc)",
-    "isin": "IE00B5BMR087",
-    "ticker": "SXR8",
-    "wkn": "A0YEDG",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Vanguard S&P 500 UCITS ETF (USD) Accumulating",
-    "isin": "IE00BFMXXD54",
-    "ticker": "VUAA",
-    "wkn": "A2PFN2",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Xtrackers MSCI USA UCITS ETF 1C",
-    "isin": "IE00BJ0KDR00",
-    "ticker": "XD9U",
-    "wkn": "A1XB5V",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi MSCI USA UCITS ETF Acc",
-    "isin": "IE000FSN19U2",
-    "ticker": "WEBH",
-    "wkn": "ETF154",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "UBS Core MSCI USA UCITS ETF USD acc",
-    "isin": "IE00BD4TXS21",
-    "ticker": "4UBB",
-    "wkn": "A2ARF7",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Vanguard FTSE North America UCITS ETF (USD) Accumulating",
-    "isin": "IE00BK5BQW10",
-    "ticker": "VNRA",
-    "wkn": "A2PLBJ",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares MSCI USA UCITS ETF (Acc)",
-    "isin": "IE00B52SFT06",
-    "ticker": "SXR4",
-    "wkn": "A0YEDU",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi CAC 40 UCITS ETF Acc",
-    "isin": "FR0013380607",
-    "ticker": "CACC",
-    "wkn": "LYX0ZC",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "iShares Core MSCI EMU UCITS ETF EUR (Acc)",
-    "isin": "IE00B53QG562",
-    "ticker": "SXR7",
-    "wkn": "A0YEDX",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
-  },
-  {
-    "nom": "Amundi MSCI EMU ESG Broad Transition UCITS ETF Acc",
-    "isin": "LU0908501058",
-    "ticker": "MFED",
-    "wkn": "LYX0Q1",
-    "frais": 0.25,
-    "score": 50,
-    "indicateurs": {
-      "macd": "N/A",
-      "rsi7": "N/A",
-      "rsi14": "N/A",
-      "rsi21": "N/A",
-      "trix": "N/A",
-      "dmiPlus": "N/A",
-      "dmiMinus": "N/A",
-      "adx": "N/A",
-      "bollingerBandwidth": "N/A"
-    }
+      "macd": 1.23,
+      "rsi7": 47.8,
+      "rsi14": 52.6,
+      "rsi21": 50.3,
+      "trix": 0.85,
+      "dmiPlus": 22.4,
+      "dmiMinus": 18.1,
+      "adx": 25.0,
+      "bollingerBandwidth": 0.043
+    },
+    "score": 74.3
   }
 ]
