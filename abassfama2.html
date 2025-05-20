@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABASSFAM ANGELIQUE</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>👶</text></svg>">
+    <style>
+.tab-nav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  background: #4472C4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+.tab-btn.active {
+  background: #2b5ca7;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Réduction de la colonne "MULT." */
+.grid th:nth-child(4),
+.grid td:nth-child(4) {
+    width: 90px;
+    max-width: 90px;
+    min-width: 50px;
+}
+
+/* Élargissement de "INDEMNITES ENTRETIEN" */
+.grid th:nth-child(6),
+.grid td:nth-child(6) {
+    width: 160px;
+    max-width: 200px;
+    min-width: 160px;
+}
+/* Forcer largeur colonne Option 1 */
+.grid th:nth-child(11),
+.grid td:nth-child(11) {
+    width: 110px;
+    min-width: 110px;
+    max-width: 110px;
+}
+
+/* Forcer largeur colonne Option 2 */
+.grid th:nth-child(12),
+.grid td:nth-child(12) {
+    width: 110px;
+    min-width: 110px;
+    max-width: 110px;
+}
+.total-row td.option1-total,
+.total-row td.option2-total 
+{
+    background-color: #dbeafe !important; /* bleu pastel */
+    font-weight: bold;
+    color: #1e3a8a;
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .nav-bar {
+            background: #4472C4;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav-bar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-bar a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .smic-rate {
+            background: #ffffff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid #4472C4;
+        }
+
+        .smic-rate label {
+            color: #2c3e50;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .smic-rate input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .smic-rate input:focus {
+            border-color: #4472C4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66,153,225,0.2);
+        }
+
+        .module {
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .module-title {
+            background: #4472C4;
+            color: white;
+            padding: 12px 20px;
+            margin: -25px -25px 20px -25px;
+            border-radius: 15px 15px 0 0;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .grid th {
+    background: #f8fafc;
+    font-weight: 700; /* <<< ici */
+    color: #2d3748;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 12px 8px;
+    border: 1px solid #e2e8f0;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+
+        .grid td {
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            background: white;
+        }
+
+        .grid input[type="number"],
+        .grid input[type="text"] {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .grid input[type="number"]:focus,
+        .grid input[type="text"]:focus {
+            border-color: #4472C4;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66,153,225,0.2);
+        }
+
+        .grid input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #4472C4;
+        }
+
+        .calculated {
+            background: #f8fafc !important;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .total-row {
+            background: #edf2f7 !important;
+            font-weight: 600;
+        }
+
+        .total-row td {
+            background: #edf2f7 !important;
+        }
+
+        .total-difference {
+            background: #2d3748 !important;
+            color: white;
+            font-weight: 600;
+        }
+
+        .total-difference td {
+            background: #2d3748 !important;
+        }
+
+        .difference-value {
+            color: #fc8181;
+            font-weight: 600;
+        }
+
+        .plus-total {
+            color: #48bb78 !important;
+        }
+
+        .minus-total {
+            color: #f56565 !important;
+        }
+
+        .sub-module-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 20px 0 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .button-group {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .save-button {
+            background: #4472C4;
+        }
+
+        .save-button:hover {
+            background: #365b9d;
+            transform: translateY(-2px);
+        }
+
+        .clear-button {
+            background: #dc3545;
+        }
+
+        .clear-button:hover {
+    background: #bb2d3b;
+    transform: translateY(-2px);
+}
+
+button.action-button.export-button {
+    background: #38a169 !important;
+    color: white !important;
+}
+
+button.action-button.export-button:hover {
+    background: #2f855a !important;
+    transform: translateY(-2px);
+}
+{
+            background: #bb2d3b;
+            transform: translateY(-2px);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            padding: 12px 24px;
+            color: white;
+            border-radius: 8px;
+            display: none;
+            animation: fadeInOut 2s ease-in-out;
+            z-index: 1000;
+        }
+
+        .save-notification {
+            background: #48bb78;
+        }
+
+        .clear-notification {
+            background: #dc3545;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                overflow-x: auto;
+            }
+            
+            body {
+                padding: 10px;
+                padding-top: 80px;
+            }
+        }
+
+        .fas {
+            font-family: "Font Awesome";
+            font-style: normal;
+        }
+        .fa-user-circle:before { content: "👤"; }
+        .fa-calculator:before { content: "🧮"; }
+        .fa-calendar-alt:before { content: "📅"; }
+        .fa-child:before { content: "👶"; }
+        .fa-euro-sign:before { content: "€"; }
+        .fa-check-square:before { content: "✓"; }
+        .fa-calendar-day:before { content: "📆"; }
+        .fa-plus:before { content: "+"; }
+        .fa-minus:before { content: "-"; }
+        .fa-sum:before { content: "Σ"; }
+        .fa-save:before { content: "💾"; }
+        .fa-trash:before { content: "🗑"; }
+        .fa-check:before { content: "✓"; }
+.fa-file-export:before { content: "📤"; }
+.fa-folder-open:before { content: "📂"; }
+/* Bouton export JSON : vert tout le temps + foncé au survol */
+button.action-button.export-button {
+    background-color: #38a169 !important;
+    color: white !important;
+}
+button.action-button.export-button:hover {
+    background-color: #2f855a !important;
+    transform: translateY(-2px);
+}
+/* Harmonisation parfaite des colonnes dans le tableau JOURS DE PRESENCE */
+#joursA .grid th,
+#joursA .grid td {
+    width: 80px;
+    max-width: 80px;
+    min-width: 50px;
+    text-align: center;
+    white-space: normal;
+overflow-wrap: break-word;
+word-break: break-word;
+}
+
+/* 🌗 Zébrage des lignes du tableau JOURS DE PRESENCE */
+#joursA .grid tr:nth-child(even) td {
+    background-color: #f9fafb;
+}
+#joursA .grid tr:nth-child(odd) td {
+    background-color: #ffffff;
+}
+
+/* 📌 Colonne "mois" figée */
+#joursA .grid th:first-child,
+#joursA .grid td:first-child {
+    position: sticky;
+    left: 0;
+    background: #f1f5f9;
+    z-index: 1;
+    box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1);
+    min-width: 100px;
+    max-width: 100px;
+    width: 100px;
+}
+.inline-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.smic-rate.small-box {
+    flex: 1 1 auto;
+    max-width: 280px;
+    min-width: 200px;
+}
+/* 🧩 Style des cellules fusionnées Forfait annuel et Repas à déduire */
+.mega-cell {
+    vertical-align: middle;
+    text-align: center;
+    background-color: #f8fafc;
+    padding: 0;
+}
+
+.mega-cell input {
+    height: 100%;
+    width: 90%;
+    font-size: 1.2rem;
+    padding: 20px;
+    border: 2px solid #cbd5e0;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.bouton-ajout {
+  background-color: #38a169;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.bouton-ajout:hover {
+  background-color: #2f855a;
+  transform: translateY(-2px);
+}
+
+    </style>
+</head>
+<body>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('angelique')">👩‍🦰 Angélique</button>
+  <button class="tab-btn" onclick="switchTab('jerome')">👨‍💼 Jérôme</button>
+</div>
+
+<div id="tab-angelique" class="tab-content active">
+  <div class="container">
+    <div class="inline-inputs">
+      <div class="smic-rate small-box">
+        <label for="globalSmicRate">SMIC HORAIRE:</label>
+        <input type="number" id="globalSmicRate" value="11.88" step="0.01"
+  oninput="updateSmicRates(this.value, '')">
+        <i class="fas fa-euro-sign"></i>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: flex-end; flex: 1;">
+        <div style="font-size: 3.6rem; font-weight: bold; color: #1e3a8a; padding-right: 10px;">
+          👩‍🦰 ANGÉLIQUE
+        </div>
+      </div>
+
+      <div>
+        <label for="globalForfaitBonus">&nbsp;</label>
+      </div>
+
+      <div> </div>
+    </div>
+
+    <div class="module">
+      <div class="module-title">
+        <i class="fas fa-user-circle"></i>
+        ABASSFAM
+      </div>
+
+      <div class="sub-module-title">
+        <i class="fas fa-calculator"></i>
+        CALCUL DES ABATTEMENTS FISCAUX
+      </div>
+
+      <div id="calculsA"></div>
+<div style="margin-top: 10px;">
+  <button class="bouton-ajout" onclick="ajouterEnfant('')">➕ Ajouter un enfant</button>
+</div>
+      <div class="sub-module-title">
+        <i class="fas fa-calendar-alt"></i>
+        CALCUL DES JOURS DE PRESENCE
+      </div>
+<!-- 🔘 Bouton ajout enfant ANGÉLIQUE -->
+</div>
+
+
+      <div id="joursA"></div>
+    </div>
+  </div>
+</div>
+
+    <div>
+     
+<div id="tab-jerome" class="tab-content">
+  <div class="container">
+  <div class="inline-inputs">
+    <div class="smic-rate small-box">
+      <label for="globalSmicRateJ">SMIC HORAIRE:</label>
+      <input type="number" id="globalSmicRateJ" value="11.88" step="0.01"
+  oninput="updateSmicRates(this.value, 'J')">
+      <i class="fas fa-euro-sign"></i>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: flex-end; flex: 1;">
+      <div style="font-size: 3.6rem; font-weight: bold; color: #1e3a8a; padding-right: 10px;">
+        👨‍💼 JÉRÔME
+      </div>
+    </div>
+
+    <div>
+      <label for="globalForfaitBonusJ">&nbsp;</label>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-title">
+      <i class="fas fa-user-circle"></i>
+      ABASSFAM
+    </div>
+
+    <div class="sub-module-title">
+      <i class="fas fa-calculator"></i>
+      CALCUL DES ABATTEMENTS FISCAUX
+    </div>
+    <div id="calculsJ"></div>
+<div style="margin-top: 10px;">
+  <button class="bouton-ajout" onclick="ajouterEnfant('J')">➕ Ajouter un enfant</button>
+</div>
+    <div class="sub-module-title">
+  <i class="fas fa-calendar-alt"></i>
+  CALCUL DES JOURS DE PRESENCE
+</div>
+
+<!-- 🔘 Bouton ajout enfant JÉRÔME -->
+
+</div>
+
+
+<div id="joursJ"></div>
+
+</div>
+</div>
+
+<!-- 🔄 Boutons globaux partagés pour Angélique et Jérôme -->
+<div class="button-group" style="right: 50%; transform: translateX(50%);">
+  <button class="action-button save-button" onclick="saveAll()">💾 Sauvegarde Locale </button>
+  <button class="action-button save-button" onclick="loadAll()">📂 Restaurer Locale</button>
+  <button class="action-button export-button" onclick="exportAllJSON()">📤 Exporter JSON</button>
+  <button class="action-button save-button" onclick="importAllFromFile()">📁 Importer JSON</button>
+</div>
+
+    <div class="nav-bar" style="display: flex; justify-content: space-between; align-items: center;">
+  <!-- Bloc gauche -->
+  <div style="display: flex; gap: 10px;">
+    <a href="smic.html" style="display: inline-block; background: #00796b; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: background 0.3s;">
+      🧮 Calculateur SMIC
+    </a>
+  </div>
+
+  <!-- Bloc centre -->
+  <div style="display: flex; gap: 10px;">
+    <a href="index.html" style="display: inline-block; background: #00796b; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: background 0.3s;">
+      🏠 Retour à l'accueil
+    </a>
+  </div>
+
+  <!-- Bloc droite -->
+<div style="display: flex; gap: 10px;">
+  <!-- Onglet Jérôme via tab, donc lien inutile -->
+</div>
+</div>
+
+    <div class="notification save-notification">
+        <i class="fas fa-check"></i>
+        Données sauvegardées
+    </div>
+
+    <div class="notification clear-notification">
+        <i class="fas fa-check"></i>
+        Données effacées
+    </div>
+
+    <script>
+        const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
+                       'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        
+function createJoursTable(containerId, suffixe = '') {
+    const container = document.getElementById(containerId);
+    const table = document.createElement('table');
+    table.className = 'grid';
+
+    const headerRow = document.createElement('tr');
+    const monthHeader = document.createElement('th');
+    monthHeader.innerHTML = '<i class="fas fa-calendar-day"></i> JOURS';
+    headerRow.appendChild(monthHeader);
+
+    for (let i = 0; i < getChildCount(suffixe); i++) {
+        const th = document.createElement('th');
+        th.colSpan = '2';
+        th.className = `child-name-${i}${suffixe}`;
+        th.textContent = `ENFANT ${i + 1}`;
+        headerRow.appendChild(th);
+    }
+    table.appendChild(headerRow);
+
+    const subheaderRow = document.createElement('tr');
+    subheaderRow.appendChild(document.createElement('th'));
+    for (let i = 0; i < getChildCount(suffixe); i++) {
+        const plusTh = document.createElement('th');
+        plusTh.innerHTML = '<i class="fas fa-plus"></i>';
+        const minusTh = document.createElement('th');
+        minusTh.innerHTML = '<i class="fas fa-minus"></i>';
+        subheaderRow.appendChild(plusTh);
+        subheaderRow.appendChild(minusTh);
+    }
+    table.appendChild(subheaderRow);
+
+    MONTHS.forEach(month => {
+        const row = document.createElement('tr');
+        const monthCell = document.createElement('td');
+        monthCell.textContent = month;
+        row.appendChild(monthCell);
+
+        for (let i = 0; i < getChildCount(suffixe); i++) {
+            const plusCell = document.createElement('td');
+            const plusInput = document.createElement('input');
+            plusInput.type = 'number';
+            plusInput.min = '0';
+            plusInput.addEventListener('input', () => {
+    calculateColumnTotals(suffixe);
+    updateDaysPresent(i, suffixe);
+});
+;
+         plusCell.appendChild(plusInput);
+
+            const minusCell = document.createElement('td');
+            const minusInput = document.createElement('input');
+            minusInput.type = 'number';
+            minusInput.min = '0';
+            minusInput.addEventListener('input', () => {
+    calculateColumnTotals(suffixe);
+    updateDaysPresent(i, suffixe);
+});
+            minusCell.appendChild(minusInput);
+
+            row.appendChild(plusCell);
+            row.appendChild(minusCell);
+        }
+
+        table.appendChild(row);
+    });
+
+    const totalRow = document.createElement('tr');
+    totalRow.className = 'total-row';
+    const totalLabel = document.createElement('td');
+    totalLabel.innerHTML = '<i class="fas fa-sum"></i> TOTAL';
+    totalRow.appendChild(totalLabel);
+
+    for (let i = 0; i < getChildCount(suffixe); i++) {
+        const plusTotal = document.createElement('td');
+        plusTotal.className = 'plus-total';
+        plusTotal.textContent = '0';
+
+        const minusTotal = document.createElement('td');
+        minusTotal.className = 'minus-total';
+        minusTotal.textContent = '0';
+
+        totalRow.appendChild(plusTotal);
+        totalRow.appendChild(minusTotal);
+    }
+    table.appendChild(totalRow);
+
+    const differenceRow = document.createElement('tr');
+    differenceRow.className = 'total-difference';
+    const differenceLabel = document.createElement('td');
+    differenceLabel.innerHTML = '<i class="fas fa-calculator"></i> GLOBAL';
+    differenceRow.appendChild(differenceLabel);
+
+    for (let i = 0; i < getChildCount(suffixe); i++) {
+        const differenceCell = document.createElement('td');
+        differenceCell.colSpan = '2';
+        differenceCell.className = 'difference-value';
+        differenceCell.textContent = '0';
+        differenceRow.appendChild(differenceCell);
+    }
+
+    table.appendChild(differenceRow);
+    container.innerHTML = '';
+    container.appendChild(table);
+}
+
+        function createCalculsTable(containerId, suffixe = '') {
+    const container = document.getElementById(containerId);
+    const table = document.createElement('table');
+    table.className = 'grid';
+
+    const headers = [
+        '<i class="fas fa-child"></i> ENFANT',
+        '<i class="fas fa-euro-sign"></i> SMIC HORAIRE',
+        '<i class="fas fa-check-square"></i> SUJETION',
+        '<i class="fas fa-calculator"></i> MULT.',
+        '<i class="fas fa-calendar-alt"></i> JOURS PRESENCE',
+        '<i class="fas fa-euro-sign"></i> INDEMNITES ENTRETIEN',
+        '<strong>+ Forfait annuel</strong>',
+        '<strong>- Repas à déduire</strong>',
+        '<i class="fas fa-calculator"></i> OPTION 1',
+        '<i class="fas fa-calculator"></i> OPTION 2'
+    ];
+
+    const headerRow = document.createElement('tr');
+    headers.forEach(header => {
+        const th = document.createElement('th');
+        th.innerHTML = header;
+        headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    for (let i = 0; i < getChildCount(suffixe); i++) {
+        const row = document.createElement('tr');
+        row.setAttribute('data-child-index', i);
+
+        // Nom de l'enfant
+        const nameCell = document.createElement('td');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'child-name';
+        nameInput.placeholder = `ENFANT ${i + 1}`;
+        nameInput.addEventListener('input', (e) => {
+            updateChildName(i, e.target.value, suffixe);
+        });
+        nameCell.appendChild(nameInput);
+        row.appendChild(nameCell);
+
+        // SMIC
+        const smicCell = document.createElement('td');
+        const smicInput = document.createElement('input');
+        smicInput.type = 'number';
+        smicInput.step = '0.01';
+        smicInput.className = 'smic-rate-input';
+        smicInput.readOnly = true;
+        smicCell.appendChild(smicInput);
+        row.appendChild(smicCell);
+
+        // Sujetion
+        const sujetionCell = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.addEventListener('change', e => {
+            const mult = e.target.closest('tr').querySelector('.multiplicateur');
+            mult.textContent = e.target.checked ? '5' : '4';
+            updateOption1(row, suffixe);
+        });
+        sujetionCell.appendChild(checkbox);
+        row.appendChild(sujetionCell);
+
+        // Multiplicateur
+        const multCell = document.createElement('td');
+        multCell.className = 'multiplicateur calculated';
+        multCell.textContent = '4';
+        row.appendChild(multCell);
+
+        // Jours de présence
+        const daysCell = document.createElement('td');
+        const daysInput = document.createElement('input');
+        daysInput.type = 'number';
+        daysInput.className = 'days-present';
+        daysInput.min = '0';
+        daysInput.addEventListener('input', () => {
+            updateOption1(row, suffixe);
+            updateOption2(row, suffixe);
+        });
+        daysCell.appendChild(daysInput);
+        row.appendChild(daysCell);
+
+        // Indemnités
+        const allowanceCell = document.createElement('td');
+        const allowanceInput = document.createElement('input');
+        allowanceInput.type = 'number';
+        allowanceInput.className = 'daily-allowance';
+        allowanceInput.step = '0.01';
+        allowanceInput.addEventListener('input', () => {
+            updateOption2(row, suffixe);
+        });
+        allowanceCell.appendChild(allowanceInput);
+        row.appendChild(allowanceCell);
+
+        if (i === 0) {
+    const rowSpanCount = getChildCount(suffixe);
+
+    const forfaitCell = document.createElement('td');
+    forfaitCell.className = 'mega-cell';
+    forfaitCell.rowSpan = rowSpanCount;
+    const forfaitInput = document.createElement('input');
+    forfaitInput.type = 'number';
+    forfaitInput.step = '0.01';
+    forfaitInput.id = 'uniqueForfait' + suffixe;
+    forfaitInput.value = '0';
+    forfaitInput.className = 'forfait-annuel-global';
+    forfaitInput.style.width = '100%';
+    forfaitInput.addEventListener('input', () => updateTotals(suffixe));
+    forfaitCell.appendChild(forfaitInput);
+    row.appendChild(forfaitCell);
+
+    const repasCell = document.createElement('td');
+    repasCell.className = 'mega-cell';
+    repasCell.rowSpan = rowSpanCount;
+    const repasInput = document.createElement('input');
+    repasInput.type = 'number';
+    repasInput.step = '0.01';
+    repasInput.id = 'uniqueRepas' + suffixe;
+    repasInput.value = '0';
+    repasInput.className = 'repas-deduire-global';
+    repasInput.style.width = '100%';
+    repasInput.addEventListener('input', () => updateTotals(suffixe));
+    repasCell.appendChild(repasInput);
+    row.appendChild(repasCell);
+}
+
+        // Option 1
+        const option1Cell = document.createElement('td');
+        const option1Input = document.createElement('input');
+        option1Input.type = 'number';
+        option1Input.className = 'option1-value';
+        option1Input.readOnly = true;
+        option1Cell.appendChild(option1Input);
+        row.appendChild(option1Cell);
+
+        // Option 2
+        const option2Cell = document.createElement('td');
+        const option2Input = document.createElement('input');
+        option2Input.type = 'number';
+        option2Input.className = 'option2-value';
+        option2Input.readOnly = true;
+        option2Cell.appendChild(option2Input);
+        row.appendChild(option2Cell);
+
+        table.appendChild(row);
+    }
+
+    // Ligne de totaux
+    const totalsRow = document.createElement('tr');
+    totalsRow.className = 'total-row';
+    for (let i = 0; i < headers.length - 2; i++) {
+        totalsRow.appendChild(document.createElement('td'));
+    }
+
+    const opt1 = document.createElement('td');
+    opt1.className = 'option1-total';
+    opt1.textContent = '0.00';
+    totalsRow.appendChild(opt1);
+
+    const opt2 = document.createElement('td');
+    opt2.className = 'option2-total';
+    opt2.textContent = '0.00';
+    totalsRow.appendChild(opt2);
+
+    table.appendChild(totalsRow);
+    container.innerHTML = '';
+    container.appendChild(table);
+}
+
+                  
+        function updateChildName(index, name, suffixe = '') {
+  const displayName = name || `ENFANT ${index + 1}`;
+  const cell = document.querySelector(`.child-name-${index}${suffixe}`);
+  if (cell) cell.textContent = displayName;
+}
+
+        function updateOption1(row, suffixe = '') {
+    const smicRaw = row.querySelector('.smic-rate-input').value;
+    const smicRate = isNaN(parseFloat(smicRaw)) ? 0 : parseFloat(smicRaw);
+    const multiplier = parseInt(row.querySelector('.multiplicateur').textContent) || 4;
+    const daysRaw = row.querySelector('.days-present').value;
+    const daysPresent = isNaN(parseInt(daysRaw)) ? 0 : parseInt(daysRaw);
+
+    const option1Value = smicRate * multiplier * daysPresent;
+    row.querySelector('.option1-value').value = option1Value.toFixed(2);
+
+    updateTotals(suffixe);
+}
+
+function updateOption2(row, suffixe = '') {
+    const daysPresent = parseInt(row.querySelector('.days-present').value) || 0;
+    const dailyAllowance = parseFloat(row.querySelector('.daily-allowance').value) || 0;
+    const option2Value = daysPresent * dailyAllowance;
+    row.querySelector('.option2-value').value = option2Value.toFixed(2);
+    updateTotals(suffixe);
+}
+
+function updateOption2All(suffixe = '') {
+    document.querySelectorAll(`#calculs${suffixe} tr[data-child-index]`).forEach(row => {
+        updateOption2(row, suffixe);
+    });
+}
+
+function updateTotals(suffixe = '') {
+  const rows = document.querySelectorAll(`#calculs${suffixe} tr[data-child-index]`);
+  let totalOption1 = 0;
+  let totalOption2 = 0;
+
+  rows.forEach(row => {
+    totalOption1 += parseFloat(row.querySelector('.option1-value')?.value || '0');
+    totalOption2 += parseFloat(row.querySelector('.option2-value')?.value || '0');
+  });
+
+  const totalRow = document.querySelector(`#calculs${suffixe} .total-row`);
+  if (totalRow) {
+    totalRow.querySelector('.option1-total').textContent = totalOption1.toFixed(2);
+    totalRow.querySelector('.option2-total').textContent = totalOption2.toFixed(2);
+  }
+}
+
+// 🔁 ICI ON COLLE
+function updateDaysPresent(childIndex, suffixe = '') {
+  const daysTable = document.querySelector(`#jours${suffixe} .grid`);
+  const calculsRow = document.querySelector(`#calculs${suffixe} tr[data-child-index="${childIndex}"]`);
+
+  if (!daysTable || !calculsRow) return;
+
+  const diffRow = daysTable.querySelector('.total-difference');
+  if (!diffRow) return;
+
+  // Chaque enfant = 2 colonnes (plus + minus), donc l’indice est : 1 + 2 × childIndex
+  const diffCell = diffRow.children[1 + (2 * childIndex)];
+  if (!diffCell) return;
+
+  const difference = parseInt(diffCell.textContent || '0');
+  calculsRow.querySelector('.days-present').value = difference;
+  updateOption1(calculsRow, suffixe);
+  updateOption2(calculsRow, suffixe);
+}
+
+
+
+function updateSmicRates(value, suffixe = '') {
+    document.querySelectorAll(`#calculs${suffixe} .smic-rate-input`).forEach(input => {
+        input.value = value;
+        updateOption1(input.closest('tr'), suffixe);
+    });
+}
+const LOCAL_STORAGE_KEY = 'abassfamDataAngelique';
+
+function getDataAngelique() {
+    const data = {
+        smicRate: document.getElementById('globalSmicRate')?.value || '',
+        forfait: document.getElementById('uniqueForfait')?.value || '0',
+        repas: document.getElementById('uniqueRepas')?.value || '0',
+        children: [],
+        days: []
+    };
+
+    document.querySelectorAll('#calculsA tr[data-child-index]').forEach(row => {
+        data.children.push({
+            name: row.querySelector('.child-name')?.value || '',
+            sujetion: row.querySelector('input[type="checkbox"]')?.checked || false,
+            daysPresent: row.querySelector('.days-present')?.value || '',
+            dailyAllowance: row.querySelector('.daily-allowance')?.value || ''
+        });
+    });
+
+    document.querySelectorAll('#joursA tr:not(:first-child):not(:nth-child(2))').forEach(row => {
+        if (!row.classList.contains('total-row') && !row.classList.contains('total-difference')) {
+            const values = [];
+            for (let i = 0; i < 6; i++) {
+                const plus = row.children[i * 2 + 1]?.querySelector('input')?.value || '';
+                const minus = row.children[i * 2 + 2]?.querySelector('input')?.value || '';
+                values.push({ plus, minus });
+            }
+            data.days.push(values);
+        }
+    });
+
+    return data;
+}
+
+function applyDataAngelique(data, suffixe = '') {
+    document.getElementById('globalSmicRate').value = data.smicRate || '';
+    updateSmicRates(data.smicRate, suffixe);
+
+    document.getElementById('uniqueForfait').value = data.forfait || '0';
+    document.getElementById('uniqueRepas').value = data.repas || '0';
+
+    data.children?.forEach((child, i) => {
+        const row = document.querySelector(`#calculsA tr[data-child-index="${i}"]`);
+        if (!row) return;
+        row.querySelector('.child-name').value = child.name || '';
+        row.querySelector('input[type="checkbox"]').checked = !!child.sujetion;
+        row.querySelector('.multiplicateur').textContent = child.sujetion ? '5' : '4';
+        row.querySelector('.days-present').value = child.daysPresent || '';
+        row.querySelector('.daily-allowance').value = child.dailyAllowance || '';
+updateChildName(i, child.name, ''); // suffixe explicitement vide
+updateOption1(row, '');
+updateOption2(row, '');
+    });
+
+    data.days?.forEach((values, rowIndex) => {
+        const row = document.querySelector(`#joursA tr:nth-child(${rowIndex + 3})`);
+        if (!row) return;
+        values.forEach((pair, i) => {
+            row.children[i * 2 + 1].querySelector('input').value = pair.plus || '';
+            row.children[i * 2 + 2].querySelector('input').value = pair.minus || '';
+        });
+    });
+
+    calculateColumnTotals();
+    updateTotals();
+}
+
+function saveData() {
+    const data = getDataAngelique();
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+    showNotification('save');
+}
+
+function loadData() {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (raw) {
+        try {
+            applyDataAngelique(JSON.parse(raw));
+        } catch (e) {
+            alert("Erreur lors du chargement des données locales.");
+        }
+    } else {
+        if (confirm("Aucune sauvegarde locale trouvée. Voulez-vous importer un fichier JSON ?")) {
+            loadFromLocalFile();
+        }
+    }
+}
+
+function exportJSON() {
+    const data = getDataAngelique();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Abassfam_2025_Angelique.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function loadFromLocalFile() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = event => {
+            try {
+                const data = JSON.parse(event.target.result);
+                applyDataAngelique(data);
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+            } catch {
+                alert("Le fichier sélectionné est invalide.");
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+function showNotification(type) {
+    const notif = document.querySelector(`.notification.${type}-notification`);
+    if (!notif) return;
+    notif.style.display = 'block';
+    setTimeout(() => notif.style.display = 'none', 2000);
+}
+
+// Sauvegarde automatique toutes les 2 minutes
+setInterval(saveData, 120000);
+
+
+// ➡️ Alerte avant de quitter la page
+window.addEventListener('beforeunload', function (e) {
+    // Message personnalisé (attention certains navigateurs n'affichent que leur propre message)
+    e.preventDefault(); // Chrome requiert ceci
+    e.returnValue = '⚠️ Attention : Sauvegarde les données avant de quitter !';
+});
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+  document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`).classList.add('active');
+}
+
+// Blocs JÉRÔME — identiques à Angélique mais suffixés en J
+const LOCAL_STORAGE_KEY_J = 'abassfamDataJerome';
+
+function createCalculsTableJerome() {
+  createCalculsTable("calculsJ", "J");
+}
+
+function createJoursTableJerome() {
+  createJoursTable("joursJ");
+}
+
+function getDataJerome() {
+    const suffixe = 'J';
+    const data = {
+        smicRate: document.getElementById('globalSmicRate' + suffixe)?.value || '',
+        forfait: document.getElementById('uniqueForfait' + suffixe)?.value || '0',
+        repas: document.getElementById('uniqueRepas' + suffixe)?.value || '0',
+        children: [],
+        days: []
+    };
+
+    document.querySelectorAll(`#calculs${suffixe} tr[data-child-index]`).forEach(row => {
+        data.children.push({
+            name: row.querySelector('.child-name')?.value || '',
+            sujetion: row.querySelector('input[type="checkbox"]')?.checked || false,
+            daysPresent: row.querySelector('.days-present')?.value || '',
+            dailyAllowance: row.querySelector('.daily-allowance')?.value || ''
+        });
+    });
+
+    document.querySelectorAll(`#jours${suffixe} tr:not(:first-child):not(:nth-child(2))`).forEach(row => {
+        if (!row.classList.contains('total-row') && !row.classList.contains('total-difference')) {
+            const values = [];
+            for (let i = 0; i < 6; i++) {
+                const plus = row.children[i * 2 + 1]?.querySelector('input')?.value || '';
+                const minus = row.children[i * 2 + 2]?.querySelector('input')?.value || '';
+                values.push({ plus, minus });
+            }
+            data.days.push(values);
+        }
+    });
+
+    return data;
+}
+
+
+function applyDataJerome(data) {
+    const suffixe = 'J';
+
+    document.getElementById('globalSmicRate' + suffixe).value = data.smicRate || '';
+    updateSmicRates(data.smicRate, suffixe);
+
+    document.getElementById('uniqueForfait' + suffixe).value = data.forfait || '0';
+    document.getElementById('uniqueRepas' + suffixe).value = data.repas || '0';
+
+    data.children?.forEach((child, i) => {
+        const row = document.querySelector(`#calculs${suffixe} tr[data-child-index="${i}"]`);
+        if (!row) return;
+        row.querySelector('.child-name').value = child.name || '';
+        row.querySelector('input[type="checkbox"]').checked = !!child.sujetion;
+        row.querySelector('.multiplicateur').textContent = child.sujetion ? '5' : '4';
+        row.querySelector('.days-present').value = child.daysPresent || '';
+        row.querySelector('.daily-allowance').value = child.dailyAllowance || '';
+        updateChildName(i, child.name, suffixe);
+        updateOption1(row, suffixe);
+        updateOption2(row, suffixe);
+    });
+
+    data.days?.forEach((values, rowIndex) => {
+        const row = document.querySelector(`#jours${suffixe} tr:nth-child(${rowIndex + 3})`);
+        if (!row) return;
+        values.forEach((pair, i) => {
+            row.children[i * 2 + 1].querySelector('input').value = pair.plus || '';
+            row.children[i * 2 + 2].querySelector('input').value = pair.minus || '';
+        });
+    });
+
+    calculateColumnTotals(); // cette fonction ne dépend pas du suffixe
+    updateTotals(suffixe);
+}
+
+function saveDataJerome() {
+  const data = getDataJerome();
+  localStorage.setItem(LOCAL_STORAGE_KEY_J, JSON.stringify(data));
+  showNotification('save');
+}
+function saveAll() {
+  saveData();        // Angélique
+  saveDataJerome();  // Jérôme
+  showNotification('save');
+}
+
+
+function loadAll() {
+  loadData();
+  loadDataJerome();
+}
+
+function exportAllJSON() {
+  const fullData = {
+    angelique: getDataAngelique(),
+    jerome: getDataJerome()
+  };
+  const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Abassfam_2025_Tout.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importAllFromFile() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json";
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = event => {
+      try {
+        const data = JSON.parse(event.target.result);
+        if (data.angelique) applyDataAngelique(data.angelique);
+        if (data.jerome) applyDataJerome(data.jerome);
+        localStorage.setItem('abassfamDataAngelique', JSON.stringify(data.angelique || {}));
+        localStorage.setItem('abassfamDataJerome', JSON.stringify(data.jerome || {}));
+        showNotification('save');
+      } catch {
+        alert("Fichier invalide.");
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function loadDataJerome() {
+  const raw = localStorage.getItem(LOCAL_STORAGE_KEY_J);
+  if (raw) {
+    try {
+      applyDataJerome(JSON.parse(raw));
+    } catch (e) {
+      alert("Erreur lors du chargement des données de Jérôme.");
+    }
+  } else {
+    if (confirm("Aucune sauvegarde locale trouvée. Voulez-vous importer un fichier JSON ?")) {
+      loadFromLocalFileJerome();
+    }
+  }
+}
+
+function exportJSONJerome() {
+  const data = getDataJerome();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Abassfam_2025_Jerome.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function loadFromLocalFileJerome() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json";
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = event => {
+      try {
+        const data = JSON.parse(event.target.result);
+        applyDataJerome(data);
+        localStorage.setItem(LOCAL_STORAGE_KEY_J, JSON.stringify(data));
+      } catch {
+        alert("Le fichier sélectionné est invalide.");
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function calculateColumnTotals(suffixe = '') {
+  const table = document.querySelector(`#jours${suffixe} .grid`);
+  if (!table) return;
+
+  const plusTotals = Array(getChildCount(suffixe)).fill(0);
+  const minusTotals = Array(getChildCount(suffixe)).fill(0);
+
+  const rows = table.querySelectorAll('tr');
+  rows.forEach((row, rowIndex) => {
+    if (rowIndex < 2 || row.classList.contains('total-row') || row.classList.contains('total-difference')) return;
+
+    for (let i = 0; i < getChildCount(suffixe); i++) {
+      const plus = parseInt(row.children[i * 2 + 1]?.querySelector('input')?.value || '0');
+      const minus = parseInt(row.children[i * 2 + 2]?.querySelector('input')?.value || '0');
+      plusTotals[i] += plus;
+      minusTotals[i] += minus;
+    }
+  });
+
+  const totalRow = table.querySelector('.total-row');
+  const diffRow = table.querySelector('.total-difference');
+
+  for (let i = 0; i < getChildCount(suffixe); i++) {
+    totalRow.children[i * 2 + 1].textContent = plusTotals[i];
+    totalRow.children[i * 2 + 2].textContent = minusTotals[i];
+    const diff = plusTotals[i] - minusTotals[i];
+    diffRow.children[i + 1].textContent = diff;
+
+    // 🔄 MAJ colonne "jours de présence" dans le tableau des abattements
+    updateDaysPresent(i, suffixe);
+  }
+}
+
+
+function getChildCount(suffixe = '') {
+  const count = document.querySelectorAll(`#calculs${suffixe} tr[data-child-index]`).length;
+  return count === 0 ? 6 : count;
+}
+
+function ajouterEnfant(suffixe = '') {
+  const currentCount = getChildCount(suffixe);
+  const newIndex = currentCount;
+
+  const calculsTable = document.querySelector(`#calculs${suffixe} .grid`);
+  const joursTable = document.querySelector(`#jours${suffixe} .grid`);
+
+  if (!calculsTable || !joursTable) return;
+
+  // ➕ Crée une nouvelle ligne dans le tableau CALCULS
+  const row = document.createElement('tr');
+  row.setAttribute('data-child-index', newIndex);
+
+  const nameCell = document.createElement('td');
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.className = 'child-name';
+  nameInput.placeholder = `ENFANT ${newIndex + 1}`;
+  nameInput.addEventListener('input', (e) => {
+    updateChildName(newIndex, e.target.value, suffixe);
+  });
+  nameCell.appendChild(nameInput);
+  row.appendChild(nameCell);
+
+  const smicCell = document.createElement('td');
+  const smicInput = document.createElement('input');
+  smicInput.type = 'number';
+  smicInput.step = '0.01';
+  smicInput.className = 'smic-rate-input';
+  smicInput.readOnly = true;
+  smicCell.appendChild(smicInput);
+  row.appendChild(smicCell);
+
+  const sujetionCell = document.createElement('td');
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.addEventListener('change', e => {
+    const mult = e.target.closest('tr').querySelector('.multiplicateur');
+    mult.textContent = e.target.checked ? '5' : '4';
+    updateOption1(row, suffixe);
+  });
+  sujetionCell.appendChild(checkbox);
+  row.appendChild(sujetionCell);
+
+  const multCell = document.createElement('td');
+  multCell.className = 'multiplicateur calculated';
+  multCell.textContent = '4';
+  row.appendChild(multCell);
+
+  const daysCell = document.createElement('td');
+  const daysInput = document.createElement('input');
+  daysInput.type = 'number';
+  daysInput.className = 'days-present';
+  daysInput.min = '0';
+  daysInput.addEventListener('input', () => {
+    updateOption1(row, suffixe);
+    updateOption2(row, suffixe);
+  });
+  daysCell.appendChild(daysInput);
+  row.appendChild(daysCell);
+
+  const allowanceCell = document.createElement('td');
+  const allowanceInput = document.createElement('input');
+  allowanceInput.type = 'number';
+  allowanceInput.className = 'daily-allowance';
+  allowanceInput.step = '0.01';
+  allowanceInput.addEventListener('input', () => {
+    updateOption2(row, suffixe);
+  });
+  allowanceCell.appendChild(allowanceInput);
+  row.appendChild(allowanceCell);
+
+  // On saute les cellules fusionnées (forfait/repas), elles sont déjà présentes
+
+  const opt1Cell = document.createElement('td');
+  const opt1Input = document.createElement('input');
+  opt1Input.type = 'number';
+  opt1Input.className = 'option1-value';
+  opt1Input.readOnly = true;
+  opt1Cell.appendChild(opt1Input);
+  row.appendChild(opt1Cell);
+
+  const opt2Cell = document.createElement('td');
+  const opt2Input = document.createElement('input');
+  opt2Input.type = 'number';
+  opt2Input.className = 'option2-value';
+  opt2Input.readOnly = true;
+  opt2Cell.appendChild(opt2Input);
+  row.appendChild(opt2Cell);
+
+  const totalRow = calculsTable.querySelector('.total-row');
+if (totalRow) {
+  calculsTable.insertBefore(row, totalRow);
+} else {
+  calculsTable.appendChild(row);
+}
+
+  // ➕ Ajouter colonnes + / - dans chaque ligne du tableau JOURS
+  const joursRows = joursTable.querySelectorAll('tr');
+  joursRows.forEach((row, index) => {
+    if (index === 0) {
+      const th = document.createElement('th');
+      th.colSpan = '2';
+      th.className = `child-name-${newIndex}${suffixe}`;
+      th.textContent = `ENFANT ${newIndex + 1}`;
+      row.appendChild(th);
+    } else if (index === 1) {
+      const plusTh = document.createElement('th');
+      plusTh.innerHTML = '<i class="fas fa-plus"></i>';
+      const minusTh = document.createElement('th');
+      minusTh.innerHTML = '<i class="fas fa-minus"></i>';
+      row.appendChild(plusTh);
+      row.appendChild(minusTh);
+    } else {
+      if (row.classList.contains('total-row')) {
+        const plusTotal = document.createElement('td');
+        plusTotal.className = 'plus-total';
+        plusTotal.textContent = '0';
+        const minusTotal = document.createElement('td');
+        minusTotal.className = 'minus-total';
+        minusTotal.textContent = '0';
+        row.appendChild(plusTotal);
+        row.appendChild(minusTotal);
+      } else if (row.classList.contains('total-difference')) {
+        const diffCell = document.createElement('td');
+        diffCell.colSpan = '2';
+        diffCell.className = 'difference-value';
+        diffCell.textContent = '0';
+        row.appendChild(diffCell);
+      } else {
+        const plusTd = document.createElement('td');
+        const plusInput = document.createElement('input');
+        plusInput.type = 'number';
+        plusInput.min = '0';
+        plusInput.addEventListener('input', () => {
+          calculateColumnTotals(suffixe);
+          updateDaysPresent(newIndex, suffixe);
+        });
+        plusTd.appendChild(plusInput);
+
+        const minusTd = document.createElement('td');
+        const minusInput = document.createElement('input');
+        minusInput.type = 'number';
+        minusInput.min = '0';
+        minusInput.addEventListener('input', () => {
+          calculateColumnTotals(suffixe);
+          updateDaysPresent(newIndex, suffixe);
+        });
+        minusTd.appendChild(minusInput);
+
+        row.appendChild(plusTd);
+        row.appendChild(minusTd);
+      }
+    }
+  });
+
+  // Recalculer tout
+  calculateColumnTotals(suffixe);
+  updateOption1(row, suffixe);
+  updateOption2(row, suffixe);
+}
+
+// ✅ Initialisation améliorée des tableaux au chargement
+window.addEventListener('DOMContentLoaded', () => {
+  createCalculsTable("calculsA");
+  createJoursTable("joursA");
+
+  createCalculsTable("calculsJ", "J");
+  createJoursTable("joursJ");
+
+  // Retarder l'application du SMIC pour garantir que les inputs existent
+  setTimeout(() => {
+    const smicA = document.getElementById("globalSmicRate")?.value || '0';
+    updateSmicRates(smicA, '');
+
+    const smicJ = document.getElementById("globalSmicRateJ")?.value || '0';
+    updateSmicRates(smicJ, 'J');
+  }, 0);
+
+  loadData();
+  loadDataJerome();
+});
+
+
+
+</script>
+</body>
+</html>
