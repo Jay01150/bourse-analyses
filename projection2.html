@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title> Projection LMP vs LMNP </title>
+<head>
+  <meta charset="UTF-8">
+  <title> Projection LMP vs LMNP </title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>📊</text></svg>">
+  <style>
+body {
+  font-family: 'Lato', sans-serif;
+  background: #f4faff;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+#container {
+  padding: 30px;
+  max-width: 80%;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2em;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+#onglets, #tabs-biens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-btn, .save-btn {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.toggle-btn.active-tab {
+  background-color: #ff914d;
+  color: white;
+}
+
+.save-btn {
+  margin: 6px;
+  color: white;
+  background-color: #00bfff;
+}
+
+.save-btn:nth-child(2n) {
+  background-color: #9cb89c;
+}
+
+#contenu, #contenu-biens {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.bien-block {
+  background: white;
+  padding: 15px;
+  margin-bottom: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.bien-block h3 {
+  color: #007bff;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.bien-block table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  border: 2px solid #ddd;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.bien-block th, .bien-block td {
+  padding: 6px 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.bien-block th {
+  background-color: #9cb89c;
+  color: white;
+  font-weight: bold;
+}
+
+input[type="number"] {
+  width: 70px;
+  padding: 4px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.2s;
+}
+
+input[type="number"]:focus {
+  border: 1px solid #007bff;
+  outline: none;
+}
+
+input:disabled {
+  background-color: #f3f3f3;
+  color: #aaa;
+}
+
+.active-tab {
+  background-color: #ff914d;
+  color: white;
+  font-weight: bold;
+}
+
+/* Optionnel mais sympa */
+.reset-cell {
+  cursor: pointer;
+  color: #b71c1c;
+  font-weight: bold;
+  margin-left: 6px;
+}
+.reset-cell:hover {
+  text-decoration: underline;
+}
+/* Amélioration du tableau de résultats fiscaux */
+#tab-resultat table {
+  margin: auto;
+  width: 90%;
+  font-size: 1.05rem;
+  border-collapse: collapse;
+  border: 1px solid #bbb;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+#tab-resultat th, #tab-resultat td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+#tab-resultat thead th {
+  background-color: #00796b;
+  color: white;
+  font-weight: bold;
+}
+
+#tab-resultat tfoot th {
+  background-color: #e0f2f1;
+  font-weight: bold;
+}
+
+/* Réduction taille du graphique */
+#chartFiscal {
+  display: block;
+  max-width: 90%;
+  margin: 30px auto 0 auto;
+  height: auto !important;
+}
+#chartFiscal {
+  display: block;
+  margin: 30px auto;
+  width: 90% !important;
+  max-width: 1200px;
+  height: 500px !important;
+}
+<style>
+  #tab-donnees,
+  #tab-resultat,
+  #tab-simulateur,
+  #tab-classements,
+  #tab-ia {
+    margin-top: 40px;
+  }
+</style>
+
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <header><h1>📊 Projection LMP vs LMNP (2025 - 2034)</h1></header>
+  <div style="text-align: center; margin-top: 20px;">
+  <a href="index.html" style="
+  display: inline-block;
+  background: #00796b;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: background 0.3s;">
+  🏠 Retour à l'accueil
+</a>
+
+<!-- Onglets navigation -->
+<div style="text-align:center; margin-top: 20px;">
+  <button class="toggle-btn" onclick="showTab('tab-donnees')">📋 Données</button>
+  <button class="toggle-btn" onclick="showTab('tab-resultat'); ;">📈 Résultat</button>
+  <button class="toggle-btn" onclick="showTab('tab-simulateur')">🧮 Simulateur BIC</button>
+   <button class="toggle-btn" onclick="showTab('tab-ia')">🧠 IA</button>
+</div>
+
+
+  <div>
+<div id="container">
+  <!-- Onglet 1 : Données -->
+  <div id="tab-donnees">
+    <h2>🔢 DONNEES </h2>
+        <div id="tabs-biens" style="text-align:center; margin:10px 0;"></div>
+<div id="contenu-biens"></div>
+  </div>
+
+  <!-- Onglet 2 : Résultat -->
+  <div id="tab-resultat" style="display:none">
+    <h2>📈 RESULTAT</h2>
+    <div style="margin-bottom:10px;"><label>Stock initial amortissement écartés (31/12/2024) (€) : <input type="number" id="stock-initial" value="50000" onchange="updateStockInitial()"></label></div>
+    <table>
+      <thead>
+        <tr><th>Année</th><th>Résultat comptable</th><th>Amortissements écartés</th><th>Stock restant</th><th>RSI (40%)</th><th>IR (30%)</th><th>Total LMP</th><th>Total LMNP</th></tr>
+      </thead>
+      <tbody id="fiscal-body"></tbody>
+      <tfoot>
+        <tr><th colspan="6">Cumul total</th><th id="cumul-lmp">0</th><th id="cumul-lmnp">0</th></tr>
+        <tr><th colspan="6">Moyenne annuelle</th><th id="moy-lmp">0</th><th id="moy-lmnp">0</th></tr>
+      </tfoot>
+    </table>
+    <canvas id="chartFiscal" style="margin: 30px auto 0 auto; display:block; max-width: 60%;"></canvas>
+  </div>
+
+  <!-- 🧮 Onglet 3 : Simulateur BIC - Nouveau design -->
+<div id="tab-simulateur" style="display:none">
+  <h2 style="text-align:center; margin-bottom:30px; font-size:2rem;">🧮 Simulateur d'imposition BIC</h2>
+
+  <div style="max-width:1100px; margin:auto; background:white; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.05); padding:30px;">
+    <table style="width:100%; border-collapse:collapse; font-size:1.2rem;">
+      <thead>
+        <tr style="background:#00796b; color:white;">
+          <th style="padding:14px; text-align:left;">Paramètre</th>
+          <th style="padding:14px; text-align:left;">Valeur saisie</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px;">Bénéfice BIC imposable (€)</td>
+          <td style="padding:12px;"><input type="number" id="benefice" value="10000" style="width:200px; padding:10px; font-size:1.2rem;"></td>
+        </tr>
+        <tr>
+          <td style="padding:12px;">TMI (Tranche marginale d'imposition)</td>
+          <td style="padding:12px;">
+            <select id="tmi" style="padding:10px; font-size:1.2rem; width:220px;">
+              <option value="0">0 %</option>
+              <option value="0.11">11 %</option>
+              <option value="0.30" selected>30 %</option>
+              <option value="0.41">41 %</option>
+              <option value="0.45">45 %</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:12px;">Taux SSI (%)</td>
+          <td style="padding:12px;"><input type="number" id="ssi" value="40" style="width:200px; padding:10px; font-size:1.2rem;"></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center; padding:16px;"><button onclick="calculer()" style="padding:14px 26px; font-weight:bold; font-size:1.2rem; border-radius:10px; background:#00bfff; color:white; border:none; cursor:pointer;">🔍 Calculer</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:40px; display:flex; justify-content:space-between; text-align:center; gap:30px;">
+      <div style="background:#e8f5e9; border-radius:16px; padding:30px; width:40%; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+        <h3 style="color:#388e3c; margin-bottom:20px; font-size:1.5rem;">🟢 LMNP</h3>
+        <div id="lmnp" style="font-size:1.5rem; font-weight:bold;"></div>
+      </div>
+
+      <div style="background:#fff3e0; border-radius:16px; padding:30px; width:40%; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+        <h3 style="color:#f57c00; margin-bottom:20px; font-size:1.5rem;">🟠 LMP</h3>
+        <div id="lmp" style="font-size:1.5rem; font-weight:bold;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const labels = Array.from({ length: 10 }, (_, i) => 2025 + i);
+function calculer() {
+  const benefice = parseFloat(document.getElementById("benefice").value || 0);
+  const tmi = parseFloat(document.getElementById("tmi").value || 0);
+  const ssi = parseFloat(document.getElementById("ssi").value || 0) / 100;
+
+  const impotLMNP = benefice * 0.30 + 0.172 * benefice;
+  const impotLMP = benefice * tmi + benefice * ssi;
+
+  document.getElementById("lmnp").innerHTML = `Impôt estimé : <br><span style='color:#33691e'>${impotLMNP.toFixed(0)} €</span>`;
+  document.getElementById("lmp").innerHTML = `Impôt estimé : <br><span style='color:#bf360c'>${impotLMP.toFixed(0)} €</span>`;
+}
+</script>
+
+<!-- 🔧 Fin du simulateur BIC correctement fermée -->
+</div> <!-- Fin #tab-simulateur -->
+
+<!-- 🧠 Onglet 4 : IA (désormais bien séparé) -->
+<div id="tab-ia" style="display:none">
+  <h2 style="text-align:center; margin-bottom:30px;">🧠 Analyse Copilot IA & Export Excel</h2>
+  <div style="margin: 20px auto; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 800px;">
+    <h3 style="margin-top: 0; color: #00796b;">🛠️ Outils d’analyse & export</h3>
+
+    <div style="margin-top:50px; display:flex; gap:30px; justify-content:center; flex-wrap:wrap;">
+      <div style="flex:1 1 250px; background:#e3f2fd; border-radius:16px; padding:20px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+        <button class="save-btn" onclick="exporterExcel()" style="font-size:1.1rem; padding:20px; border-radius:12px; background:#1976d2; color:white; width:100%;">📤 Télécharger tableau Excel</button>
+      </div>
+      <div style="flex:1 1 250px; background:#e8f5e9; border-radius:16px; padding:20px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+        <button class="save-btn" onclick="lancerAnalyseCopilot()" style="font-size:1.1rem; padding:20px; border-radius:12px; background:#43a047; color:white; width:100%;">🔍 Lancer l’analyse IA</button>
+      </div>
+      <div style="flex:1 1 250px; background:#fff8e1; border-radius:16px; padding:20px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+        <button class="save-btn" onclick="lancerPlanificateurIA()" style="font-size:1.1rem; padding:20px; border-radius:12px; background:#fbc02d; color:#333; width:100%;">📅 Planifier sur 10 ans</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="copilot-resultats" style="display:none; margin-top:20px; background:#f1f8e9; border-left:6px solid #689f38; padding:15px; border-radius:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="color:#33691e;">🤖 Résultats de l'analyse IA</h3>
+      <button class="save-btn" style="padding:6px 12px;" onclick="toggleCopilot()">👁️ Masquer</button>
+    </div>
+    <div id="copilot-content">
+      <div id="resultats-par-bien"></div>
+      <hr style="margin:15px 10px;">
+      <div id="copilot-synthese" style="font-style:italic; margin-top:10px;"></div>
+      <div style="margin-top:10px; text-align:right;">
+        <button class="save-btn" onclick="copierSynthesePourNotion()">📝 Copier version Notion</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="copilot-strategie" style="display:none; margin-top:30px; background:#e3f2fd; border-left:6px solid #2196f3; padding:20px; border-radius:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="color:#0d47a1;">📅 Planification sur 10 ans</h3>
+      <button class="save-btn" style="padding:6px 12px;" onclick="toggleStrategie()">👁️ Masquer</button>
+    </div>
+    <div id="planification-content" style="margin-top:10px;"></div>
+    <div style="margin-top:10px; text-align:right;">
+      <button class="save-btn" onclick="copierPlanificationPourNotion()">📝 Copier version Notion</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🏆 Onglet 5 : Classements -->
+<div id="tab-classements" style="display:none">
+  <h2>🏆 Classement des biens à vendre en priorité</h2>
+  <div id="ranking-fiscal" class="ranking"></div>
+
+  <h2>💰 Classement des biens par cash flow annuel</h2>
+  <div id="ranking-cashflow" class="ranking"></div>
+</div>
+
+
+
+  <div id="copilot-resultats" style="display:none; margin-top:20px; background:#f1f8e9; border-left:6px solid #689f38; padding:15px; border-radius:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="color:#33691e;">🤖 Résultats de l'analyse IA</h3>
+      <button class="save-btn" style="padding:6px 12px;" onclick="toggleCopilot()">👁️ Masquer</button>
+    </div>
+    <div id="copilot-content">
+      <div id="resultats-par-bien"></div>
+      <hr style="margin:15px 10px;">
+      <div id="copilot-synthese" style="font-style:italic; margin-top:10px;"></div>
+      <div style="margin-top:10px; text-align:right;">
+        <button class="save-btn" onclick="copierSynthesePourNotion()">📝 Copier version Notion</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- === Résultat stratégie IA planificatrice === -->
+<div id="copilot-strategie" style="display:none; margin-top:30px; background:#e3f2fd; border-left:6px solid #2196f3; padding:20px; border-radius:12px;">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h3 style="color:#0d47a1;">📅 Planification sur 10 ans</h3>
+    <button class="save-btn" style="padding:6px 12px;" onclick="toggleStrategie()">👁️ Masquer</button>
+  </div>
+  <div id="planification-content" style="margin-top:10px;"></div>
+<div style="margin-top:10px; text-align:right;">
+  <button class="save-btn" onclick="copierPlanificationPourNotion()">📝 Copier version Notion</button>
+</div>
+</div>
+
+  <script>
+    const RSI_RATE = 0.4225, IR_RATE = 0.30, LMNP_RATE = 0.362, LMNP_BONUS = 3000;
+    let stockAmort;
+    const biens = ["Ferry 1","Ferry 2","Berard","Eglise T3","Eglise Studio","Sorlin","Acquises 1","Phoenix 1","Phoenix 2","Phoenix 3"];
+    const annees = Array.from({ length: 10 }, (_, i) => 2025 + i);
+
+let chartFiscal = null;
+
+function afficherBien(nomBien) {
+  biens.forEach(bien => {
+    const div = document.getElementById(`bien-${bien}`);
+    if (div) div.style.display = bien === nomBien ? "block" : "none";
+  });
+
+  // Gestion de l’onglet actif visuellement
+  Array.from(document.getElementById("tabs-biens").children).forEach(btn => {
+    btn.classList.toggle("active-tab", btn.textContent === nomBien);
+  });
+}
+
+let donneesInitiales = {};
+
+try {
+  const savedData = localStorage.getItem("lmp_lmnp_donnees");
+  if (savedData) {
+    donneesInitiales = JSON.parse(savedData);
+  } else {
+    // ici seulement tu initialises tes valeurs en dur si rien n'existe
+    donneesInitiales = {
+  "Ferry 1_2025_loyer": "7452",
+  "Ferry 1_2025_gli": "588.71",
+  "Ferry 1_2025_tf": "484",
+  "Ferry 1_2025_ass": "258",
+  "Ferry 1_2025_amort": "4778",
+  "Ferry 1_2025_mob": "500",
+  "Ferry 1_2025_interet": "1466",
+  "Ferry 1_2025_autre": "300",
+  "Ferry 1_2025_cfe": "323",
+  "Ferry 1_2025_compta": "145",
+  "Ferry 1_2025_total": "8342.71",
+  "Ferry 1_2025_net": "-890.71",
+  "Ferry 1_2026_loyer": "7452",
+  "Ferry 1_2026_gli": "588.71",
+  "Ferry 1_2026_tf": "484",
+  "Ferry 1_2026_ass": "258",
+  "Ferry 1_2026_amort": "4778",
+  "Ferry 1_2026_mob": "500",
+  "Ferry 1_2026_interet": "1451",
+  "Ferry 1_2026_autre": "300",
+  "Ferry 1_2026_cfe": "323",
+  "Ferry 1_2026_compta": "145",
+  "Ferry 1_2026_total": "8327.71",
+  "Ferry 1_2026_net": "-875.71",
+  "Ferry 1_2027_loyer": "7452",
+  "Ferry 1_2027_gli": "588.71",
+  "Ferry 1_2027_tf": "484",
+  "Ferry 1_2027_ass": "258",
+  "Ferry 1_2027_amort": "4278",
+  "Ferry 1_2027_mob": "",
+  "Ferry 1_2027_interet": "1435",
+  "Ferry 1_2027_autre": "300",
+  "Ferry 1_2027_cfe": "323",
+  "Ferry 1_2027_compta": "145",
+  "Ferry 1_2027_total": "7811.71",
+  "Ferry 1_2027_net": "-359.71",
+  "Ferry 1_2028_loyer": "7452",
+  "Ferry 1_2028_gli": "588.71",
+  "Ferry 1_2028_tf": "484",
+  "Ferry 1_2028_ass": "258",
+  "Ferry 1_2028_amort": "4278",
+  "Ferry 1_2028_mob": "",
+  "Ferry 1_2028_interet": "1418",
+  "Ferry 1_2028_autre": "300",
+  "Ferry 1_2028_cfe": "323",
+  "Ferry 1_2028_compta": "145",
+  "Ferry 1_2028_total": "7794.71",
+  "Ferry 1_2028_net": "-342.71",
+  "Ferry 1_2029_loyer": "7452",
+  "Ferry 1_2029_gli": "588.71",
+  "Ferry 1_2029_tf": "484",
+  "Ferry 1_2029_ass": "258",
+  "Ferry 1_2029_amort": "4278",
+  "Ferry 1_2029_mob": "",
+  "Ferry 1_2029_interet": "1399",
+  "Ferry 1_2029_autre": "300",
+  "Ferry 1_2029_cfe": "323",
+  "Ferry 1_2029_compta": "145",
+  "Ferry 1_2029_total": "7775.71",
+  "Ferry 1_2029_net": "-323.71",
+  "Ferry 1_2030_loyer": "7452",
+  "Ferry 1_2030_gli": "588.71",
+  "Ferry 1_2030_tf": "484",
+  "Ferry 1_2030_ass": "258",
+  "Ferry 1_2030_amort": "4278",
+  "Ferry 1_2030_mob": "",
+  "Ferry 1_2030_interet": "1379",
+  "Ferry 1_2030_autre": "300",
+  "Ferry 1_2030_cfe": "323",
+  "Ferry 1_2030_compta": "145",
+  "Ferry 1_2030_total": "7755.71",
+  "Ferry 1_2030_net": "-303.71",
+  "Ferry 1_2031_loyer": "7452",
+  "Ferry 1_2031_gli": "588.71",
+  "Ferry 1_2031_tf": "484",
+  "Ferry 1_2031_ass": "258",
+  "Ferry 1_2031_amort": "4278",
+  "Ferry 1_2031_mob": "",
+  "Ferry 1_2031_interet": "1358",
+  "Ferry 1_2031_autre": "300",
+  "Ferry 1_2031_cfe": "323",
+  "Ferry 1_2031_compta": "145",
+  "Ferry 1_2031_total": "7734.71",
+  "Ferry 1_2031_net": "-282.71",
+  "Ferry 1_2032_loyer": "7452",
+  "Ferry 1_2032_gli": "588.71",
+  "Ferry 1_2032_tf": "484",
+  "Ferry 1_2032_ass": "258",
+  "Ferry 1_2032_amort": "4278",
+  "Ferry 1_2032_mob": "",
+  "Ferry 1_2032_interet": "1336",
+  "Ferry 1_2032_autre": "300",
+  "Ferry 1_2032_cfe": "323",
+  "Ferry 1_2032_compta": "145",
+  "Ferry 1_2032_total": "7712.71",
+  "Ferry 1_2032_net": "-260.71",
+  "Ferry 1_2033_loyer": "7452",
+  "Ferry 1_2033_gli": "588.71",
+  "Ferry 1_2033_tf": "484",
+  "Ferry 1_2033_ass": "258",
+  "Ferry 1_2033_amort": "4278",
+  "Ferry 1_2033_mob": "",
+  "Ferry 1_2033_interet": "1312",
+  "Ferry 1_2033_autre": "300",
+  "Ferry 1_2033_cfe": "323",
+  "Ferry 1_2033_compta": "145",
+  "Ferry 1_2033_total": "7688.71",
+  "Ferry 1_2033_net": "-236.71",
+  "Ferry 1_2034_loyer": "7452",
+  "Ferry 1_2034_gli": "588.71",
+  "Ferry 1_2034_tf": "484",
+  "Ferry 1_2034_ass": "258",
+  "Ferry 1_2034_amort": "4278",
+  "Ferry 1_2034_mob": "",
+  "Ferry 1_2034_interet": "1286",
+  "Ferry 1_2034_autre": "300",
+  "Ferry 1_2034_cfe": "323",
+  "Ferry 1_2034_compta": "145",
+  "Ferry 1_2034_total": "7662.71",
+  "Ferry 1_2034_net": "-210.71",
+  "Ferry 2_2025_loyer": "8064",
+  "Ferry 2_2025_gli": "637.06",
+  "Ferry 2_2025_tf": "484",
+  "Ferry 2_2025_ass": "258",
+  "Ferry 2_2025_amort": "4888.5",
+  "Ferry 2_2025_mob": "900",
+  "Ferry 2_2025_interet": "1587",
+  "Ferry 2_2025_autre": "150",
+  "Ferry 2_2025_cfe": "",
+  "Ferry 2_2025_compta": "145",
+  "Ferry 2_2025_total": "8149.56",
+  "Ferry 2_2025_net": "-85.56",
+  "Ferry 2_2026_loyer": "8064",
+  "Ferry 2_2026_gli": "637.06",
+  "Ferry 2_2026_tf": "484",
+  "Ferry 2_2026_ass": "258",
+  "Ferry 2_2026_amort": "4888.5",
+  "Ferry 2_2026_mob": "900",
+  "Ferry 2_2026_interet": "1571",
+  "Ferry 2_2026_autre": "150",
+  "Ferry 2_2026_cfe": "",
+  "Ferry 2_2026_compta": "145",
+  "Ferry 2_2026_total": "8133.56",
+  "Ferry 2_2026_net": "-69.56",
+  "Ferry 2_2027_loyer": "8064",
+  "Ferry 2_2027_gli": "637.06",
+  "Ferry 2_2027_tf": "484",
+  "Ferry 2_2027_ass": "258",
+  "Ferry 2_2027_amort": "3986.5",
+  "Ferry 2_2027_mob": "",
+  "Ferry 2_2027_interet": "1553",
+  "Ferry 2_2027_autre": "150",
+  "Ferry 2_2027_cfe": "",
+  "Ferry 2_2027_compta": "145",
+  "Ferry 2_2027_total": "7213.56",
+  "Ferry 2_2027_net": "850.44",
+  "Ferry 2_2028_loyer": "8064",
+  "Ferry 2_2028_gli": "637.06",
+  "Ferry 2_2028_tf": "484",
+  "Ferry 2_2028_ass": "258",
+  "Ferry 2_2028_amort": "3986.5",
+  "Ferry 2_2028_mob": "",
+  "Ferry 2_2028_interet": "1534",
+  "Ferry 2_2028_autre": "150",
+  "Ferry 2_2028_cfe": "",
+  "Ferry 2_2028_compta": "145",
+  "Ferry 2_2028_total": "7194.56",
+  "Ferry 2_2028_net": "869.44",
+  "Ferry 2_2029_loyer": "8064",
+  "Ferry 2_2029_gli": "637.06",
+  "Ferry 2_2029_tf": "484",
+  "Ferry 2_2029_ass": "258",
+  "Ferry 2_2029_amort": "3986.5",
+  "Ferry 2_2029_mob": "",
+  "Ferry 2_2029_interet": "1514",
+  "Ferry 2_2029_autre": "150",
+  "Ferry 2_2029_cfe": "",
+  "Ferry 2_2029_compta": "145",
+  "Ferry 2_2029_total": "7174.56",
+  "Ferry 2_2029_net": "889.44",
+  "Ferry 2_2030_loyer": "8064",
+  "Ferry 2_2030_gli": "637.06",
+  "Ferry 2_2030_tf": "484",
+  "Ferry 2_2030_ass": "258",
+  "Ferry 2_2030_amort": "3986.5",
+  "Ferry 2_2030_mob": "",
+  "Ferry 2_2030_interet": "1493",
+  "Ferry 2_2030_autre": "150",
+  "Ferry 2_2030_cfe": "",
+  "Ferry 2_2030_compta": "145",
+  "Ferry 2_2030_total": "7153.56",
+  "Ferry 2_2030_net": "910.44",
+  "Ferry 2_2031_loyer": "8064",
+  "Ferry 2_2031_gli": "637.06",
+  "Ferry 2_2031_tf": "484",
+  "Ferry 2_2031_ass": "258",
+  "Ferry 2_2031_amort": "3986.5",
+  "Ferry 2_2031_mob": "",
+  "Ferry 2_2031_interet": "1470",
+  "Ferry 2_2031_autre": "150",
+  "Ferry 2_2031_cfe": "",
+  "Ferry 2_2031_compta": "145",
+  "Ferry 2_2031_total": "7130.56",
+  "Ferry 2_2031_net": "933.44",
+  "Ferry 2_2032_loyer": "8064",
+  "Ferry 2_2032_gli": "637.06",
+  "Ferry 2_2032_tf": "484",
+  "Ferry 2_2032_ass": "258",
+  "Ferry 2_2032_amort": "3986.5",
+  "Ferry 2_2032_mob": "",
+  "Ferry 2_2032_interet": "1445",
+  "Ferry 2_2032_autre": "150",
+  "Ferry 2_2032_cfe": "",
+  "Ferry 2_2032_compta": "145",
+  "Ferry 2_2032_total": "7105.56",
+  "Ferry 2_2032_net": "958.44",
+  "Ferry 2_2033_loyer": "8064",
+  "Ferry 2_2033_gli": "637.06",
+  "Ferry 2_2033_tf": "484",
+  "Ferry 2_2033_ass": "258",
+  "Ferry 2_2033_amort": "3986.5",
+  "Ferry 2_2033_mob": "",
+  "Ferry 2_2033_interet": "1420",
+  "Ferry 2_2033_autre": "150",
+  "Ferry 2_2033_cfe": "",
+  "Ferry 2_2033_compta": "145",
+  "Ferry 2_2033_total": "7080.56",
+  "Ferry 2_2033_net": "983.44",
+  "Ferry 2_2034_loyer": "8064",
+  "Ferry 2_2034_gli": "637.06",
+  "Ferry 2_2034_tf": "484",
+  "Ferry 2_2034_ass": "258",
+  "Ferry 2_2034_amort": "3986.5",
+  "Ferry 2_2034_mob": "",
+  "Ferry 2_2034_interet": "1392",
+  "Ferry 2_2034_autre": "150",
+  "Ferry 2_2034_cfe": "",
+  "Ferry 2_2034_compta": "145",
+  "Ferry 2_2034_total": "7052.56",
+  "Ferry 2_2034_net": "1011.44",
+  "Berard_2025_loyer": "7500",
+  "Berard_2025_gli": "592.50",
+  "Berard_2025_tf": "742",
+  "Berard_2025_ass": "105",
+  "Berard_2025_amort": "3872.5",
+  "Berard_2025_mob": "600",
+  "Berard_2025_interet": "1476",
+  "Berard_2025_autre": "504",
+  "Berard_2025_cfe": "",
+  "Berard_2025_compta": "145",
+  "Berard_2025_total": "7437.00",
+  "Berard_2025_net": "63.00",
+  "Berard_2026_loyer": "7500",
+  "Berard_2026_gli": "592.50",
+  "Berard_2026_tf": "742",
+  "Berard_2026_ass": "105",
+  "Berard_2026_amort": "3872.5",
+  "Berard_2026_mob": "600",
+  "Berard_2026_interet": "1461",
+  "Berard_2026_autre": "504",
+  "Berard_2026_cfe": "",
+  "Berard_2026_compta": "145",
+  "Berard_2026_total": "7422.00",
+  "Berard_2026_net": "78.00",
+  "Berard_2027_loyer": "7500",
+  "Berard_2027_gli": "592.50",
+  "Berard_2027_tf": "742",
+  "Berard_2027_ass": "105",
+  "Berard_2027_amort": "3272.5",
+  "Berard_2027_mob": "",
+  "Berard_2027_interet": "1490",
+  "Berard_2027_autre": "504",
+  "Berard_2027_cfe": "",
+  "Berard_2027_compta": "145",
+  "Berard_2027_total": "6851.00",
+  "Berard_2027_net": "649.00",
+  "Berard_2028_loyer": "7500",
+  "Berard_2028_gli": "592.50",
+  "Berard_2028_tf": "742",
+  "Berard_2028_ass": "105",
+  "Berard_2028_amort": "3272.5",
+  "Berard_2028_mob": "",
+  "Berard_2028_interet": "1445",
+  "Berard_2028_autre": "504",
+  "Berard_2028_cfe": "",
+  "Berard_2028_compta": "145",
+  "Berard_2028_total": "6806.00",
+  "Berard_2028_net": "694.00",
+  "Berard_2029_loyer": "7500",
+  "Berard_2029_gli": "592.50",
+  "Berard_2029_tf": "742",
+  "Berard_2029_ass": "105",
+  "Berard_2029_amort": "3272.5",
+  "Berard_2029_mob": "",
+  "Berard_2029_interet": "1427",
+  "Berard_2029_autre": "504",
+  "Berard_2029_cfe": "",
+  "Berard_2029_compta": "145",
+  "Berard_2029_total": "6788.00",
+  "Berard_2029_net": "712.00",
+  "Berard_2030_loyer": "7500",
+  "Berard_2030_gli": "592.50",
+  "Berard_2030_tf": "742",
+  "Berard_2030_ass": "105",
+  "Berard_2030_amort": "3272.5",
+  "Berard_2030_mob": "",
+  "Berard_2030_interet": "1408",
+  "Berard_2030_autre": "504",
+  "Berard_2030_cfe": "",
+  "Berard_2030_compta": "145",
+  "Berard_2030_total": "6769.00",
+  "Berard_2030_net": "731.00",
+  "Berard_2031_loyer": "7500",
+  "Berard_2031_gli": "592.50",
+  "Berard_2031_tf": "742",
+  "Berard_2031_ass": "105",
+  "Berard_2031_amort": "3272.5",
+  "Berard_2031_mob": "",
+  "Berard_2031_interet": "1388",
+  "Berard_2031_autre": "504",
+  "Berard_2031_cfe": "",
+  "Berard_2031_compta": "145",
+  "Berard_2031_total": "6749.00",
+  "Berard_2031_net": "751.00",
+  "Berard_2032_loyer": "7500",
+  "Berard_2032_gli": "592.50",
+  "Berard_2032_tf": "742",
+  "Berard_2032_ass": "105",
+  "Berard_2032_amort": "3272.5",
+  "Berard_2032_mob": "",
+  "Berard_2032_interet": "1367",
+  "Berard_2032_autre": "504",
+  "Berard_2032_cfe": "",
+  "Berard_2032_compta": "145",
+  "Berard_2032_total": "6728.00",
+  "Berard_2032_net": "772.00",
+  "Berard_2033_loyer": "7500",
+  "Berard_2033_gli": "592.50",
+  "Berard_2033_tf": "742",
+  "Berard_2033_ass": "105",
+  "Berard_2033_amort": "3272.5",
+  "Berard_2033_mob": "",
+  "Berard_2033_interet": "1344",
+  "Berard_2033_autre": "504",
+  "Berard_2033_cfe": "",
+  "Berard_2033_compta": "145",
+  "Berard_2033_total": "6705.00",
+  "Berard_2033_net": "795.00",
+  "Berard_2034_loyer": "7500",
+  "Berard_2034_gli": "592.50",
+  "Berard_2034_tf": "742",
+  "Berard_2034_ass": "105",
+  "Berard_2034_amort": "3272.5",
+  "Berard_2034_mob": "",
+  "Berard_2034_interet": "1320",
+  "Berard_2034_autre": "504",
+  "Berard_2034_cfe": "",
+  "Berard_2034_compta": "145",
+  "Berard_2034_total": "6681.00",
+  "Berard_2034_net": "819.00",
+  "Eglise T3_2025_loyer": "9540",
+  "Eglise T3_2025_gli": "753.66",
+  "Eglise T3_2025_tf": "600",
+  "Eglise T3_2025_ass": "900",
+  "Eglise T3_2025_amort": "4229",
+  "Eglise T3_2025_mob": "600",
+  "Eglise T3_2025_interet": "1877",
+  "Eglise T3_2025_autre": "",
+  "Eglise T3_2025_cfe": "",
+  "Eglise T3_2025_compta": "145",
+  "Eglise T3_2025_total": "8504.66",
+  "Eglise T3_2025_net": "1035.34",
+  "Eglise T3_2026_loyer": "9540",
+  "Eglise T3_2026_gli": "753.66",
+  "Eglise T3_2026_tf": "600",
+  "Eglise T3_2026_ass": "900",
+  "Eglise T3_2026_amort": "4229",
+  "Eglise T3_2026_mob": "600",
+  "Eglise T3_2026_interet": "1848",
+  "Eglise T3_2026_autre": "",
+  "Eglise T3_2026_cfe": "",
+  "Eglise T3_2026_compta": "145",
+  "Eglise T3_2026_total": "8475.66",
+  "Eglise T3_2026_net": "1064.34",
+  "Eglise T3_2027_loyer": "9540",
+  "Eglise T3_2027_gli": "753.66",
+  "Eglise T3_2027_tf": "600",
+  "Eglise T3_2027_ass": "900",
+  "Eglise T3_2027_amort": "3629",
+  "Eglise T3_2027_mob": "",
+  "Eglise T3_2027_interet": "1838",
+  "Eglise T3_2027_autre": "",
+  "Eglise T3_2027_cfe": "",
+  "Eglise T3_2027_compta": "145",
+  "Eglise T3_2027_total": "7865.66",
+  "Eglise T3_2027_net": "1674.34",
+  "Eglise T3_2028_loyer": "9540",
+  "Eglise T3_2028_gli": "753.66",
+  "Eglise T3_2028_tf": "600",
+  "Eglise T3_2028_ass": "900",
+  "Eglise T3_2028_amort": "3629",
+  "Eglise T3_2028_mob": "",
+  "Eglise T3_2028_interet": "1815",
+  "Eglise T3_2028_autre": "",
+  "Eglise T3_2028_cfe": "",
+  "Eglise T3_2028_compta": "145",
+  "Eglise T3_2028_total": "7842.66",
+  "Eglise T3_2028_net": "1697.34",
+  "Eglise T3_2029_loyer": "9540",
+  "Eglise T3_2029_gli": "753.66",
+  "Eglise T3_2029_tf": "600",
+  "Eglise T3_2029_ass": "900",
+  "Eglise T3_2029_amort": "3629",
+  "Eglise T3_2029_mob": "",
+  "Eglise T3_2029_interet": "1791",
+  "Eglise T3_2029_autre": "",
+  "Eglise T3_2029_cfe": "",
+  "Eglise T3_2029_compta": "145",
+  "Eglise T3_2029_total": "7818.66",
+  "Eglise T3_2029_net": "1721.34",
+  "Eglise T3_2030_loyer": "9540",
+  "Eglise T3_2030_gli": "753.66",
+  "Eglise T3_2030_tf": "600",
+  "Eglise T3_2030_ass": "900",
+  "Eglise T3_2030_amort": "3629",
+  "Eglise T3_2030_mob": "",
+  "Eglise T3_2030_interet": "1766",
+  "Eglise T3_2030_autre": "",
+  "Eglise T3_2030_cfe": "",
+  "Eglise T3_2030_compta": "145",
+  "Eglise T3_2030_total": "7793.66",
+  "Eglise T3_2030_net": "1746.34",
+  "Eglise T3_2031_loyer": "9540",
+  "Eglise T3_2031_gli": "753.66",
+  "Eglise T3_2031_tf": "600",
+  "Eglise T3_2031_ass": "900",
+  "Eglise T3_2031_amort": "3629",
+  "Eglise T3_2031_mob": "",
+  "Eglise T3_2031_interet": "1739",
+  "Eglise T3_2031_autre": "",
+  "Eglise T3_2031_cfe": "",
+  "Eglise T3_2031_compta": "145",
+  "Eglise T3_2031_total": "7766.66",
+  "Eglise T3_2031_net": "1773.34",
+  "Eglise T3_2032_loyer": "9540",
+  "Eglise T3_2032_gli": "753.66",
+  "Eglise T3_2032_tf": "600",
+  "Eglise T3_2032_ass": "900",
+  "Eglise T3_2032_amort": "3629",
+  "Eglise T3_2032_mob": "",
+  "Eglise T3_2032_interet": "1710",
+  "Eglise T3_2032_autre": "",
+  "Eglise T3_2032_cfe": "",
+  "Eglise T3_2032_compta": "145",
+  "Eglise T3_2032_total": "7737.66",
+  "Eglise T3_2032_net": "1802.34",
+  "Eglise T3_2033_loyer": "9540",
+  "Eglise T3_2033_gli": "753.66",
+  "Eglise T3_2033_tf": "600",
+  "Eglise T3_2033_ass": "900",
+  "Eglise T3_2033_amort": "3629",
+  "Eglise T3_2033_mob": "",
+  "Eglise T3_2033_interet": "1679",
+  "Eglise T3_2033_autre": "",
+  "Eglise T3_2033_cfe": "",
+  "Eglise T3_2033_compta": "145",
+  "Eglise T3_2033_total": "7706.66",
+  "Eglise T3_2033_net": "1833.34",
+  "Eglise T3_2034_loyer": "9540",
+  "Eglise T3_2034_gli": "753.66",
+  "Eglise T3_2034_tf": "600",
+  "Eglise T3_2034_ass": "900",
+  "Eglise T3_2034_amort": "3629",
+  "Eglise T3_2034_mob": "",
+  "Eglise T3_2034_interet": "1613",
+  "Eglise T3_2034_autre": "",
+  "Eglise T3_2034_cfe": "",
+  "Eglise T3_2034_compta": "145",
+  "Eglise T3_2034_total": "7640.66",
+  "Eglise T3_2034_net": "1899.34",
+  "Eglise Studio_2025_loyer": "5940",
+  "Eglise Studio_2025_gli": "469.26",
+  "Eglise Studio_2025_tf": "364",
+  "Eglise Studio_2025_ass": "472",
+  "Eglise Studio_2025_amort": "3137",
+  "Eglise Studio_2025_mob": "400",
+  "Eglise Studio_2025_interet": "1169",
+  "Eglise Studio_2025_autre": "",
+  "Eglise Studio_2025_cfe": "",
+  "Eglise Studio_2025_compta": "145",
+  "Eglise Studio_2025_total": "5756.26",
+  "Eglise Studio_2025_net": "183.74",
+  "Eglise Studio_2026_loyer": "5940",
+  "Eglise Studio_2026_gli": "469.26",
+  "Eglise Studio_2026_tf": "364",
+  "Eglise Studio_2026_ass": "472",
+  "Eglise Studio_2026_amort": "3137",
+  "Eglise Studio_2026_mob": "400",
+  "Eglise Studio_2026_interet": "1157",
+  "Eglise Studio_2026_autre": "",
+  "Eglise Studio_2026_cfe": "",
+  "Eglise Studio_2026_compta": "145",
+  "Eglise Studio_2026_total": "5744.26",
+  "Eglise Studio_2026_net": "195.74",
+  "Eglise Studio_2027_loyer": "5940",
+  "Eglise Studio_2027_gli": "469.26",
+  "Eglise Studio_2027_tf": "364",
+  "Eglise Studio_2027_ass": "472",
+  "Eglise Studio_2027_amort": "2737",
+  "Eglise Studio_2027_mob": "",
+  "Eglise Studio_2027_interet": "1144",
+  "Eglise Studio_2027_autre": "",
+  "Eglise Studio_2027_cfe": "",
+  "Eglise Studio_2027_compta": "145",
+  "Eglise Studio_2027_total": "5331.26",
+  "Eglise Studio_2027_net": "608.74",
+  "Eglise Studio_2028_loyer": "5940",
+  "Eglise Studio_2028_gli": "469.26",
+  "Eglise Studio_2028_tf": "364",
+  "Eglise Studio_2028_ass": "472",
+  "Eglise Studio_2028_amort": "2737",
+  "Eglise Studio_2028_mob": "",
+  "Eglise Studio_2028_interet": "1130",
+  "Eglise Studio_2028_autre": "",
+  "Eglise Studio_2028_cfe": "",
+  "Eglise Studio_2028_compta": "145",
+  "Eglise Studio_2028_total": "5317.26",
+  "Eglise Studio_2028_net": "622.74",
+  "Eglise Studio_2029_loyer": "5940",
+  "Eglise Studio_2029_gli": "469.26",
+  "Eglise Studio_2029_tf": "364",
+  "Eglise Studio_2029_ass": "472",
+  "Eglise Studio_2029_amort": "2737",
+  "Eglise Studio_2029_mob": "",
+  "Eglise Studio_2029_interet": "1115",
+  "Eglise Studio_2029_autre": "",
+  "Eglise Studio_2029_cfe": "",
+  "Eglise Studio_2029_compta": "145",
+  "Eglise Studio_2029_total": "5302.26",
+  "Eglise Studio_2029_net": "637.74",
+  "Eglise Studio_2030_loyer": "5940",
+  "Eglise Studio_2030_gli": "469.26",
+  "Eglise Studio_2030_tf": "364",
+  "Eglise Studio_2030_ass": "472",
+  "Eglise Studio_2030_amort": "2737",
+  "Eglise Studio_2030_mob": "",
+  "Eglise Studio_2030_interet": "1100",
+  "Eglise Studio_2030_autre": "",
+  "Eglise Studio_2030_cfe": "",
+  "Eglise Studio_2030_compta": "145",
+  "Eglise Studio_2030_total": "5287.26",
+  "Eglise Studio_2030_net": "652.74",
+  "Eglise Studio_2031_loyer": "5940",
+  "Eglise Studio_2031_gli": "469.26",
+  "Eglise Studio_2031_tf": "364",
+  "Eglise Studio_2031_ass": "472",
+  "Eglise Studio_2031_amort": "2737",
+  "Eglise Studio_2031_mob": "",
+  "Eglise Studio_2031_interet": "1083",
+  "Eglise Studio_2031_autre": "",
+  "Eglise Studio_2031_cfe": "",
+  "Eglise Studio_2031_compta": "145",
+  "Eglise Studio_2031_total": "5270.26",
+  "Eglise Studio_2031_net": "669.74",
+  "Eglise Studio_2032_loyer": "5940",
+  "Eglise Studio_2032_gli": "469.26",
+  "Eglise Studio_2032_tf": "364",
+  "Eglise Studio_2032_ass": "472",
+  "Eglise Studio_2032_amort": "2737",
+  "Eglise Studio_2032_mob": "",
+  "Eglise Studio_2032_interet": "1065",
+  "Eglise Studio_2032_autre": "",
+  "Eglise Studio_2032_cfe": "",
+  "Eglise Studio_2032_compta": "145",
+  "Eglise Studio_2032_total": "5252.26",
+  "Eglise Studio_2032_net": "687.74",
+  "Eglise Studio_2033_loyer": "5940",
+  "Eglise Studio_2033_gli": "469.26",
+  "Eglise Studio_2033_tf": "364",
+  "Eglise Studio_2033_ass": "472",
+  "Eglise Studio_2033_amort": "2737",
+  "Eglise Studio_2033_mob": "",
+  "Eglise Studio_2033_interet": "1046",
+  "Eglise Studio_2033_autre": "",
+  "Eglise Studio_2033_cfe": "",
+  "Eglise Studio_2033_compta": "145",
+  "Eglise Studio_2033_total": "5233.26",
+  "Eglise Studio_2033_net": "706.74",
+  "Eglise Studio_2034_loyer": "5940",
+  "Eglise Studio_2034_gli": "469.26",
+  "Eglise Studio_2034_tf": "364",
+  "Eglise Studio_2034_ass": "472",
+  "Eglise Studio_2034_amort": "2737",
+  "Eglise Studio_2034_mob": "",
+  "Eglise Studio_2034_interet": "1025",
+  "Eglise Studio_2034_autre": "",
+  "Eglise Studio_2034_cfe": "",
+  "Eglise Studio_2034_compta": "145",
+  "Eglise Studio_2034_total": "5212.26",
+  "Eglise Studio_2034_net": "727.74",
+  "Sorlin_2025_loyer": "10740",
+  "Sorlin_2025_gli": "848.46",
+  "Sorlin_2025_tf": "509",
+  "Sorlin_2025_ass": "319",
+  "Sorlin_2025_amort": "6652.5",
+  "Sorlin_2025_mob": "1000",
+  "Sorlin_2025_interet": "2113",
+  "Sorlin_2025_autre": "",
+  "Sorlin_2025_cfe": "175",
+  "Sorlin_2025_compta": "145",
+  "Sorlin_2025_total": "10761.96",
+  "Sorlin_2025_net": "-21.96",
+  "Sorlin_2026_loyer": "10740",
+  "Sorlin_2026_gli": "848.46",
+  "Sorlin_2026_tf": "509",
+  "Sorlin_2026_ass": "319",
+  "Sorlin_2026_amort": "6652.5",
+  "Sorlin_2026_mob": "1000",
+  "Sorlin_2026_interet": "2092",
+  "Sorlin_2026_autre": "",
+  "Sorlin_2026_cfe": "175",
+  "Sorlin_2026_compta": "145",
+  "Sorlin_2026_total": "10740.96",
+  "Sorlin_2026_net": "-0.96",
+  "Sorlin_2027_loyer": "10740",
+  "Sorlin_2027_gli": "848.46",
+  "Sorlin_2027_tf": "509",
+  "Sorlin_2027_ass": "319",
+  "Sorlin_2027_amort": "5652.5",
+  "Sorlin_2027_mob": "",
+  "Sorlin_2027_interet": "2069",
+  "Sorlin_2027_autre": "",
+  "Sorlin_2027_cfe": "175",
+  "Sorlin_2027_compta": "145",
+  "Sorlin_2027_total": "9717.96",
+  "Sorlin_2027_net": "1022.04",
+  "Sorlin_2028_loyer": "10740",
+  "Sorlin_2028_gli": "848.46",
+  "Sorlin_2028_tf": "509",
+  "Sorlin_2028_ass": "319",
+  "Sorlin_2028_amort": "5652.5",
+  "Sorlin_2028_mob": "",
+  "Sorlin_2028_interet": "2044",
+  "Sorlin_2028_autre": "",
+  "Sorlin_2028_cfe": "175",
+  "Sorlin_2028_compta": "145",
+  "Sorlin_2028_total": "9692.96",
+  "Sorlin_2028_net": "1047.04",
+  "Sorlin_2029_loyer": "10740",
+  "Sorlin_2029_gli": "848.46",
+  "Sorlin_2029_tf": "509",
+  "Sorlin_2029_ass": "319",
+  "Sorlin_2029_amort": "5652.5",
+  "Sorlin_2029_mob": "",
+  "Sorlin_2029_interet": "2017",
+  "Sorlin_2029_autre": "",
+  "Sorlin_2029_cfe": "175",
+  "Sorlin_2029_compta": "145",
+  "Sorlin_2029_total": "9665.96",
+  "Sorlin_2029_net": "1074.04",
+  "Sorlin_2030_loyer": "10740",
+  "Sorlin_2030_gli": "848.46",
+  "Sorlin_2030_tf": "509",
+  "Sorlin_2030_ass": "319",
+  "Sorlin_2030_amort": "5652.5",
+  "Sorlin_2030_mob": "",
+  "Sorlin_2030_interet": "1988",
+  "Sorlin_2030_autre": "",
+  "Sorlin_2030_cfe": "175",
+  "Sorlin_2030_compta": "145",
+  "Sorlin_2030_total": "9636.96",
+  "Sorlin_2030_net": "1103.04",
+  "Sorlin_2031_loyer": "10740",
+  "Sorlin_2031_gli": "848.46",
+  "Sorlin_2031_tf": "509",
+  "Sorlin_2031_ass": "319",
+  "Sorlin_2031_amort": "5652.5",
+  "Sorlin_2031_mob": "",
+  "Sorlin_2031_interet": "1958",
+  "Sorlin_2031_autre": "",
+  "Sorlin_2031_cfe": "175",
+  "Sorlin_2031_compta": "145",
+  "Sorlin_2031_total": "9606.96",
+  "Sorlin_2031_net": "1133.04",
+  "Sorlin_2032_loyer": "10740",
+  "Sorlin_2032_gli": "848.46",
+  "Sorlin_2032_tf": "509",
+  "Sorlin_2032_ass": "319",
+  "Sorlin_2032_amort": "5652.5",
+  "Sorlin_2032_mob": "",
+  "Sorlin_2032_interet": "1925",
+  "Sorlin_2032_autre": "",
+  "Sorlin_2032_cfe": "175",
+  "Sorlin_2032_compta": "145",
+  "Sorlin_2032_total": "9573.96",
+  "Sorlin_2032_net": "1166.04",
+  "Sorlin_2033_loyer": "10740",
+  "Sorlin_2033_gli": "848.46",
+  "Sorlin_2033_tf": "509",
+  "Sorlin_2033_ass": "319",
+  "Sorlin_2033_amort": "5652.5",
+  "Sorlin_2033_mob": "",
+  "Sorlin_2033_interet": "1891",
+  "Sorlin_2033_autre": "",
+  "Sorlin_2033_cfe": "175",
+  "Sorlin_2033_compta": "145",
+  "Sorlin_2033_total": "9539.96",
+  "Sorlin_2033_net": "1200.04",
+  "Sorlin_2034_loyer": "10740",
+  "Sorlin_2034_gli": "848.46",
+  "Sorlin_2034_tf": "509.68",
+  "Sorlin_2034_ass": "319.88",
+  "Sorlin_2034_amort": "5652.5",
+  "Sorlin_2034_mob": "",
+  "Sorlin_2034_interet": "1854",
+  "Sorlin_2034_autre": "",
+  "Sorlin_2034_cfe": "175",
+  "Sorlin_2034_compta": "145",
+  "Sorlin_2034_total": "9504.52",
+  "Sorlin_2034_net": "1235.48",
+  "Acquises 1_2025_loyer": "3600",
+  "Acquises 1_2025_gli": "284.40",
+  "Acquises 1_2025_tf": "600",
+  "Acquises 1_2025_ass": "450",
+  "Acquises 1_2025_amort": "4914",
+  "Acquises 1_2025_mob": "600",
+  "Acquises 1_2025_interet": "708",
+  "Acquises 1_2025_autre": "180",
+  "Acquises 1_2025_cfe": "",
+  "Acquises 1_2025_compta": "145",
+  "Acquises 1_2025_total": "7281.40",
+  "Acquises 1_2025_net": "-3681.40",
+  "Acquises 1_2026_loyer": "3600",
+  "Acquises 1_2026_gli": "284.40",
+  "Acquises 1_2026_tf": "600",
+  "Acquises 1_2026_ass": "450",
+  "Acquises 1_2026_amort": "4914",
+  "Acquises 1_2026_mob": "600",
+  "Acquises 1_2026_interet": "701",
+  "Acquises 1_2026_autre": "180",
+  "Acquises 1_2026_cfe": "",
+  "Acquises 1_2026_compta": "145",
+  "Acquises 1_2026_total": "7274.40",
+  "Acquises 1_2026_net": "-3674.40",
+  "Acquises 1_2027_loyer": "3600",
+  "Acquises 1_2027_gli": "284.40",
+  "Acquises 1_2027_tf": "600",
+  "Acquises 1_2027_ass": "450",
+  "Acquises 1_2027_amort": "4314",
+  "Acquises 1_2027_mob": "",
+  "Acquises 1_2027_interet": "693",
+  "Acquises 1_2027_autre": "180",
+  "Acquises 1_2027_cfe": "",
+  "Acquises 1_2027_compta": "145",
+  "Acquises 1_2027_total": "6666.40",
+  "Acquises 1_2027_net": "-3066.40",
+  "Acquises 1_2028_loyer": "3600",
+  "Acquises 1_2028_gli": "284.40",
+  "Acquises 1_2028_tf": "600",
+  "Acquises 1_2028_ass": "450",
+  "Acquises 1_2028_amort": "4314",
+  "Acquises 1_2028_mob": "",
+  "Acquises 1_2028_interet": "685",
+  "Acquises 1_2028_autre": "180",
+  "Acquises 1_2028_cfe": "",
+  "Acquises 1_2028_compta": "145",
+  "Acquises 1_2028_total": "6658.40",
+  "Acquises 1_2028_net": "-3058.40",
+  "Acquises 1_2029_loyer": "3600",
+  "Acquises 1_2029_gli": "284.40",
+  "Acquises 1_2029_tf": "600",
+  "Acquises 1_2029_ass": "450",
+  "Acquises 1_2029_amort": "4314",
+  "Acquises 1_2029_mob": "",
+  "Acquises 1_2029_interet": "676",
+  "Acquises 1_2029_autre": "180",
+  "Acquises 1_2029_cfe": "",
+  "Acquises 1_2029_compta": "145",
+  "Acquises 1_2029_total": "6649.40",
+  "Acquises 1_2029_net": "-3049.40",
+  "Acquises 1_2030_loyer": "3600",
+  "Acquises 1_2030_gli": "284.40",
+  "Acquises 1_2030_tf": "600",
+  "Acquises 1_2030_ass": "450",
+  "Acquises 1_2030_amort": "4314",
+  "Acquises 1_2030_mob": "",
+  "Acquises 1_2030_interet": "666",
+  "Acquises 1_2030_autre": "180",
+  "Acquises 1_2030_cfe": "",
+  "Acquises 1_2030_compta": "145",
+  "Acquises 1_2030_total": "6639.40",
+  "Acquises 1_2030_net": "-3039.40",
+  "Acquises 1_2031_loyer": "3600",
+  "Acquises 1_2031_gli": "284.40",
+  "Acquises 1_2031_tf": "600",
+  "Acquises 1_2031_ass": "450",
+  "Acquises 1_2031_amort": "4314",
+  "Acquises 1_2031_mob": "",
+  "Acquises 1_2031_interet": "656",
+  "Acquises 1_2031_autre": "180",
+  "Acquises 1_2031_cfe": "",
+  "Acquises 1_2031_compta": "145",
+  "Acquises 1_2031_total": "6629.40",
+  "Acquises 1_2031_net": "-3029.40",
+  "Acquises 1_2032_loyer": "3600",
+  "Acquises 1_2032_gli": "284.40",
+  "Acquises 1_2032_tf": "600",
+  "Acquises 1_2032_ass": "450",
+  "Acquises 1_2032_amort": "4314",
+  "Acquises 1_2032_mob": "",
+  "Acquises 1_2032_interet": "645",
+  "Acquises 1_2032_autre": "180",
+  "Acquises 1_2032_cfe": "",
+  "Acquises 1_2032_compta": "145",
+  "Acquises 1_2032_total": "6618.40",
+  "Acquises 1_2032_net": "-3018.40",
+  "Acquises 1_2033_loyer": "3600",
+  "Acquises 1_2033_gli": "284.40",
+  "Acquises 1_2033_tf": "600",
+  "Acquises 1_2033_ass": "450",
+  "Acquises 1_2033_amort": "4314",
+  "Acquises 1_2033_mob": "",
+  "Acquises 1_2033_interet": "634",
+  "Acquises 1_2033_autre": "180",
+  "Acquises 1_2033_cfe": "",
+  "Acquises 1_2033_compta": "145",
+  "Acquises 1_2033_total": "6607.40",
+  "Acquises 1_2033_net": "-3007.40",
+  "Acquises 1_2034_loyer": "3600",
+  "Acquises 1_2034_gli": "284.40",
+  "Acquises 1_2034_tf": "600",
+  "Acquises 1_2034_ass": "450",
+  "Acquises 1_2034_amort": "4314",
+  "Acquises 1_2034_mob": "",
+  "Acquises 1_2034_interet": "621",
+  "Acquises 1_2034_autre": "180",
+  "Acquises 1_2034_cfe": "",
+  "Acquises 1_2034_compta": "145",
+  "Acquises 1_2034_total": "6594.40",
+  "Acquises 1_2034_net": "-2994.40",
+  "Phoenix 1_2025_loyer": "7620",
+  "Phoenix 1_2025_gli": "601.98",
+  "Phoenix 1_2025_tf": "120",
+  "Phoenix 1_2025_ass": "132",
+  "Phoenix 1_2025_amort": "4811",
+  "Phoenix 1_2025_mob": "971",
+  "Phoenix 1_2025_interet": "867",
+  "Phoenix 1_2025_autre": "180",
+  "Phoenix 1_2025_cfe": "",
+  "Phoenix 1_2025_compta": "145",
+  "Phoenix 1_2025_total": "6856.98",
+  "Phoenix 1_2025_net": "763.02",
+  "Phoenix 1_2026_loyer": "7620",
+  "Phoenix 1_2026_gli": "601.98",
+  "Phoenix 1_2026_tf": "120",
+  "Phoenix 1_2026_ass": "132",
+  "Phoenix 1_2026_amort": "4811",
+  "Phoenix 1_2026_mob": "971",
+  "Phoenix 1_2026_interet": "825",
+  "Phoenix 1_2026_autre": "180",
+  "Phoenix 1_2026_cfe": "",
+  "Phoenix 1_2026_compta": "145",
+  "Phoenix 1_2026_total": "6814.98",
+  "Phoenix 1_2026_net": "805.02",
+  "Phoenix 1_2027_loyer": "7620",
+  "Phoenix 1_2027_gli": "601.98",
+  "Phoenix 1_2027_tf": "120",
+  "Phoenix 1_2027_ass": "132",
+  "Phoenix 1_2027_amort": "4811",
+  "Phoenix 1_2027_mob": "971",
+  "Phoenix 1_2027_interet": "783",
+  "Phoenix 1_2027_autre": "180",
+  "Phoenix 1_2027_cfe": "",
+  "Phoenix 1_2027_compta": "145",
+  "Phoenix 1_2027_total": "6772.98",
+  "Phoenix 1_2027_net": "847.02",
+  "Phoenix 1_2028_loyer": "7620",
+  "Phoenix 1_2028_gli": "601.98",
+  "Phoenix 1_2028_tf": "120",
+  "Phoenix 1_2028_ass": "132",
+  "Phoenix 1_2028_amort": "3840",
+  "Phoenix 1_2028_mob": "",
+  "Phoenix 1_2028_interet": "739",
+  "Phoenix 1_2028_autre": "180",
+  "Phoenix 1_2028_cfe": "",
+  "Phoenix 1_2028_compta": "145",
+  "Phoenix 1_2028_total": "5757.98",
+  "Phoenix 1_2028_net": "1862.02",
+  "Phoenix 1_2029_loyer": "7620",
+  "Phoenix 1_2029_gli": "601.98",
+  "Phoenix 1_2029_tf": "120",
+  "Phoenix 1_2029_ass": "132",
+  "Phoenix 1_2029_amort": "3840",
+  "Phoenix 1_2029_mob": "",
+  "Phoenix 1_2029_interet": "739",
+  "Phoenix 1_2029_autre": "180",
+  "Phoenix 1_2029_cfe": "",
+  "Phoenix 1_2029_compta": "145",
+  "Phoenix 1_2029_total": "5757.98",
+  "Phoenix 1_2029_net": "1862.02",
+  "Phoenix 1_2030_loyer": "7620",
+  "Phoenix 1_2030_gli": "601.98",
+  "Phoenix 1_2030_tf": "120",
+  "Phoenix 1_2030_ass": "132",
+  "Phoenix 1_2030_amort": "3840",
+  "Phoenix 1_2030_mob": "",
+  "Phoenix 1_2030_interet": "695",
+  "Phoenix 1_2030_autre": "180",
+  "Phoenix 1_2030_cfe": "",
+  "Phoenix 1_2030_compta": "145",
+  "Phoenix 1_2030_total": "5713.98",
+  "Phoenix 1_2030_net": "1906.02",
+  "Phoenix 1_2031_loyer": "7620",
+  "Phoenix 1_2031_gli": "601.98",
+  "Phoenix 1_2031_tf": "120",
+  "Phoenix 1_2031_ass": "132",
+  "Phoenix 1_2031_amort": "3840",
+  "Phoenix 1_2031_mob": "",
+  "Phoenix 1_2031_interet": "648",
+  "Phoenix 1_2031_autre": "180",
+  "Phoenix 1_2031_cfe": "",
+  "Phoenix 1_2031_compta": "145",
+  "Phoenix 1_2031_total": "5666.98",
+  "Phoenix 1_2031_net": "1953.02",
+  "Phoenix 1_2032_loyer": "7620",
+  "Phoenix 1_2032_gli": "601.98",
+  "Phoenix 1_2032_tf": "120",
+  "Phoenix 1_2032_ass": "132",
+  "Phoenix 1_2032_amort": "3840",
+  "Phoenix 1_2032_mob": "",
+  "Phoenix 1_2032_interet": "602",
+  "Phoenix 1_2032_autre": "180",
+  "Phoenix 1_2032_cfe": "",
+  "Phoenix 1_2032_compta": "145",
+  "Phoenix 1_2032_total": "5620.98",
+  "Phoenix 1_2032_net": "1999.02",
+  "Phoenix 1_2033_loyer": "7620",
+  "Phoenix 1_2033_gli": "601.98",
+  "Phoenix 1_2033_tf": "120",
+  "Phoenix 1_2033_ass": "132",
+  "Phoenix 1_2033_amort": "3840",
+  "Phoenix 1_2033_mob": "",
+  "Phoenix 1_2033_interet": "506",
+  "Phoenix 1_2033_autre": "180",
+  "Phoenix 1_2033_cfe": "",
+  "Phoenix 1_2033_compta": "145",
+  "Phoenix 1_2033_total": "5524.98",
+  "Phoenix 1_2033_net": "2095.02",
+  "Phoenix 1_2034_loyer": "7620",
+  "Phoenix 1_2034_gli": "601.98",
+  "Phoenix 1_2034_tf": "120",
+  "Phoenix 1_2034_ass": "132",
+  "Phoenix 1_2034_amort": "3840",
+  "Phoenix 1_2034_mob": "",
+  "Phoenix 1_2034_interet": "456",
+  "Phoenix 1_2034_autre": "180",
+  "Phoenix 1_2034_cfe": "",
+  "Phoenix 1_2034_compta": "145",
+  "Phoenix 1_2034_total": "5474.98",
+  "Phoenix 1_2034_net": "2145.02",
+  "Phoenix 2_2025_loyer": "9756",
+  "Phoenix 2_2025_gli": "770.72",
+  "Phoenix 2_2025_tf": "144",
+  "Phoenix 2_2025_ass": "177",
+  "Phoenix 2_2025_amort": "6045",
+  "Phoenix 2_2025_mob": "1245",
+  "Phoenix 2_2025_interet": "1111",
+  "Phoenix 2_2025_autre": "204",
+  "Phoenix 2_2025_cfe": "",
+  "Phoenix 2_2025_compta": "145",
+  "Phoenix 2_2025_total": "8596.72",
+  "Phoenix 2_2025_net": "1159.28",
+  "Phoenix 2_2026_loyer": "9756",
+  "Phoenix 2_2026_gli": "770.72",
+  "Phoenix 2_2026_tf": "144",
+  "Phoenix 2_2026_ass": "177",
+  "Phoenix 2_2026_amort": "6045",
+  "Phoenix 2_2026_mob": "1245",
+  "Phoenix 2_2026_interet": "1057",
+  "Phoenix 2_2026_autre": "204",
+  "Phoenix 2_2026_cfe": "",
+  "Phoenix 2_2026_compta": "145",
+  "Phoenix 2_2026_total": "8542.72",
+  "Phoenix 2_2026_net": "1213.28",
+  "Phoenix 2_2027_loyer": "9756",
+  "Phoenix 2_2027_gli": "770.72",
+  "Phoenix 2_2027_tf": "144",
+  "Phoenix 2_2027_ass": "177",
+  "Phoenix 2_2027_amort": "6045",
+  "Phoenix 2_2027_mob": "1245",
+  "Phoenix 2_2027_interet": "1002",
+  "Phoenix 2_2027_autre": "204",
+  "Phoenix 2_2027_cfe": "",
+  "Phoenix 2_2027_compta": "145",
+  "Phoenix 2_2027_total": "8487.72",
+  "Phoenix 2_2027_net": "1268.28",
+  "Phoenix 2_2028_loyer": "9756",
+  "Phoenix 2_2028_gli": "770.72",
+  "Phoenix 2_2028_tf": "144",
+  "Phoenix 2_2028_ass": "177",
+  "Phoenix 2_2028_amort": "4800",
+  "Phoenix 2_2028_mob": "",
+  "Phoenix 2_2028_interet": "946",
+  "Phoenix 2_2028_autre": "204",
+  "Phoenix 2_2028_cfe": "",
+  "Phoenix 2_2028_compta": "145",
+  "Phoenix 2_2028_total": "7186.72",
+  "Phoenix 2_2028_net": "2569.28",
+  "Phoenix 2_2029_loyer": "9756",
+  "Phoenix 2_2029_gli": "770.72",
+  "Phoenix 2_2029_tf": "144",
+  "Phoenix 2_2029_ass": "177",
+  "Phoenix 2_2029_amort": "4800",
+  "Phoenix 2_2029_mob": "",
+  "Phoenix 2_2029_interet": "889",
+  "Phoenix 2_2029_autre": "204",
+  "Phoenix 2_2029_cfe": "",
+  "Phoenix 2_2029_compta": "145",
+  "Phoenix 2_2029_total": "7129.72",
+  "Phoenix 2_2029_net": "2626.28",
+  "Phoenix 2_2030_loyer": "9756",
+  "Phoenix 2_2030_gli": "770.72",
+  "Phoenix 2_2030_tf": "144",
+  "Phoenix 2_2030_ass": "177",
+  "Phoenix 2_2030_amort": "4800",
+  "Phoenix 2_2030_mob": "",
+  "Phoenix 2_2030_interet": "830",
+  "Phoenix 2_2030_autre": "204",
+  "Phoenix 2_2030_cfe": "",
+  "Phoenix 2_2030_compta": "145",
+  "Phoenix 2_2030_total": "7070.72",
+  "Phoenix 2_2030_net": "2685.28",
+  "Phoenix 2_2031_loyer": "9756",
+  "Phoenix 2_2031_gli": "770.72",
+  "Phoenix 2_2031_tf": "144",
+  "Phoenix 2_2031_ass": "177",
+  "Phoenix 2_2031_amort": "4800",
+  "Phoenix 2_2031_mob": "",
+  "Phoenix 2_2031_interet": "771",
+  "Phoenix 2_2031_autre": "204",
+  "Phoenix 2_2031_cfe": "",
+  "Phoenix 2_2031_compta": "145",
+  "Phoenix 2_2031_total": "7011.72",
+  "Phoenix 2_2031_net": "2744.28",
+  "Phoenix 2_2032_loyer": "9756",
+  "Phoenix 2_2032_gli": "770.72",
+  "Phoenix 2_2032_tf": "144",
+  "Phoenix 2_2032_ass": "177",
+  "Phoenix 2_2032_amort": "4800",
+  "Phoenix 2_2032_mob": "",
+  "Phoenix 2_2032_interet": "710",
+  "Phoenix 2_2032_autre": "204",
+  "Phoenix 2_2032_cfe": "",
+  "Phoenix 2_2032_compta": "145",
+  "Phoenix 2_2032_total": "6950.72",
+  "Phoenix 2_2032_net": "2805.28",
+  "Phoenix 2_2033_loyer": "9756",
+  "Phoenix 2_2033_gli": "770.72",
+  "Phoenix 2_2033_tf": "144",
+  "Phoenix 2_2033_ass": "177",
+  "Phoenix 2_2033_amort": "4800",
+  "Phoenix 2_2033_mob": "",
+  "Phoenix 2_2033_interet": "648",
+  "Phoenix 2_2033_autre": "204",
+  "Phoenix 2_2033_cfe": "",
+  "Phoenix 2_2033_compta": "145",
+  "Phoenix 2_2033_total": "6888.72",
+  "Phoenix 2_2033_net": "2867.28",
+  "Phoenix 2_2034_loyer": "9756",
+  "Phoenix 2_2034_gli": "770.72",
+  "Phoenix 2_2034_tf": "144",
+  "Phoenix 2_2034_ass": "177",
+  "Phoenix 2_2034_amort": "4800",
+  "Phoenix 2_2034_mob": "",
+  "Phoenix 2_2034_interet": "584",
+  "Phoenix 2_2034_autre": "204",
+  "Phoenix 2_2034_cfe": "",
+  "Phoenix 2_2034_compta": "145",
+  "Phoenix 2_2034_total": "6824.72",
+  "Phoenix 2_2034_net": "2931.28",
+  "Phoenix 3_2025_loyer": "7440",
+  "Phoenix 3_2025_gli": "587.76",
+  "Phoenix 3_2025_tf": "120",
+  "Phoenix 3_2025_ass": "132",
+  "Phoenix 3_2025_amort": "4811",
+  "Phoenix 3_2025_mob": "971",
+  "Phoenix 3_2025_interet": "847",
+  "Phoenix 3_2025_autre": "180",
+  "Phoenix 3_2025_cfe": "",
+  "Phoenix 3_2025_compta": "145",
+  "Phoenix 3_2025_total": "6822.76",
+  "Phoenix 3_2025_net": "617.24",
+  "Phoenix 3_2026_loyer": "7440",
+  "Phoenix 3_2026_gli": "587.76",
+  "Phoenix 3_2026_tf": "120",
+  "Phoenix 3_2026_ass": "132",
+  "Phoenix 3_2026_amort": "4811",
+  "Phoenix 3_2026_mob": "971",
+  "Phoenix 3_2026_interet": "806",
+  "Phoenix 3_2026_autre": "180",
+  "Phoenix 3_2026_cfe": "",
+  "Phoenix 3_2026_compta": "145",
+  "Phoenix 3_2026_total": "6781.76",
+  "Phoenix 3_2026_net": "658.24",
+  "Phoenix 3_2027_loyer": "7440",
+  "Phoenix 3_2027_gli": "587.76",
+  "Phoenix 3_2027_tf": "120",
+  "Phoenix 3_2027_ass": "132",
+  "Phoenix 3_2027_amort": "4811",
+  "Phoenix 3_2027_mob": "971",
+  "Phoenix 3_2027_interet": "764",
+  "Phoenix 3_2027_autre": "180",
+  "Phoenix 3_2027_cfe": "",
+  "Phoenix 3_2027_compta": "145",
+  "Phoenix 3_2027_total": "6739.76",
+  "Phoenix 3_2027_net": "700.24",
+  "Phoenix 3_2028_loyer": "7440",
+  "Phoenix 3_2028_gli": "587.76",
+  "Phoenix 3_2028_tf": "120",
+  "Phoenix 3_2028_ass": "132",
+  "Phoenix 3_2028_amort": "3840",
+  "Phoenix 3_2028_mob": "",
+  "Phoenix 3_2028_interet": "721",
+  "Phoenix 3_2028_autre": "180",
+  "Phoenix 3_2028_cfe": "",
+  "Phoenix 3_2028_compta": "145",
+  "Phoenix 3_2028_total": "5725.76",
+  "Phoenix 3_2028_net": "1714.24",
+  "Phoenix 3_2029_loyer": "7440",
+  "Phoenix 3_2029_gli": "587.76",
+  "Phoenix 3_2029_tf": "120",
+  "Phoenix 3_2029_ass": "132",
+  "Phoenix 3_2029_amort": "3840",
+  "Phoenix 3_2029_mob": "",
+  "Phoenix 3_2029_interet": "678",
+  "Phoenix 3_2029_autre": "180",
+  "Phoenix 3_2029_cfe": "",
+  "Phoenix 3_2029_compta": "145",
+  "Phoenix 3_2029_total": "5682.76",
+  "Phoenix 3_2029_net": "1757.24",
+  "Phoenix 3_2030_loyer": "7440",
+  "Phoenix 3_2030_gli": "587.76",
+  "Phoenix 3_2030_tf": "120",
+  "Phoenix 3_2030_ass": "132",
+  "Phoenix 3_2030_amort": "3840",
+  "Phoenix 3_2030_mob": "",
+  "Phoenix 3_2030_interet": "633",
+  "Phoenix 3_2030_autre": "180",
+  "Phoenix 3_2030_cfe": "",
+  "Phoenix 3_2030_compta": "145",
+  "Phoenix 3_2030_total": "5637.76",
+  "Phoenix 3_2030_net": "1802.24",
+  "Phoenix 3_2031_loyer": "7440",
+  "Phoenix 3_2031_gli": "587.76",
+  "Phoenix 3_2031_tf": "120",
+  "Phoenix 3_2031_ass": "132",
+  "Phoenix 3_2031_amort": "3840",
+  "Phoenix 3_2031_mob": "",
+  "Phoenix 3_2031_interet": "588",
+  "Phoenix 3_2031_autre": "180",
+  "Phoenix 3_2031_cfe": "",
+  "Phoenix 3_2031_compta": "145",
+  "Phoenix 3_2031_total": "5592.76",
+  "Phoenix 3_2031_net": "1847.24",
+  "Phoenix 3_2032_loyer": "7440",
+  "Phoenix 3_2032_gli": "587.76",
+  "Phoenix 3_2032_tf": "120",
+  "Phoenix 3_2032_ass": "132",
+  "Phoenix 3_2032_amort": "3840",
+  "Phoenix 3_2032_mob": "",
+  "Phoenix 3_2032_interet": "541",
+  "Phoenix 3_2032_autre": "180",
+  "Phoenix 3_2032_cfe": "",
+  "Phoenix 3_2032_compta": "145",
+  "Phoenix 3_2032_total": "5545.76",
+  "Phoenix 3_2032_net": "1894.24",
+  "Phoenix 3_2033_loyer": "7440",
+  "Phoenix 3_2033_gli": "587.76",
+  "Phoenix 3_2033_tf": "120",
+  "Phoenix 3_2033_ass": "132",
+  "Phoenix 3_2033_amort": "3840",
+  "Phoenix 3_2033_mob": "",
+  "Phoenix 3_2033_interet": "494",
+  "Phoenix 3_2033_autre": "180",
+  "Phoenix 3_2033_cfe": "",
+  "Phoenix 3_2033_compta": "145",
+  "Phoenix 3_2033_total": "5498.76",
+  "Phoenix 3_2033_net": "1941.24",
+  "Phoenix 3_2034_loyer": "7440",
+  "Phoenix 3_2034_gli": "587.76",
+  "Phoenix 3_2034_tf": "120",
+  "Phoenix 3_2034_ass": "132",
+  "Phoenix 3_2034_amort": "3840",
+  "Phoenix 3_2034_mob": "",
+  "Phoenix 3_2034_interet": "446",
+  "Phoenix 3_2034_autre": "180",
+  "Phoenix 3_2034_cfe": "",
+  "Phoenix 3_2034_compta": "145",
+  "Phoenix 3_2034_total": "5450.76",
+  "Phoenix 3_2034_net": "1989.24",
+  "stock-initial": "50000",
+  "benefice": "10000",
+  "ssi": "40"
+};
+  }
+} catch(e) {
+  console.error("Erreur chargement des données initiales :", e);
+}
+    function createBienTable(nom) {
+      let html = `<div class='bien-block'><h3 onclick="toggleBien('${nom}')" style="cursor:pointer;color:#00796b">▶ ${nom}</h3><div id='${nom}_table'><table><thead><tr>`+
+  `<th class="col-gauche">Année</th><th class="col-gauche">Loyer brut</th><th class="col-gauche">GLI</th><th class="col-gauche">Taxe foncière</th><th class="col-gauche">Assurance</th>`+
+  `<th class="col-gauche">Amortissements</th><th class="col-gauche">Dont mobilier</th><th class="col-gauche">Intérêts emprunt</th>`+
+  `<th class="col-gauche">Autres charges</th><th class="col-gauche">CFE</th><th class="col-gauche">Comptable</th>`+
+  `<th class="col-gauche">Total charges</th><th class="col-gauche">Résultat net</th></tr></thead><tbody>`;
+      annees.forEach(a => {
+        const id = `${nom}_${a}`;
+        html += `<tr><td>${a}</td>` +
+          ["loyer","gli","tf","ass","amort","mob","interet","autre","cfe","compta"]
+            .map(f=>`<td><input type='number' step='any' id='${id}_${f}' onchange='manualOverride("${id}_${f}"); recalculate("${id}")'></td>`).join('')+
+          `<td><input type='number' id='${id}_total' onchange='manualOverride("${id}_total")'></td><td><input type='number' id='${id}_net' onchange='manualOverride("${id}_net")'></td></tr>`;
+      });
+      return html + '</tbody></table></div></div>';
+    }
+
+    const tabsContainer = document.getElementById("tabs-biens");
+const contenuContainer = document.getElementById("contenu-biens");
+
+biens.forEach((bien, index) => {
+  // Bouton d’onglet
+  const bouton = document.createElement("button");
+  bouton.className = "toggle-btn";
+  bouton.textContent = bien;
+  bouton.onclick = () => afficherBien(bien);
+  tabsContainer.appendChild(bouton);
+
+  // Contenu
+  const bloc = document.createElement("div");
+  bloc.id = `bien-${bien}`;
+  bloc.innerHTML = createBienTable(bien);
+  bloc.style.display = index === 0 ? "block" : "none";
+  contenuContainer.appendChild(bloc);
+});
+
+    function saveData(exportToFile = false) {
+  const data = {};
+  document.querySelectorAll("input[type='number']").forEach(i => data[i.id] = i.value);
+  localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
+
+  if (exportToFile) {
+    const now = new Date().toISOString().slice(0,19).replace(/[:T]/g, "-");
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Backup_Projection_LMP_LMNP_${now}.json`;
+    a.click();
+  }
+
+  alert("✅ Données enregistrées localement.\n💡 Une copie de sauvegarde a été téléchargée automatiquement.");
+}
+    function restoreData() {
+  if (!confirm("⚠️ Voulez-vous vraiment restaurer les données ?")) return;
+  if (!confirm("🛑 Dernier avertissement : cette action écrasera toutes les données en cours. Continuer ?")) return;
+  const data = JSON.parse(localStorage.getItem('lmp_lmnp_donnees') || '{}');
+  Object.keys(data).forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) inp.value = data[id];
+  });
+
+  recalculateAll();
+  computeFiscal(); // ✅ Ajoute cette ligne pour afficher le tableau Résultat
+  updateClassements();
+}
+
+
+function injecterDonneesInitiales() {
+  Object.entries(donneesInitiales).forEach(([id, valeur]) => {
+    const champ = document.getElementById(id);
+    if (champ && champ.value === "") {
+      champ.value = valeur;
+    }
+  });
+}
+
+    function importerJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+donneesInitiales = data;
+      Object.keys(data).forEach(id => {
+        const inp = document.getElementById(id);
+        if (inp) inp.value = data[id];
+      });
+      recalculateAll();
+      computeFiscal();
+      updateClassements();
+      alert("✅ Données importées avec succès.");
+    } catch (err) {
+      alert("❌ Erreur lors de l'importation du fichier JSON.");
+      console.error("Erreur JSON:", err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+            function recalculate(id) {
+      
+      const loyer = parseFloat(document.getElementById(`${id}_loyer`).value) || 0;
+
+if (!champsManuels.has(`${id}_gli`)) {
+  document.getElementById(`${id}_gli`).value = (loyer * 0.079).toFixed(2);
+}
+      
+      const champs = ["gli","tf","ass","amort","interet","autre","cfe","compta"];
+let totalCh = 0;
+champs.forEach(f => totalCh += parseFloat(document.getElementById(`${id}_${f}`).value) || 0);
+
+if (!champsManuels.has(`${id}_total`)) {
+  document.getElementById(`${id}_total`).value = totalCh.toFixed(2);
+}
+if (!champsManuels.has(`${id}_net`)) {
+  document.getElementById(`${id}_net`).value = (loyer - totalCh).toFixed(2);
+}
+computeFiscal();
+updateClassements();
+    }
+
+    function recalculateAll() {
+      biens.forEach(n => annees.forEach(a => recalculate(`${n}_${a}`)));
+    }
+// 🖊️ Champs saisis à la main (on ne les recalcule plus automatiquement)
+const champsManuels = new Set();
+
+function appliquerDonneesAvecFallback() {
+  const dataJSON = localStorage.getItem('lmp_lmnp_donnees');
+  if (!dataJSON) {
+    console.warn("Aucune donnée JSON en localStorage, on garde les valeurs HTML.");
+    return;
+  }
+
+  const data = JSON.parse(dataJSON);
+
+  // Applique les valeurs JSON si l'élément HTML correspondant existe
+  Object.keys(data).forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.value = data[id];
+    }
+  });
+
+  console.log("✅ Données JSON appliquées aux champs HTML");
+  recalculateAll(); // ou ton équivalent de mise à jour
+}
+
+function manualOverride(id) {
+  champsManuels.add(id);
+}
+
+    function toggleBien(n) { const e = document.getElementById(`${n}_table`); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
+   
+
+    let chart;
+    
+function afficherGraphiqueFiscal(labels, dataLMP, dataLMNP) {
+  const canvas = document.getElementById("chartFiscal");
+  if (!canvas) {
+    console.warn("Canvas 'chartFiscal' introuvable.");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+
+  if (chartFiscal) {
+    try {
+      chartFiscal.destroy();
+      console.log("🧹 Ancien graphique fiscal détruit proprement");
+    } catch (err) {
+      console.warn("⚠️ Impossible de détruire l'ancien graphique:", err);
+    }
+  }
+
+  chartFiscal = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Imposition LMP",
+          data: dataLMP,
+          borderWidth: 2,
+          fill: false,
+          tension: 0.2,
+          borderColor: "#00796b"
+        },
+        {
+          label: "Imposition LMNP",
+          data: dataLMNP,
+          borderWidth: 2,
+          fill: false,
+          tension: 0.2,
+          borderColor: "#e65100"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: "Comparaison LMP vs LMNP"
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+    function computeFiscal() {
+   // met à jour les TF + assurances pour toutes les années
+
+  let stock = parseFloat(document.getElementById('stock-initial').value) || 0; // notre gomme magique (amortissements écartés)
+  const tbody = document.getElementById('fiscal-body');
+  tbody.innerHTML = ''; // on vide le tableau pour le re-remplir proprement
+
+  const dataLMP = [], dataLMNP = [];
+  let totalLMP = 0, totalLMNP = 0;
+
+  annees.forEach(annee => {
+    let resultatNet = 0;
+
+    // ➕ Étape 1 : On additionne les résultats nets de tous les biens pour l'année
+    biens.forEach(bien => {
+      const val = parseFloat(document.getElementById(`${bien}_${annee}_net`).value) || 0;
+      resultatNet += val;
+    });
+
+    let amortUtilise = 0;
+    let resultatCorrige = resultatNet;
+
+    if (resultatNet > 0) {
+    amortUtilise = Math.min(stock, resultatNet);
+    resultatCorrige = resultatNet - amortUtilise;
+    stock -= amortUtilise;
+} else if (resultatNet < 0) {
+    amortUtilise = 0;
+    resultatCorrige = 0; // <-- pour éviter un calcul d'impôts sur un déficit
+    stock += Math.abs(resultatNet);
+}
+
+
+    const stockRestant = Math.max(stock, 0);
+
+    // 🧮 Étape 3 : Calcul RSI + IR
+    const rsi = (resultatCorrige * RSI_RATE).toFixed(2);
+    const ir = (resultatCorrige * IR_RATE).toFixed(2);
+    const totalImpotsLMP = Math.max(parseFloat(rsi) + parseFloat(ir), 1245).toFixed(2); // minimum cotisation
+    const totalImpotsLMNP = (resultatCorrige * LMNP_RATE + LMNP_BONUS).toFixed(2);
+
+    // 📊 Étape 4 : On ajoute la ligne dans le tableau
+    tbody.innerHTML += `
+      <tr>
+        <td>${annee}</td>
+        <td>${resultatNet.toFixed(2)}</td>
+        <td>${amortUtilise.toFixed(2)}</td>
+        <td>${stockRestant.toFixed(2)}</td>
+        <td>${rsi}</td>
+        <td>${ir}</td>
+        <td>${totalImpotsLMP}</td>
+        <td>${totalImpotsLMNP}</td>
+      </tr>
+    `;
+
+    totalLMP += parseFloat(totalImpotsLMP);
+    totalLMNP += parseFloat(totalImpotsLMNP);
+    dataLMP.push(totalImpotsLMP);
+    dataLMNP.push(totalImpotsLMNP);
+  });
+
+  // 🧾 Mise à jour des totaux
+  document.getElementById('cumul-lmp').textContent = totalLMP.toFixed(2);
+  document.getElementById('cumul-lmnp').textContent = totalLMNP.toFixed(2);
+  document.getElementById('moy-lmp').textContent = (totalLMP / annees.length).toFixed(2);
+  document.getElementById('moy-lmnp').textContent = (totalLMNP / annees.length).toFixed(2);
+
+  // 📈 Mise à jour du graphique
+  afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
+}
+
+function updateClassements() {
+  const resultatsParBien = {}; // pour classer les biens selon le résultat net cumulé
+  const cashflowsParBien = {}; // pour classer les biens selon le cash flow cumulé
+
+  biens.forEach(bien => {
+    let totalResultat = 0;
+    let totalCashflow = 0;
+
+    annees.forEach(annee => {
+      const net = parseFloat(document.getElementById(`${bien}_${annee}_net`).value) || 0;
+      const interets = parseFloat(document.getElementById(`${bien}_${annee}_interet`).value) || 0;
+      const compta = parseFloat(document.getElementById(`${bien}_${annee}_compta`).value) || 0;
+
+      totalResultat += Math.max(0, net); // on cumule seulement les années "positives"
+      totalCashflow += net - interets - compta; // approximation du vrai cash-flow
+    });
+
+    resultatsParBien[bien] = totalResultat;
+    cashflowsParBien[bien] = totalCashflow;
+  });
+
+  // Génère les TOP 3 triés
+  const topResultats = Object.entries(resultatsParBien)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+
+  const topCashflow = Object.entries(cashflowsParBien)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+
+  // Affichage HTML
+  document.getElementById('ranking-fiscal').innerHTML =
+    '<h3>👉 À vendre en priorité (résultat net trop positif)</h3><ol>' +
+    topResultats.map(([bien, val]) => `<li><strong>${bien}</strong> : ${val.toFixed(0)} €</li>`).join('') +
+    '</ol>';
+
+  document.getElementById('ranking-cashflow').innerHTML =
+    '<h3>💸 Meilleur cash flow cumulé (hors intérêts et compta)</h3><ol>' +
+    topCashflow.map(([bien, val]) => `<li><strong>${bien}</strong> : ${val.toFixed(0)} €</li>`).join('') +
+    '</ol>';
+}
+
+    function updateStockInitial() {
+      stockAmort = parseFloat(document.getElementById('stock-initial').value) || 0;
+      computeFiscal();
+;
+    }
+
+    restoreData();
+injecterDonneesInitiales();
+    updateStockInitial();
+    restaurerSimuBIC();
+function isLocalhost() {
+  return location.hostname === "localhost" || location.protocol === "file:";
+}
+function getValeurAmortModifiee(annee, cle, valeurAuto) {
+  const modif = donneesInitiales[`modif_${cle}_${annee}`];
+  return modif !== undefined ? Number(modif) : Math.round(valeurAuto);
+}
+
+function rendreCelluleEditable(td, annee, cle, valeurAuto) {
+  const key = `modif_${cle}_${annee}`;
+  const valeurExistante = donneesInitiales[key];
+  const valeurAffichee = valeurExistante !== undefined ? Math.round(valeurExistante) : Math.round(valeurAuto);
+  const valeurTitle = Math.round(valeurAuto);
+
+  td.innerHTML = `
+    <input type="number" value="${valeurAffichee}" style="width:80px" 
+      title="Calcul auto : ${valeurTitle.toLocaleString()} €">
+    <span class="reset-cell" title="Réinitialiser">↩️</span>
+  `;
+
+  const input = td.querySelector("input");
+  const reset = td.querySelector(".reset-cell");
+
+  input.addEventListener("change", () => {
+    const nouvelleValeur = Math.round(Number(input.value));
+    if (!isNaN(nouvelleValeur)) {
+      donneesInitiales[key] = nouvelleValeur;
+      saveData(false);
+      computeFiscal();
+    }
+  });
+
+  reset.addEventListener("click", () => {
+    delete donneesInitiales[key];
+    saveData(false);
+    computeFiscal();
+  });
+}
+
+function computeFiscal() {
+  let stockInitial = parseFloat(document.getElementById('stock-initial').value) || 0;
+  const tbody = document.getElementById('fiscal-body');
+  tbody.innerHTML = '';
+
+  const dataLMP = [], dataLMNP = [];
+  let totalLMP = 0, totalLMNP = 0;
+  let stock = stockInitial;
+
+  const formatEuro = v => `${Math.round(v).toLocaleString("fr-FR")} €`;
+
+  annees.forEach(annee => {
+    let resultatNet = 0;
+    biens.forEach(bien => {
+      const val = parseFloat(document.getElementById(`${bien}_${annee}_net`)?.value || donneesInitiales[`${bien}_${annee}_net`] || 0);
+      resultatNet += val;
+    });
+
+    const amortAuto = (resultatNet > 0) ? Math.min(stock, resultatNet) : 0;
+    const resultatCorrige = (resultatNet > 0) ? resultatNet - amortAuto : 0;
+    const stockAuto = (resultatNet > 0) ? stock - amortAuto : stock + Math.abs(resultatNet);
+
+    const amortUtilise = getValeurAmortModifiee(annee, "amortEcartes", amortAuto);
+    const stockRestant = getValeurAmortModifiee(annee, "stockRestant", stockAuto);
+
+    const ecartStock = stockRestant - stockAuto;
+    stock = stockAuto + ecartStock;
+
+    const rsi = resultatCorrige * RSI_RATE;
+    const ir = resultatCorrige * IR_RATE;
+    const totalImpotsLMP = Math.max(rsi + ir, 1245);
+    const totalImpotsLMNP = (resultatCorrige * LMNP_RATE + LMNP_BONUS);
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${annee}</td>
+      <td>${formatEuro(resultatNet)}</td>
+      <td class="editable amortEcartes"></td>
+      <td class="editable stockRestant"></td>
+      <td>${formatEuro(rsi)}</td>
+      <td>${formatEuro(ir)}</td>
+      <td>${formatEuro(totalImpotsLMP)}</td>
+      <td>${formatEuro(totalImpotsLMNP)}</td>
+    `;
+
+    const tds = row.querySelectorAll(".editable");
+    rendreCelluleEditable(tds[0], annee, "amortEcartes", amortAuto);
+    rendreCelluleEditable(tds[1], annee, "stockRestant", stockAuto);
+
+    tbody.appendChild(row);
+    totalLMP += totalImpotsLMP;
+    totalLMNP += totalImpotsLMNP;
+    dataLMP.push(totalImpotsLMP);
+    dataLMNP.push(totalImpotsLMNP);
+  });
+
+  document.getElementById('cumul-lmp').textContent = formatEuro(totalLMP);
+  document.getElementById('cumul-lmnp').textContent = formatEuro(totalLMNP);
+  document.getElementById('moy-lmp').textContent = formatEuro(totalLMP / annees.length);
+  document.getElementById('moy-lmnp').textContent = formatEuro(totalLMNP / annees.length);
+
+  afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
+  updateClassements();
+}
+
+function saveAsMaster() {
+  if (!confirm("⚠️ Tu es sur le point d’écraser la sauvegarde MASTER.")) return;
+  if (!confirm("❗ Es-tu ABSOLUMENT certain de vouloir faire ça ?")) return;
+
+  const data = {};
+  document.querySelectorAll("input[type='number']").forEach(i => data[i.id] = i.value);
+
+  // Toujours enregistrer en local
+  localStorage.setItem('lmp_lmnp_master', JSON.stringify(data));
+
+  // Si on est en ligne (pas en local), on envoie aussi au serveur
+  if (!isLocalhost()) {
+    fetch('save_master.php', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(() => alert("✅ Sauvegarde MASTER enregistrée sur le serveur + local."))
+    .catch(() => alert("⚠️ Sauvegarde uniquement en local (erreur serveur)."));
+  } else {
+    alert("💾 Sauvegarde MASTER enregistrée en local (mode hors-ligne).");
+  }
+}
+// === 🔍 Fonction IA : lancerAnalyseCopilot() ===
+function lancerAnalyseCopilot() {
+  const seuilAmort = 3000;
+  const synthese = [];
+  let risques = 0, stables = 0, performants = 0;
+  const resultats = [];
+
+  biens.forEach(bien => {
+    let totalNet = 0, totalCF = 0, totalLoyer = 0;
+    let totalAmort = 0, totalAmortMob = 0, totalCharges = 0;
+    let pos = 0, neg = 0, cashNeg = 0;
+
+    annees.forEach(annee => {
+      const id = `${bien}_${annee}`;
+      const net = parseFloat(document.getElementById(`${id}_net`)?.value || 0);
+      const interet = parseFloat(document.getElementById(`${id}_interet`)?.value || 0);
+      const compta = parseFloat(document.getElementById(`${id}_compta`)?.value || 0);
+      const amort = parseFloat(document.getElementById(`${id}_amort`)?.value || 0);
+      const mob = parseFloat(document.getElementById(`${id}_mob`)?.value || 0);
+      const loyer = parseFloat(document.getElementById(`${id}_loyer`)?.value || 0);
+      const charges = parseFloat(document.getElementById(`${id}_total`)?.value || 0);
+
+      totalNet += net;
+      totalCF += (net - interet - compta);
+      totalLoyer += loyer;
+      totalCharges += charges;
+      totalAmort += amort;
+      totalAmortMob += mob;
+
+      if (net > 0) pos++;
+      if (net < 0) neg++;
+      if ((net - interet - compta) < 0) cashNeg++;
+    });
+
+    const ratioAmort = totalAmort / (totalLoyer || 1);
+    const ratioCharges = totalCharges / (totalLoyer || 1);
+    const avgCF = totalCF / annees.length;
+    const avgNet = totalNet / annees.length;
+
+    let niveau = "", pastille = "verte";
+    const alertes = [];
+
+    if (cashNeg >= 3) { alertes.push("💸 Cashflow négatif fréquent"); pastille = "orange"; }
+    if (pos >= 3 && totalAmort < seuilAmort) {
+      alertes.push("⚠️ Amort. total faible avec bénéfice élevé");
+      pastille = "rouge"; niveau = "à risque"; risques++;
+    } else if (pos >= 3) {
+      alertes.push("🟠 Résultats positifs à surveiller");
+      pastille = "jaune"; niveau = "stable"; stables++;
+    } else {
+      alertes.push("✅ Comportement fiscal équilibré");
+      niveau = "performant"; performants++;
+    }
+
+    alertes.push(`📊 Moy. résultat net : ${avgNet.toFixed(0)} €`);
+    alertes.push(`📊 Moy. cashflow : ${avgCF.toFixed(0)} €`);
+    alertes.push(`📉 Ratio amort./loyer : ${(ratioAmort*100).toFixed(1)}%`);
+    alertes.push(`📉 Ratio charges/loyer : ${(ratioCharges*100).toFixed(1)}%`);
+    alertes.push(`📦 Total amort. mobilier restant : ${totalAmortMob.toFixed(0)} €`);
+
+    const icone = pastille === "rouge" ? "🔴" : pastille === "orange" ? "🟠" : pastille === "jaune" ? "🟡" : "🟢";
+
+    resultats.push(`
+      <div style="margin-bottom:18px;">
+        <h4 style="margin-bottom:6px;">${icone} <strong>${bien}</strong> (${niveau})</h4>
+        <ul style="padding-left:20px; margin:0;">
+          ${alertes.map(a => `<li>${a}</li>`).join("")}
+        </ul>
+      </div>
+    `);
+  });
+
+  // 📋 Synthèse
+  const stock = parseFloat(document.getElementById("stock-initial").value || 0);
+  if (stock < 10000) synthese.push("🚨 Le stock d’amortissements est bientôt épuisé.");
+  else if (stock > 25000) synthese.push("🧘 Amortissements disponibles pour lisser les 10 prochaines années.");
+  synthese.push(`📍 ${risques} bien(s) à risque fiscal — arbitrage recommandé`);
+  synthese.push(`📍 ${stables} bien(s) stables — suivi conseillé`);
+  synthese.push(`📍 ${performants} bien(s) performants — pas d’alerte actuelle`);
+
+  // Affichage
+  document.getElementById("copilot-resultats").style.display = "block";
+  document.getElementById("resultats-par-bien").innerHTML = resultats.join("");
+  document.getElementById("copilot-synthese").innerHTML = synthese.map(txt => {
+    let classe = "synthese-vert";
+    if (txt.includes("🚨")) classe = "synthese-rouge";
+    else if (txt.includes("arbitrage")) classe = "synthese-jaune";
+    return `<div class="${classe}">${txt}</div>`;
+  }).join("");
+}
+// === 📤 Fonction d'export Excel ===
+function exporterExcel() {
+  const wb = XLSX.utils.book_new();
+
+  // 🧩 1 onglet par bien
+  biens.forEach(bien => {
+    const sheetData = [["Année", "Loyer brut", "GLI", "Taxe foncière", "Assurance", "Amortissements", "Mobilier", "Intérêts", "Autres charges", "Comptable", "Charges totales", "Résultat net"]];
+    annees.forEach(annee => {
+      const id = `${bien}_${annee}`;
+      sheetData.push([
+        annee,
+        document.getElementById(`${id}_loyer`)?.value || "0",
+        document.getElementById(`${id}_gli`)?.value || "0",
+        document.getElementById(`${id}_tf`)?.value || "0",
+        document.getElementById(`${id}_ass`)?.value || "0",
+        document.getElementById(`${id}_amort`)?.value || "0",
+        document.getElementById(`${id}_mob`)?.value || "0",
+        document.getElementById(`${id}_interet`)?.value || "0",
+        document.getElementById(`${id}_autre`)?.value || "0",
+        document.getElementById(`${id}_compta`)?.value || "0",
+        document.getElementById(`${id}_total`)?.value || "0",
+        document.getElementById(`${id}_net`)?.value || "0",
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    XLSX.utils.book_append_sheet(wb, ws, bien);
+  });
+
+  // 📊 Onglet final : Résumé fiscal
+  const fiscalData = [["Année", "Résultat net", "Amortissements utilisés", "Stock restant", "RSI (40%)", "IR (30%)", "Total LMP", "Total LMNP"]];
+  const rows = document.querySelectorAll("#fiscal-body tr");
+  rows.forEach(row => {
+    const cells = Array.from(row.children).map(td => td.textContent.trim());
+    if (cells.length === 8) fiscalData.push(cells);
+  });
+  fiscalData.push([]);
+  fiscalData.push(["Cumul", "", "", "", "", "", document.getElementById("cumul-lmp").textContent, document.getElementById("cumul-lmnp").textContent]);
+  fiscalData.push(["Moyenne", "", "", "", "", "", document.getElementById("moy-lmp").textContent, document.getElementById("moy-lmnp").textContent]);
+
+  const wsFiscal = XLSX.utils.aoa_to_sheet(fiscalData);
+  XLSX.utils.book_append_sheet(wb, wsFiscal, "Résumé fiscal");
+
+  // 📤 Téléchargement du fichier
+  const now = new Date().toISOString().slice(0,19).replace(/[:T]/g, "-");
+  XLSX.writeFile(wb, `Projection_LMP_LMNP_${now}.xlsx`);
+}
+function restoreMaster() {
+  if (!confirm("⚠️ Cette action va restaurer les données MASTER et supprimer toutes les données saisies en cours.")) return;
+  if (!confirm("❗ Es-tu bien sûr ? Cette opération est irréversible.")) return;
+
+  // Si on est en ligne (pas en local), essayer le serveur d’abord
+  if (!isLocalhost()) {
+    fetch('load_master.php')
+      .then(res => {
+        if (!res.ok) throw new Error("Erreur serveur");
+        return res.json();
+      })
+      .then(data => {
+        applyMasterData(data);
+        alert("✅ Données restaurées depuis la sauvegarde MASTER (serveur).");
+      })
+      .catch(() => {
+        fallbackToLocalMaster();
+      });
+  } else {
+    fallbackToLocalMaster();
+  }
+}
+
+function fallbackToLocalMaster() {
+  const data = JSON.parse(localStorage.getItem('lmp_lmnp_master') || '{}');
+  if (!Object.keys(data).length) return alert("❌ Aucune sauvegarde master trouvée en local.");
+  applyMasterData(data);
+  alert("✅ Données restaurées depuis la sauvegarde MASTER locale.");
+}
+
+function applyMasterData(data) {
+  Object.keys(data).forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) inp.value = data[id];
+  });
+  recalculateAll();
+  updateClassements();
+}
+function sauvegarderSimuBIC() {
+  const data = {
+    benefice: document.getElementById("benefice").value,
+    tmi: document.getElementById("tmi").value,
+    ssi: document.getElementById("ssi").value
+  };
+  localStorage.setItem("simu_bic", JSON.stringify(data));
+}
+
+function restaurerSimuBIC() {
+  const data = JSON.parse(localStorage.getItem("simu_bic"));
+  if (!data) return;
+function lancerAnalyseCopilot() {
+  const seuilAmortRestant = 3000;
+  const resultats = [];
+  const synthese = [];
+
+  biens.forEach(bien => {
+    let anneesPositives = 0;
+    let amortRestantTotal = 0;
+    let amortRestantMobilier = 0;
+    let cashflowNegatif = 0;
+
+    annees.forEach(annee => {
+      const net = parseFloat(document.getElementById(`${bien}_${annee}_net`)?.value || 0);
+      const interets = parseFloat(document.getElementById(`${bien}_${annee}_interet`)?.value || 0);
+      const compta = parseFloat(document.getElementById(`${bien}_${annee}_compta`)?.value || 0);
+      const mob = parseFloat(document.getElementById(`${bien}_${annee}_mob`)?.value || 0);
+      const amort = parseFloat(document.getElementById(`${bien}_${annee}_amort`)?.value || 0);
+
+      if (net > 0) anneesPositives++;
+      if (net - interets - compta < 0) cashflowNegatif++;
+      amortRestantMobilier += mob;
+      amortRestantTotal += amort;
+    });
+
+    const alertes = [];
+
+    if (anneesPositives >= 3) alertes.push(`📈 Résultat net positif ${anneesPositives} années`);
+    if (amortRestantMobilier < seuilAmortRestant) alertes.push(`🔻 Amortis. mobilier faible (${amortRestantMobilier.toFixed(0)} €)`);
+    if (amortRestantTotal < seuilAmortRestant) alertes.push(`🟠 Amortis. total faible (${amortRestantTotal.toFixed(0)} €)`);
+    if (cashflowNegatif >= 3) alertes.push(`⚠️ Cash flow négatif ${cashflowNegatif} fois`);
+    if (anneesPositives >= 3 && amortRestantTotal < seuilAmortRestant) alertes.push(`🚨 Bien à risque fiscal !`);
+
+    if (alertes.length) {
+      const alertesAvecPastilles = alertes.map(msg => {
+        if (msg.includes("🚨") || msg.includes("risque fiscal")) return `<span class="pastille rouge"></span>${msg}`;
+        if (msg.includes("⚠️") || msg.includes("Cash flow négatif")) return `<span class="pastille orange"></span>${msg}`;
+        if (msg.includes("🔻") || msg.includes("faible")) return `<span class="pastille jaune"></span>${msg}`;
+        return `<span class="pastille verte"></span>${msg}`;
+      });
+      resultats.push(`<strong>${bien}</strong><ul><li>` + alertesAvecPastilles.join("</li><li>") + "</li></ul>");
+    }
+  });
+
+  // Synthèse globale
+  const stock = parseFloat(document.getElementById("stock-initial").value || 0);
+  if (stock < 10000) synthese.push("📉 Le stock d’amortissement écarté va s’épuiser vite.");
+  if (stock > 20000) synthese.push("🧘 Utiliser le stock sur 10 ans pour lisser les résultats.");
+  synthese.push("🏁 Envisager un arbitrage sur 1 à 2 biens d’ici 3 ans.");
+  synthese.push("🚪 Certains biens pourraient profiter d’une exonération LMP après 5 ans.");
+
+  document.getElementById("copilot-resultats").style.display = "block";
+  document.getElementById("resultats-par-bien").innerHTML = resultats.join("<br>");
+  const syntheseHTML = synthese.map(txt => {
+    let classe = "synthese-vert";
+    if (txt.includes("s’épuiser") || txt.includes("arbitrage")) classe = "synthese-rouge";
+    else if (txt.includes("lisser") || txt.includes("stratégie")) classe = "synthese-jaune";
+    return `<div class="${classe}">${txt}</div>`;
+  }).join("");
+
+  document.getElementById("copilot-synthese").innerHTML = syntheseHTML;
+}
+  document.getElementById("benefice").value = data.benefice;
+  document.getElementById("tmi").value = data.tmi;
+  document.getElementById("ssi").value = data.ssi;
+}
+
+// === Simulateur bénéfice : fonction calculer() ===
+function calculer() {
+  sauvegarderSimuBIC();
+  const benefice = parseFloat(document.getElementById("benefice").value);
+  const tmi = parseFloat(document.getElementById("tmi").value);
+  const ssiTaux = parseFloat(document.getElementById("ssi").value) / 100;
+
+  const revenuNetLMNP = benefice;
+  const impotLMNP = revenuNetLMNP * tmi;
+  const impositionTotaleLMNP = impotLMNP;
+  const resultatNetLMNP = benefice - impositionTotaleLMNP;
+
+  const ssi = benefice * ssiTaux;
+  const revenuNetLMP = benefice - ssi;
+  const impotLMP = revenuNetLMP * tmi;
+  const impositionTotaleLMP = ssi + impotLMP;
+  const resultatNetLMP = benefice - impositionTotaleLMP;
+
+  const ecart = resultatNetLMP - resultatNetLMNP;
+
+  document.getElementById("lmnp").innerHTML =
+    `<b>LMNP</b><br>📉 Revenu Net Imposable : ${revenuNetLMNP.toFixed(0)} €<br>
+     💸 IR : ${impotLMNP.toFixed(0)} €<br>
+     ✅ Résultat net : ${resultatNetLMNP.toFixed(0)} €`;
+
+  document.getElementById("lmp").innerHTML =
+    `<b>LMP</b><br>🔻 Charges SSI : ${ssi.toFixed(0)} €<br>
+     📉 Revenu Net Imposable : ${revenuNetLMP.toFixed(0)} €<br>
+     💸 IR : ${impotLMP.toFixed(0)} €<br>
+     💰 Imposition totale : ${impositionTotaleLMP.toFixed(0)} €<br>
+     ✅ Résultat net : ${resultatNetLMP.toFixed(0)} €<br>
+     🔄 Écart avec LMNP : ${ecart.toFixed(0)} €`;
+}
+// === 👁️ Toggle bloc analyse IA ===
+function toggleCopilot() {
+  const bloc = document.getElementById("copilot-resultats");
+  bloc.style.display = bloc.style.display === "none" ? "block" : "none";
+}
+function lancerPlanificateurIA() {
+  const stockInitial = parseFloat(document.getElementById("stock-initial").value || 0);
+  let stock = stockInitial;
+  let strategieHTML = "";
+  let alertes = [];
+
+  strategieHTML += `<p>📦 <strong>Stock initial :</strong> ${stockInitial.toFixed(0)} €</p><ul>`;
+
+  annees.forEach((annee, index) => {
+    let resultatAnnuel = 0;
+
+    biens.forEach(bien => {
+      const val = parseFloat(document.getElementById(`${bien}_${annee}_net`)?.value || 0);
+      resultatAnnuel += val;
+    });
+
+    let amortUtilise = 0;
+    let resultatCorrige = resultatAnnuel;
+
+    if (resultatAnnuel > 0) {
+      amortUtilise = Math.min(stock, resultatAnnuel);
+      stock -= amortUtilise;
+      resultatCorrige = resultatAnnuel - amortUtilise;
+    }
+
+    const couleur = (resultatCorrige > 3000)
+      ? "#d32f2f"  // rouge
+      : (resultatCorrige > 1000)
+        ? "#fbc02d" // jaune
+        : "#388e3c"; // vert
+
+    strategieHTML += `<li><span style="color:${couleur}">📆 ${annee}</span> : Résultat net = ${resultatAnnuel.toFixed(0)} €, amort. utilisé = ${amortUtilise.toFixed(0)} €, stock restant = ${stock.toFixed(0)} €</li>`;
+
+    if (resultatCorrige > 3000) {
+      alertes.push(`⚠️ ${annee} : Résultat imposable non effacé (risque fiscal)`);
+    }
+    if (stock <= 0 && index < annees.length - 2) {
+      alertes.push(`🔻 ${annee} : Stock épuisé trop tôt`);
+    }
+  });
+
+  strategieHTML += `</ul><hr><h4>🧠 Recommandations :</h4><ul>`;
+  if (alertes.length === 0) {
+    strategieHTML += `<li>✅ Stock bien utilisé : stratégie fluide sur 10 ans</li>`;
+  } else {
+    alertes.forEach(a => strategieHTML += `<li>${a}</li>`);
+  }
+  strategieHTML += `</ul>`;
+
+  document.getElementById("planification-content").innerHTML = strategieHTML;
+  document.getElementById("copilot-strategie").style.display = "block";
+}
+
+function toggleStrategie() {
+  const bloc = document.getElementById("copilot-strategie");
+  bloc.style.display = bloc.style.display === "none" ? "block" : "none";
+}
+// === 📝 Copier la synthèse IA en version Notion (texte brut) ===
+function copierSynthesePourNotion() {
+  let texte = "🧠 Analyse IA par bien :\n\n";
+
+  const sections = document.querySelectorAll("#resultats-par-bien > strong");
+  sections.forEach(section => {
+    const bien = section.textContent.trim();
+    const ul = section.nextElementSibling;
+    const lignes = Array.from(ul.querySelectorAll("li")).map(li => "- " + li.textContent.trim());
+    texte += `📌 ${bien}\n${lignes.join("\n")}\n\n`;
+  });
+
+  texte += "📊 Synthèse globale :\n\n";
+  const blocs = document.querySelectorAll("#copilot-synthese > div");
+  blocs.forEach(div => texte += "- " + div.textContent.trim() + "\n");
+
+  navigator.clipboard.writeText(texte).then(() => {
+    alert("✅ Synthèse IA copiée au format Notion (texte brut) !");
+  });
+}
+function copierPlanificationPourNotion() {
+  const contenu = document.getElementById("planification-content").innerText;
+  navigator.clipboard.writeText(contenu).then(() => {
+    alert("📋 Planification copiée dans le presse-papiers.\n💡 Tu peux la coller dans Notion !");
+  }).catch(() => {
+    alert("❌ Impossible de copier le texte. Essaie manuellement.");
+  });
+}
+
+</script>
+
+<script>
+// 🔀 Bascule entre onglets + mise en valeur du bouton actif
+function showTab(id) {
+    const tabs = ['tab-donnees', 'tab-resultat', 'tab-simulateur', 'tab-classements', 'tab-ia'];
+  tabs.forEach(t => {
+    const el = document.getElementById(t);
+    if (el) el.style.display = (t === id) ? 'block' : 'none';
+  });
+
+  // Gère la classe active sur les boutons
+  const buttons = document.querySelectorAll(".toggle-btn");
+buttons.forEach(btn => {
+  if ((btn.getAttribute("onclick") || "").includes(id)) {
+    btn.classList.add("active-tab");
+  } else {
+    btn.classList.remove("active-tab");
+if (id === "tab-resultat") {
+  ;
+}
+  }
+});
+}
+
+// Affiche par défaut le premier onglet
+showTab('tab-donnees');
+</script>
+<script>
+function createSaveRestoreButtons() {
+  const container = document.createElement('div');
+  container.className = "save-restore-bar";
+  container.style.textAlign = "center";
+  container.innerHTML = `
+    <button class="save-btn" onclick="sauvegardeLocale()">🗂️ Sauvegarde locale</button>
+<button class="save-btn" onclick="restaurationLocale()">♻️ Restauration locale</button>
+<button class="save-btn" onclick="exporterJSON()">📤 Export JSON</button>
+<button class="save-btn" onclick="document.getElementById('import-json').click()">📥 Import JSON</button>
+<input type="file" id="import-json" accept=".json" style="display:none" onchange="importerJSON(event)">
+
+  `;
+  return container;
+}
+
+// Ajoute ces alias simples AVANT ton addEventListener DOMContentLoaded
+function sauvegardeLocale() { saveData(false); }
+function restaurationLocale() { restoreData(); }
+function exporterJSON() { saveData(true); }
+function importerJSON(e) { importFromFile(e); }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll('[id^="tab-"]');
+  tabs.forEach(tab => {
+    if (!tab.querySelector('.save-restore-bar')) {
+      const clone = createSaveRestoreButtons();
+      tab.insertBefore(clone, tab.children[1]);
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', () => {
+  appliquerDonneesAvecFallback();
+});
+
+function afficherGraphiqueFiscal(dataLMP, dataLMNP) {
+  const canvas = document.getElementById("chartFiscal");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  if (chartFiscal) {
+    chartFiscalInstance.destroy();
+    console.log("🧹 Ancien graphique fiscal détruit");
+  }
+
+  chartFiscalInstance = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: annees,
+      datasets: [
+        {
+          label: "LMP",
+          borderColor: "#00796b",
+          backgroundColor: "transparent",
+          data: dataLMP,
+          tension: 0.3
+        },
+        {
+          label: "LMNP",
+          borderColor: "#ff914d",
+          backgroundColor: "transparent",
+          data: dataLMNP,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "bottom" }
+      },
+      scales: {
+        y: {
+          beginAtZero: false,
+          ticks: { callback: v => v + " €" }
+        }
+      }
+    }
+  });
+}
+// Appelle ça à la fin de updateResultatFiscal() après avoir mis à jour les dataLMP et dataLMNP
+// Exemple :
+function updateResultatFiscal() {
+  // [... ton code qui génère les résultats fiscaux ...]
+
+  // À la toute fin :
+  afficherGraphiqueFiscal(dataLMP, dataLMNP);
+}
+</script>
+<script>
+// Exécution après génération des données fiscales
+// (À appeler à la fin de ta fonction de génération des résultats)
+</script>
+
+<script>
+
+function genererResultatsFiscaux() {
+  const tbody = document.getElementById("fiscal-body");
+  tbody.innerHTML = "";
+
+  let cumulLMP = 0, cumulLMNP = 0;
+  let dataLMP = [], dataLMNP = [], labels = [];
+
+  const valeursManuelles = {};
+  const lignesExistantes = document.querySelectorAll("tr[data-annee]");
+
+  // 🧩 Récupération des saisies manuelles existantes
+  lignesExistantes.forEach(tr => {
+    const annee = tr.getAttribute("data-annee");
+    const valRes = parseFloat(tr.querySelector(".editable-comptable")?.textContent.replace(",", "."));
+    const valAmort = parseFloat(tr.querySelector(".editable-amort")?.textContent.replace(",", "."));
+    const valStock = parseFloat(tr.querySelector(".editable-stock")?.textContent.replace(",", "."));
+    valeursManuelles[annee] = {
+      comptable: !isNaN(valRes) ? valRes : null,
+      amort: !isNaN(valAmort) ? valAmort : null,
+      stock: !isNaN(valStock) ? valStock : null
+    };
+  });
+
+  // 🔁 On construit année après année, avec recalcul de stock
+  let stock = parseFloat(document.getElementById("stock-initial")?.value || 0);
+
+  annees.forEach((annee, index) => {
+    let resultatComptable = Object.keys(donneesInitiales)
+      .filter(k => k.endsWith(annee + "_net"))
+      .reduce((acc, k) => acc + parseFloat(donneesInitiales[k] || 0), 0);
+
+   if (valeursManuelles[annee] && valeursManuelles[annee].comptable !== null) {
+  resultatComptable = valeursManuelles[annee].comptable;
+}
+
+    let amortEcartes = Math.min(Math.max(0, resultatComptable), stock);
+    if (valeursManuelles[annee] && valeursManuelles[annee].amort !== null) {
+  amortEcartes = valeursManuelles[annee].amort;
+}
+
+    // 🔄 Recalcul automatique du stock, sauf si valeur manuelle
+    let stockRestant = stock - amortEcartes;
+    if (valeursManuelles[annee] && valeursManuelles[annee].stock !== null) {
+  stockRestant = valeursManuelles[annee].stock;
+}
+
+    // ➡️ Propagation automatique du stock à l’année suivante
+    stock = stockRestant;
+
+    // 🧮 Calculs fiscaux
+    const baseImposableLMP = Math.max(0, resultatComptable - amortEcartes);
+    const rsi = baseImposableLMP * RSI_RATE;
+    const ir = baseImposableLMP * IR_RATE;
+    const totalLMP = rsi + ir;
+
+    const totalLMNP = Math.max(0, (resultatComptable * LMNP_RATE) - LMNP_BONUS);
+
+    cumulLMP += totalLMP;
+    cumulLMNP += totalLMNP;
+    labels.push(annee.toString());
+    dataLMP.push(totalLMP);
+    dataLMNP.push(totalLMNP);
+
+    // 🖊️ Affichage ligne dans le tableau
+    tbody.innerHTML += `
+      <tr data-annee="${annee}">
+        <td>${annee}</td>
+        <td contenteditable="true" class="editable-comptable">${resultatComptable.toFixed(2)}</td>
+        <td contenteditable="true" class="editable-amort">${amortEcartes.toFixed(2)}</td>
+        <td contenteditable="true" class="editable-stock">${stockRestant.toFixed(2)}</td>
+        <td>${rsi.toFixed(2)}</td>
+        <td>${ir.toFixed(2)}</td>
+        <td>${totalLMP.toFixed(2)}</td>
+        <td>${totalLMNP.toFixed(2)}</td>
+      </tr>`;
+  });
+
+  // 📊 Maj cumul et moyennes
+  document.getElementById("cumul-lmp").textContent = cumulLMP.toFixed(2);
+  document.getElementById("cumul-lmnp").textContent = cumulLMNP.toFixed(2);
+  document.getElementById("moy-lmp").textContent = (cumulLMP / annees.length).toFixed(2);
+  document.getElementById("moy-lmnp").textContent = (cumulLMNP / annees.length).toFixed(2);
+
+  // 📈 Graphique
+  if (labels.length && dataLMP.length && dataLMNP.length) {
+    afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
+  } else {
+    console.warn("⛔ Données insuffisantes pour générer le graphique fiscal");
+  }
+
+  // 🔁 Réactivation événements
+  document.querySelectorAll(".editable-comptable, .editable-amort, .editable-stock").forEach(cell => {
+    cell.removeEventListener("input", triggerUpdate);
+    cell.addEventListener("input", triggerUpdate);
+  });
+}
+
+
+function triggerUpdate() {
+  clearTimeout(window._refreshFiscal);
+  window._refreshFiscal = setTimeout(genererResultatsFiscaux, 300);
+}
+
+
+</script>
+<script>
+// Forcer une initialisation complète dès le chargement
+document.addEventListener("DOMContentLoaded", () => {
+  // On initialise le stock (même si l'utilisateur n'interagit pas)
+  updateStockInitial();
+
+  // Si l'onglet Résultat est déjà actif (peu probable au chargement)
+  const tabResultat = document.getElementById("tab-resultat");
+  if (tabResultat && tabResultat.style.display !== "none") {
+    ;
+  }
+});
+
+// Et on ajoute un appel systématique à chaque fois que l’onglet Résultat est ouvert
+function showTab(id) {
+  // Masquer tous les onglets
+  document.querySelectorAll("#container > div").forEach(div => {
+    div.style.display = "none";
+  });
+
+  // Afficher celui qu'on a cliqué
+  const onglet = document.getElementById(id);
+  if (onglet) onglet.style.display = "block";
+
+  // Activer le bon bouton
+  document.querySelectorAll(".toggle-btn").forEach(btn => {
+    btn.classList.remove("active-tab");
+  });
+  const activeBtn = Array.from(document.querySelectorAll(".toggle-btn")).find(btn => btn.onclick?.toString().includes(id));
+  if (activeBtn) activeBtn.classList.add("active-tab");
+
+  // Et si c’est "Résultat", on relance les calculs
+  if (id === "tab-resultat") {
+    updateStockInitial();  // <- déclenche aussi genererResultatsFiscaux
+  }
+}
+ window.onload = function () {
+  console.log("🚀 Page chargée, initialisation en cours...");
+
+  try {
+    // 1. Application des données JSON (si présentes)
+    if (typeof appliquerDonneesDepuisJSON === "function") {
+      appliquerDonneesDepuisJSON();
+      console.log("✅ Données JSON appliquées");
+    } else {
+      console.warn("⚠️ appliquerDonneesDepuisJSON non définie - étape ignorée");
+    }
+
+    // 2. Génération des tableaux de résultats
+    if (typeof genererResultatsFiscaux === "function") {
+      genererResultatsFiscaux();
+      console.log("✅ Résultats fiscaux générés");
+    } else {
+      console.warn("⚠️ genererResultatsFiscaux non définie");
+    }
+
+    // 3. Génération du graphique fiscal (en attente pour être sûr que les données sont prêtes)
+    setTimeout(() => {
+      if (typeof genererGraphiqueFiscal === "function") {
+        genererGraphiqueFiscal();
+        console.log("✅ Graphique fiscal généré");
+      } else {
+        console.warn("⚠️ genererGraphiqueFiscal non définie");
+      }
+    }, 150); // léger délai pour laisser le temps aux données de se poser
+
+  } catch (e) {
+    console.error("❌ Erreur lors de l'initialisation :", e);
+  }
+};
+</script>
+</body>
+</html>
