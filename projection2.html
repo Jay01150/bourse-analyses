@@ -2520,9 +2520,12 @@ function afficherGraphiqueFiscal(dataLMP, dataLMNP) {
   const ctx = canvas.getContext("2d");
 
   if (chartFiscal) {
-    chartFiscal.destroy();
+  chartFiscal.destroy();
+  if (!window._alreadyLogged) {
     console.log("🧹 Ancien graphique fiscal détruit");
+    window._alreadyLogged = true;
   }
+}
 
   chartFiscal = new Chart(ctx, {
     type: "line",
@@ -2732,11 +2735,11 @@ function showTab(id) {
 
     // 3. Génération du graphique fiscal (en attente pour être sûr que les données sont prêtes)
     setTimeout(() => {
-  if (typeof genererGraphiqueFiscal === "function") {
-    genererGraphiqueFiscal();
+  if (typeof afficherGraphiqueFiscal === "function") {
+    afficherGraphiqueFiscal();
     console.log("✅ Graphique fiscal généré");
   } else {
-    console.warn("⚠️ genererGraphiqueFiscal non définie");
+    console.warn("⚠️ afficherGraphiqueFiscal non définie");
   }
 }, 150); // léger délai pour laisser le temps aux données de se poser
 
