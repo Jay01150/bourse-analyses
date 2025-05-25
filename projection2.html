@@ -1802,63 +1802,24 @@ function manualOverride(id) {
 
     let chart;
     
-function afficherGraphiqueFiscal(labels, dataLMP, dataLMNP) {
-  const canvas = document.getElementById("chartFiscal");
-  if (!canvas) {
-    console.warn("Canvas 'chartFiscal' introuvable.");
-    return;
-  }
-
-  const ctx = canvas.getContext("2d");
-
+function afficherGraphiqueFiscal(newData, newOptions) {
+  const ctx = document.getElementById('chartFiscal').getContext('2d');
   if (chartFiscal) {
-    try {
+    // Si le type est identique, on met juste à jour les données
+    if (chartFiscal.config.type === newOptions.type) {
+      chartFiscal.data = newData;
+      chartFiscal.options = newOptions;
+      chartFiscal.update();
+      return; // Pas besoin de détruire ni de recréer
+    } else {
+      // Sinon, on détruit avant de recréer
       chartFiscal.destroy();
-      console.log("🧹 Ancien graphique fiscal détruit proprement");
-    } catch (err) {
-      console.warn("⚠️ Impossible de détruire l'ancien graphique:", err);
     }
   }
-
   chartFiscal = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels,
-      datasets: [
-        {
-          label: "Imposition LMP",
-          data: dataLMP,
-          borderWidth: 2,
-          fill: false,
-          tension: 0.2,
-          borderColor: "#00796b"
-        },
-        {
-          label: "Imposition LMNP",
-          data: dataLMNP,
-          borderWidth: 2,
-          fill: false,
-          tension: 0.2,
-          borderColor: "#e65100"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { position: "top" },
-        title: {
-          display: true,
-          text: "Comparaison LMP vs LMNP"
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
+    type: newOptions.type,
+    data: newData,
+    options: newOptions
   });
 }
     function computeFiscal() {
@@ -2559,11 +2520,11 @@ function afficherGraphiqueFiscal(dataLMP, dataLMNP) {
   const ctx = canvas.getContext("2d");
 
   if (chartFiscal) {
-    chartFiscalInstance.destroy();
+    chartFiscal.destroy();
     console.log("🧹 Ancien graphique fiscal détruit");
   }
 
-  chartFiscalInstance = new Chart(ctx, {
+  chartFiscal = new Chart(ctx, {
     type: "line",
     data: {
       labels: annees,
@@ -2761,14 +2722,7 @@ function showTab(id) {
 
   try {
     // 1. Application des données JSON (si présentes)
-    if (typeof appliquerDonneesDepuisJSON === "function") {
-      appliquerDonneesDepuisJSON();
-      console.log("✅ Données JSON appliquées");
-    } else {
-      console.warn("⚠️ appliquerDonneesDepuisJSON non définie - étape ignorée");
-    }
-
-    // 2. Génération des tableaux de résultats
+        // 2. Génération des tableaux de résultats
     if (typeof genererResultatsFiscaux === "function") {
       genererResultatsFiscaux();
       console.log("✅ Résultats fiscaux générés");
@@ -2778,13 +2732,13 @@ function showTab(id) {
 
     // 3. Génération du graphique fiscal (en attente pour être sûr que les données sont prêtes)
     setTimeout(() => {
-      if (typeof genererGraphiqueFiscal === "function") {
-        genererGraphiqueFiscal();
-        console.log("✅ Graphique fiscal généré");
-      } else {
-        console.warn("⚠️ genererGraphiqueFiscal non définie");
-      }
-    }, 150); // léger délai pour laisser le temps aux données de se poser
+  if (typeof genererGraphiqueFiscal === "function") {
+    genererGraphiqueFiscal();
+    console.log("✅ Graphique fiscal généré");
+  } else {
+    console.warn("⚠️ genererGraphiqueFiscal non définie");
+  }
+}, 150); // léger délai pour laisser le temps aux données de se poser
 
   } catch (e) {
     console.error("❌ Erreur lors de l'initialisation :", e);
