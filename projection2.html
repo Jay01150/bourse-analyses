@@ -1762,9 +1762,139 @@ if (!champsManuels.has(`${id}_total`)) {
 if (!champsManuels.has(`${id}_net`)) {
   document.getElementById(`${id}_net`).value = (loyer - totalCh).toFixed(2);
 }
-computeFiscal();
+genererResultatsFiscaux();
 updateClassements();
     }
+function triggerUpdate(event, annee, champ) {
+  const nouvelleValeur = event.target.value ? parseFloat(event.target.value) : null;
+  let valeurs = localStorage.getItem('valeursManuelles')
+    ? JSON.parse(localStorage.getItem('valeursManuelles'))
+    : {};
+  if (!valeurs[annee]) valeurs[annee] = {};
+  if (nouvelleValeur !== null && !isNaN(nouvelleValeur)) {
+    valeurs[annee][champ] = nouvelleValeur;
+  } else {
+    delete valeurs[annee][champ];
+  }
+  if (Object.keys(valeurs[annee]).length === 0) {
+    delete valeurs[annee];
+  }
+  localStorage.setItem('valeursManuelles', JSON.stringify(valeurs));
+  genererResultatsFiscaux();
+}
+
+function resetCell(annee, champ) {
+  if (localStorage.getItem('valeursManuelles')) {
+    let valeurs = JSON.parse(localStorage.getItem('valeursManuelles'));
+    if (valeurs[annee]) {
+      delete valeurs[annee][champ];
+      if (Object.keys(valeurs[annee]).length === 0) {
+        delete valeurs[annee];
+      }
+      localStorage.setItem('valeursManuelles', JSON.stringify(valeurs));
+    }
+  }
+  genererResultatsFiscaux();
+}
+
+function genererResultatsFiscaux() {
+  const tbody = document.getElementById("fiscal-body");
+  tbody.innerHTML = "";
+
+  let cumulLMP = 0, cumulLMNP = 0;
+  let dataLMP = [], dataLMNP = [], labels = [];
+
+  let valeursManuelles = {};
+if (localStorage.getItem('valeursManuelles')) {
+  valeursManuelles = JSON.parse(localStorage.getItem('valeursManuelles'));
+}
+
+  // 🧩 Récupération des saisies manuelles existantes
+
+
+  // 🔁 On construit année après année, avec recalcul de stock
+  let stock = parseFloat(document.getElementById("stock-initial")?.value || 0);
+
+  annees.forEach((annee, index) => {
+    let resultatComptable = Object.keys(donneesInitiales)
+      .filter(k => k.endsWith(annee + "_net"))
+      .reduce((acc, k) => acc + parseFloat(donneesInitiales[k] || 0), 0);
+
+   if (valeursManuelles[annee] && valeursManuelles[annee].comptable !== null) {
+  resultatComptable = valeursManuelles[annee].comptable;
+}
+
+    let amortEcartes = Math.min(Math.max(0, resultatComptable), stock);
+    if (valeursManuelles[annee] && valeursManuelles[annee].amort !== null) {
+  amortEcartes = valeursManuelles[annee].amort;
+}
+
+    // 🔄 Recalcul automatique du stock, sauf si valeur manuelle
+    let stockRestant = stock - amortEcartes;
+    if (valeursManuelles[annee] && valeursManuelles[annee].stock !== null) {
+  stockRestant = valeursManuelles[annee].stock;
+}
+
+    // ➡️ Propagation automatique du stock à l’année suivante
+    stock = stockRestant;
+
+    // 🧮 Calculs fiscaux
+    const baseImposableLMP = Math.max(0, resultatComptable - amortEcartes);
+    const rsi = baseImposableLMP * RSI_RATE;
+    const ir = baseImposableLMP * IR_RATE;
+    const totalLMP = rsi + ir;
+
+    const totalLMNP = Math.max(0, (resultatComptable * LMNP_RATE) - LMNP_BONUS);
+
+    cumulLMP += totalLMP;
+    cumulLMNP += totalLMNP;
+    labels.push(annee.toString());
+    dataLMP.push(totalLMP);
+    dataLMNP.push(totalLMNP);
+console.log("Génération tableau fiscal AVEC input editable");
+    // 🖊️ Affichage ligne dans le tableau
+   tbody.innerHTML += `
+  <tr data-annee="${annee}">
+    <td>${annee}</td>
+    <td>
+      <input type="number"
+             class="editable-comptable"
+             id="resultat-${annee}"
+             value="${(!isNaN(resultatComptable) ? resultatComptable : 0).toFixed(2)}"
+             step="0.01"
+             style="width:90px;"
+             oninput="triggerUpdate(event, '${annee}', 'comptable')" />
+      <span class="reset-cell" onclick="resetCell('${annee}', 'comptable')">↺</span>
+    </td>
+    <td contenteditable="true" class="editable-amort">${(!isNaN(amortEcartes) ? amortEcartes : 0).toFixed(2)}</td>
+    <td contenteditable="true" class="editable-stock">${(!isNaN(stockRestant) ? stockRestant : 0).toFixed(2)}</td>
+    <td>${(!isNaN(rsi) ? rsi : 0).toFixed(2)}</td>
+    <td>${(!isNaN(ir) ? ir : 0).toFixed(2)}</td>
+    <td>${(!isNaN(totalLMP) ? totalLMP : 0).toFixed(2)}</td>
+    <td>${(!isNaN(totalLMNP) ? totalLMNP : 0).toFixed(2)}</td>
+  </tr>
+`;
+  });
+
+  // 📊 Maj cumul et moyennes
+  document.getElementById("cumul-lmp").textContent = cumulLMP.toFixed(2);
+  document.getElementById("cumul-lmnp").textContent = cumulLMNP.toFixed(2);
+  document.getElementById("moy-lmp").textContent = (cumulLMP / annees.length).toFixed(2);
+  document.getElementById("moy-lmnp").textContent = (cumulLMNP / annees.length).toFixed(2);
+
+  // 📈 Graphique
+  if (labels.length && dataLMP.length && dataLMNP.length) {
+    afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
+  } else {
+    console.warn("⛔ Données insuffisantes pour générer le graphique fiscal");
+  }
+
+  // 🔁 Réactivation événements
+  document.querySelectorAll(".editable-comptable, .editable-amort, .editable-stock").forEach(cell => {
+    cell.removeEventListener("input", triggerUpdate);
+    cell.addEventListener("input", triggerUpdate);
+  });
+}
 
     function recalculateAll() {
       biens.forEach(n => annees.forEach(a => recalculate(`${n}_${a}`)));
@@ -2578,109 +2708,6 @@ function updateResultatFiscal() {
 </script>
 
 <script>
-
-function genererResultatsFiscaux() {
-  const tbody = document.getElementById("fiscal-body");
-  tbody.innerHTML = "";
-
-  let cumulLMP = 0, cumulLMNP = 0;
-  let dataLMP = [], dataLMNP = [], labels = [];
-
-  const valeursManuelles = {};
-  const lignesExistantes = document.querySelectorAll("tr[data-annee]");
-
-  // 🧩 Récupération des saisies manuelles existantes
-  lignesExistantes.forEach(tr => {
-    const annee = tr.getAttribute("data-annee");
-    const valRes = parseFloat(tr.querySelector(".editable-comptable")?.textContent.replace(",", "."));
-    const valAmort = parseFloat(tr.querySelector(".editable-amort")?.textContent.replace(",", "."));
-    const valStock = parseFloat(tr.querySelector(".editable-stock")?.textContent.replace(",", "."));
-    valeursManuelles[annee] = {
-      comptable: !isNaN(valRes) ? valRes : null,
-      amort: !isNaN(valAmort) ? valAmort : null,
-      stock: !isNaN(valStock) ? valStock : null
-    };
-  });
-
-  // 🔁 On construit année après année, avec recalcul de stock
-  let stock = parseFloat(document.getElementById("stock-initial")?.value || 0);
-
-  annees.forEach((annee, index) => {
-    let resultatComptable = Object.keys(donneesInitiales)
-      .filter(k => k.endsWith(annee + "_net"))
-      .reduce((acc, k) => acc + parseFloat(donneesInitiales[k] || 0), 0);
-
-   if (valeursManuelles[annee] && valeursManuelles[annee].comptable !== null) {
-  resultatComptable = valeursManuelles[annee].comptable;
-}
-
-    let amortEcartes = Math.min(Math.max(0, resultatComptable), stock);
-    if (valeursManuelles[annee] && valeursManuelles[annee].amort !== null) {
-  amortEcartes = valeursManuelles[annee].amort;
-}
-
-    // 🔄 Recalcul automatique du stock, sauf si valeur manuelle
-    let stockRestant = stock - amortEcartes;
-    if (valeursManuelles[annee] && valeursManuelles[annee].stock !== null) {
-  stockRestant = valeursManuelles[annee].stock;
-}
-
-    // ➡️ Propagation automatique du stock à l’année suivante
-    stock = stockRestant;
-
-    // 🧮 Calculs fiscaux
-    const baseImposableLMP = Math.max(0, resultatComptable - amortEcartes);
-    const rsi = baseImposableLMP * RSI_RATE;
-    const ir = baseImposableLMP * IR_RATE;
-    const totalLMP = rsi + ir;
-
-    const totalLMNP = Math.max(0, (resultatComptable * LMNP_RATE) - LMNP_BONUS);
-
-    cumulLMP += totalLMP;
-    cumulLMNP += totalLMNP;
-    labels.push(annee.toString());
-    dataLMP.push(totalLMP);
-    dataLMNP.push(totalLMNP);
-
-    // 🖊️ Affichage ligne dans le tableau
-    tbody.innerHTML += `
-      <tr data-annee="${annee}">
-        <td>${annee}</td>
-        <td contenteditable="true" class="editable-comptable">${resultatComptable.toFixed(2)}</td>
-        <td contenteditable="true" class="editable-amort">${amortEcartes.toFixed(2)}</td>
-        <td contenteditable="true" class="editable-stock">${stockRestant.toFixed(2)}</td>
-        <td>${rsi.toFixed(2)}</td>
-        <td>${ir.toFixed(2)}</td>
-        <td>${totalLMP.toFixed(2)}</td>
-        <td>${totalLMNP.toFixed(2)}</td>
-      </tr>`;
-  });
-
-  // 📊 Maj cumul et moyennes
-  document.getElementById("cumul-lmp").textContent = cumulLMP.toFixed(2);
-  document.getElementById("cumul-lmnp").textContent = cumulLMNP.toFixed(2);
-  document.getElementById("moy-lmp").textContent = (cumulLMP / annees.length).toFixed(2);
-  document.getElementById("moy-lmnp").textContent = (cumulLMNP / annees.length).toFixed(2);
-
-  // 📈 Graphique
-  if (labels.length && dataLMP.length && dataLMNP.length) {
-    afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
-  } else {
-    console.warn("⛔ Données insuffisantes pour générer le graphique fiscal");
-  }
-
-  // 🔁 Réactivation événements
-  document.querySelectorAll(".editable-comptable, .editable-amort, .editable-stock").forEach(cell => {
-    cell.removeEventListener("input", triggerUpdate);
-    cell.addEventListener("input", triggerUpdate);
-  });
-}
-
-
-function triggerUpdate() {
-  clearTimeout(window._refreshFiscal);
-  window._refreshFiscal = setTimeout(genererResultatsFiscaux, 300);
-}
 
 
 </script>
