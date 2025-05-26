@@ -1643,6 +1643,47 @@ try {
 } catch(e) {
   console.error("Erreur chargement des données initiales :", e);
 }
+
+function updateClassements() {
+  // Exemple : met à jour les classements affichés dans les div #ranking-fiscal et #ranking-cashflow
+
+  // Récupère les biens et les données pour classement fiscal (par exemple sur la base du net ou du total)
+  const classementFiscal = biens.map(bien => {
+    // On prend la somme des net sur 10 ans pour chaque bien
+    let totalNet = 0;
+    for (let an = 2025; an <= 2034; an++) {
+      const key = `${bien}_${an}_net`;
+      totalNet += parseFloat(donneesInitiales[key] || 0);
+    }
+    return { bien, totalNet };
+  }).sort((a, b) => a.totalNet - b.totalNet); // tri croissant, à adapter
+
+  // Affiche dans la div correspondante
+  const fiscalDiv = document.getElementById('ranking-fiscal');
+  if (fiscalDiv) {
+    fiscalDiv.innerHTML = classementFiscal.map((item, idx) =>
+      `<div>${idx + 1}. ${item.bien} : ${item.totalNet.toFixed(2)} €</div>`
+    ).join('');
+  }
+
+  // Même idée pour le cashflow, ou autre critère
+  const classementCashflow = biens.map(bien => {
+    // Moyenne annuelle du net sur 10 ans
+    let totalNet = 0;
+    for (let an = 2025; an <= 2034; an++) {
+      const key = `${bien}_${an}_net`;
+      totalNet += parseFloat(donneesInitiales[key] || 0);
+    }
+    return { bien, cashflow: totalNet / 10 };
+  }).sort((a, b) => b.cashflow - a.cashflow); // tri décroissant
+
+  const cashflowDiv = document.getElementById('ranking-cashflow');
+  if (cashflowDiv) {
+    cashflowDiv.innerHTML = classementCashflow.map((item, idx) =>
+      `<div>${idx + 1}. ${item.bien} : ${item.cashflow.toFixed(2)} €/an</div>`
+    ).join('');
+  }
+}
     function createBienTable(nom) {
       let html = `<div class='bien-block'><h3 onclick="toggleBien('${nom}')" style="cursor:pointer;color:#00796b">▶ ${nom}</h3><div id='${nom}_table'><table><thead><tr>`+
   `<th class="col-gauche">Année</th><th class="col-gauche">Loyer brut</th><th class="col-gauche">GLI</th><th class="col-gauche">Taxe foncière</th><th class="col-gauche">Assurance</th>`+
@@ -1765,22 +1806,40 @@ if (!champsManuels.has(`${id}_net`)) {
 genererResultatsFiscaux();
 updateClassements();
     }
+let timerID = null; // Timer pour différer la mise à jour
+
 function triggerUpdate(event, annee, champ) {
   const nouvelleValeur = event.target.value ? parseFloat(event.target.value) : null;
+
+  // Récupération des valeurs manuelles depuis le localStorage
   let valeurs = localStorage.getItem('valeursManuelles')
     ? JSON.parse(localStorage.getItem('valeursManuelles'))
     : {};
+
+  // Initialiser l'année si elle n'existe pas
   if (!valeurs[annee]) valeurs[annee] = {};
+
+  // Gérer la nouvelle valeur
   if (nouvelleValeur !== null && !isNaN(nouvelleValeur)) {
-    valeurs[annee][champ] = nouvelleValeur;
+    valeurs[annee][champ] = nouvelleValeur; // Mettre à jour la valeur
   } else {
-    delete valeurs[annee][champ];
+    delete valeurs[annee][champ]; // Supprimer si invalide
   }
+
+  // Supprimer l'année si elle est vide
   if (Object.keys(valeurs[annee]).length === 0) {
     delete valeurs[annee];
   }
+
+  // Sauvegarder les nouvelles valeurs dans le localStorage
   localStorage.setItem('valeursManuelles', JSON.stringify(valeurs));
-  genererResultatsFiscaux();
+
+  // Empêcher un recalcul immédiat : différer avec un timer
+  if (timerID) clearTimeout(timerID);
+  timerID = setTimeout(() => {
+    genererResultatsFiscaux(); // Recalcul après délai
+    timerID = null;
+  }, 500); // Délai de 500 ms
 }
 
 function resetCell(annee, champ) {
@@ -1805,91 +1864,105 @@ function genererResultatsFiscaux() {
   let dataLMP = [], dataLMNP = [], labels = [];
 
   let valeursManuelles = {};
-if (localStorage.getItem('valeursManuelles')) {
-  valeursManuelles = JSON.parse(localStorage.getItem('valeursManuelles'));
-}
+  if (localStorage.getItem('valeursManuelles')) {
+    valeursManuelles = JSON.parse(localStorage.getItem('valeursManuelles'));
+  }
 
-  // 🧩 Récupération des saisies manuelles existantes
-
-
-  // 🔁 On construit année après année, avec recalcul de stock
   let stock = parseFloat(document.getElementById("stock-initial")?.value || 0);
 
-  annees.forEach((annee, index) => {
+annees.forEach((annee, index) => {
+    // 1. Calcul résultat comptable avec valeurs manuelles
     let resultatComptable = Object.keys(donneesInitiales)
-      .filter(k => k.endsWith(annee + "_net"))
-      .reduce((acc, k) => acc + parseFloat(donneesInitiales[k] || 0), 0);
+        .filter(k => k.endsWith(annee + "_net"))
+        .reduce((acc, k) => acc + parseFloat(donneesInitiales[k] || 0), 0);
+    if (valeursManuelles[annee] && valeursManuelles[annee].comptable !== undefined) {
+        resultatComptable = valeursManuelles[annee].comptable;
+    }
 
-   if (valeursManuelles[annee] && valeursManuelles[annee].comptable !== null) {
-  resultatComptable = valeursManuelles[annee].comptable;
-}
-
+    // 2. Calcul amortissements avec valeurs manuelles
     let amortEcartes = Math.min(Math.max(0, resultatComptable), stock);
-    if (valeursManuelles[annee] && valeursManuelles[annee].amort !== null) {
-  amortEcartes = valeursManuelles[annee].amort;
-}
+    if (valeursManuelles[annee] && valeursManuelles[annee].amort !== undefined) {
+        amortEcartes = valeursManuelles[annee].amort;
+    }
 
-    // 🔄 Recalcul automatique du stock, sauf si valeur manuelle
-    let stockRestant = stock - amortEcartes;
-    if (valeursManuelles[annee] && valeursManuelles[annee].stock !== null) {
-  stockRestant = valeursManuelles[annee].stock;
-}
+    // 3. Calcul du stock restant pour CETTE année (toujours à partir du stock précédent)
+    let stockRestant;
+    if (valeursManuelles[annee] && valeursManuelles[annee].stock !== undefined) {
+        stockRestant = valeursManuelles[annee].stock;
+    } else {
+        stockRestant = stock - amortEcartes;
+    }
 
-    // ➡️ Propagation automatique du stock à l’année suivante
+    // 4. Propagation du stock pour l’année suivante (toujours la valeur calculée ou manuelle de CETTE année)
     stock = stockRestant;
 
-    // 🧮 Calculs fiscaux
+
     const baseImposableLMP = Math.max(0, resultatComptable - amortEcartes);
     const rsi = baseImposableLMP * RSI_RATE;
     const ir = baseImposableLMP * IR_RATE;
     const totalLMP = rsi + ir;
 
-    const totalLMNP = Math.max(0, (resultatComptable * LMNP_RATE) - LMNP_BONUS);
+    const totalLMNP = Math.max(3000, resultatComptable * LMNP_RATE);
 
     cumulLMP += totalLMP;
     cumulLMNP += totalLMNP;
     labels.push(annee.toString());
     dataLMP.push(totalLMP);
     dataLMNP.push(totalLMNP);
-console.log("Génération tableau fiscal AVEC input editable");
-    // 🖊️ Affichage ligne dans le tableau
-   tbody.innerHTML += `
-  <tr data-annee="${annee}">
-    <td>${annee}</td>
-    <td>
-      <input type="number"
-             class="editable-comptable"
-             id="resultat-${annee}"
-             value="${(!isNaN(resultatComptable) ? resultatComptable : 0).toFixed(2)}"
-             step="0.01"
-             style="width:90px;"
-             oninput="triggerUpdate(event, '${annee}', 'comptable')" />
-      <span class="reset-cell" onclick="resetCell('${annee}', 'comptable')">↺</span>
-    </td>
-    <td contenteditable="true" class="editable-amort">${(!isNaN(amortEcartes) ? amortEcartes : 0).toFixed(2)}</td>
-    <td contenteditable="true" class="editable-stock">${(!isNaN(stockRestant) ? stockRestant : 0).toFixed(2)}</td>
-    <td>${(!isNaN(rsi) ? rsi : 0).toFixed(2)}</td>
-    <td>${(!isNaN(ir) ? ir : 0).toFixed(2)}</td>
-    <td>${(!isNaN(totalLMP) ? totalLMP : 0).toFixed(2)}</td>
-    <td>${(!isNaN(totalLMNP) ? totalLMNP : 0).toFixed(2)}</td>
-  </tr>
-`;
+    console.log("Génération tableau fiscal AVEC input editable");
+
+    tbody.innerHTML += `
+      <tr data-annee="${annee}">
+        <td>${annee}</td>
+        <td>
+          <input type="number"
+                 class="editable-comptable"
+                 id="resultat-${annee}"
+                 value="${(!isNaN(resultatComptable) ? resultatComptable : 0).toFixed(2)}"
+                 step="0.01"
+                 style="width:90px;"
+                 oninput="triggerUpdate(event, '${annee}', 'comptable')" />
+          <span class="reset-cell" onclick="resetCell('${annee}', 'comptable')">↺</span>
+        </td>
+        <td>
+          <input type="number"
+                 class="editable-amort"
+                 id="amort-${annee}"
+                 value="${(!isNaN(amortEcartes) ? amortEcartes : 0).toFixed(2)}"
+                 step="0.01"
+                 style="width:90px;"
+                 oninput="triggerUpdate(event, '${annee}', 'amort')" />
+          <span class="reset-cell" onclick="resetCell('${annee}', 'amort')">↺</span>
+        </td>
+        <td>
+          <input type="number"
+                 class="editable-stock"
+                 id="stock-${annee}"
+                 value="${(!isNaN(stockRestant) ? stockRestant : 0).toFixed(2)}"
+                 step="0.01"
+                 style="width:90px;"
+                 oninput="triggerUpdate(event, '${annee}', 'stock')" />
+          <span class="reset-cell" onclick="resetCell('${annee}', 'stock')">↺</span>
+        </td>
+        <td>${(!isNaN(rsi) ? rsi : 0).toFixed(2)}</td>
+        <td>${(!isNaN(ir) ? ir : 0).toFixed(2)}</td>
+        <td>${(!isNaN(totalLMP) ? totalLMP : 0).toFixed(2)}</td>
+        <td>${(!isNaN(totalLMNP) ? totalLMNP : 0).toFixed(2)}</td>
+      </tr>
+    `;
   });
 
-  // 📊 Maj cumul et moyennes
   document.getElementById("cumul-lmp").textContent = cumulLMP.toFixed(2);
   document.getElementById("cumul-lmnp").textContent = cumulLMNP.toFixed(2);
   document.getElementById("moy-lmp").textContent = (cumulLMP / annees.length).toFixed(2);
   document.getElementById("moy-lmnp").textContent = (cumulLMNP / annees.length).toFixed(2);
 
-  // 📈 Graphique
   if (labels.length && dataLMP.length && dataLMNP.length) {
     afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
   } else {
     console.warn("⛔ Données insuffisantes pour générer le graphique fiscal");
   }
 
-  // 🔁 Réactivation événements
   document.querySelectorAll(".editable-comptable, .editable-amort, .editable-stock").forEach(cell => {
     cell.removeEventListener("input", triggerUpdate);
     cell.addEventListener("input", triggerUpdate);
