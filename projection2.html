@@ -1995,17 +1995,26 @@ function afficherGraphiqueFiscal(newData, newOptions) {
 
     // 📊 Étape 4 : On ajoute la ligne dans le tableau
     tbody.innerHTML += `
-      <tr>
-        <td>${annee}</td>
-        <td>${resultatNet.toFixed(2)}</td>
-        <td>${amortUtilise.toFixed(2)}</td>
-        <td>${stockRestant.toFixed(2)}</td>
-        <td>${rsi}</td>
-        <td>${ir}</td>
-        <td>${totalImpotsLMP}</td>
-        <td>${totalImpotsLMNP}</td>
-      </tr>
-    `;
+  <tr data-annee="${annee}">
+    <td>${annee}</td>
+    <td>
+      <input type="number"
+             class="editable-comptable"
+             id="resultat-${annee}"
+             value="${(!isNaN(resultatComptable) ? resultatComptable : 0).toFixed(2)}"
+             step="0.01"
+             style="width:90px;"
+             oninput="triggerUpdate(event, '${annee}', 'comptable')" />
+      <span class="reset-cell" onclick="resetCell('${annee}', 'comptable')">↺</span>
+    </td>
+    <td contenteditable="true" class="editable-amort">${(!isNaN(amortEcartes) ? amortEcartes : 0).toFixed(2)}</td>
+    <td contenteditable="true" class="editable-stock">${(!isNaN(stockRestant) ? stockRestant : 0).toFixed(2)}</td>
+    <td>${(!isNaN(rsi) ? rsi : 0).toFixed(2)}</td>
+    <td>${(!isNaN(ir) ? ir : 0).toFixed(2)}</td>
+    <td>${(!isNaN(totalLMP) ? totalLMP : 0).toFixed(2)}</td>
+    <td>${(!isNaN(totalLMNP) ? totalLMNP : 0).toFixed(2)}</td>
+  </tr>
+`;
 
     totalLMP += parseFloat(totalImpotsLMP);
     totalLMNP += parseFloat(totalImpotsLMNP);
