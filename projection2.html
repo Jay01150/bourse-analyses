@@ -1704,7 +1704,7 @@ biens.forEach((bien, index) => {
   });
 
   recalculateAll();
-  computeFiscal(); // ✅ Ajoute cette ligne pour afficher le tableau Résultat
+  genererResultatsFiscaux(); // ✅ Ajoute cette ligne pour afficher le tableau Résultat
   updateClassements();
 }
 
@@ -1732,7 +1732,7 @@ donneesInitiales = data;
         if (inp) inp.value = data[id];
       });
       recalculateAll();
-      computeFiscal();
+      genererResultatsFiscaux();
       updateClassements();
       alert("✅ Données importées avec succès.");
     } catch (err) {
@@ -1952,131 +1952,9 @@ function afficherGraphiqueFiscal(newData, newOptions) {
     options: newOptions
   });
 }
-    function computeFiscal() {
-   // met à jour les TF + assurances pour toutes les années
-
-  let stock = parseFloat(document.getElementById('stock-initial').value) || 0; // notre gomme magique (amortissements écartés)
-  const tbody = document.getElementById('fiscal-body');
-  tbody.innerHTML = ''; // on vide le tableau pour le re-remplir proprement
-
-  const dataLMP = [], dataLMNP = [];
-  let totalLMP = 0, totalLMNP = 0;
-
-  annees.forEach(annee => {
-    let resultatNet = 0;
-
-    // ➕ Étape 1 : On additionne les résultats nets de tous les biens pour l'année
-    biens.forEach(bien => {
-      const val = parseFloat(document.getElementById(`${bien}_${annee}_net`).value) || 0;
-      resultatNet += val;
-    });
-
-    let amortUtilise = 0;
-    let resultatCorrige = resultatNet;
-
-    if (resultatNet > 0) {
-    amortUtilise = Math.min(stock, resultatNet);
-    resultatCorrige = resultatNet - amortUtilise;
-    stock -= amortUtilise;
-} else if (resultatNet < 0) {
-    amortUtilise = 0;
-    resultatCorrige = 0; // <-- pour éviter un calcul d'impôts sur un déficit
-    stock += Math.abs(resultatNet);
-}
-
-
-    const stockRestant = Math.max(stock, 0);
-
-    // 🧮 Étape 3 : Calcul RSI + IR
-    const rsi = (resultatCorrige * RSI_RATE).toFixed(2);
-    const ir = (resultatCorrige * IR_RATE).toFixed(2);
-    const totalImpotsLMP = Math.max(parseFloat(rsi) + parseFloat(ir), 1245).toFixed(2); // minimum cotisation
-    const totalImpotsLMNP = (resultatCorrige * LMNP_RATE + LMNP_BONUS).toFixed(2);
-
-    // 📊 Étape 4 : On ajoute la ligne dans le tableau
-    tbody.innerHTML += `
-  <tr data-annee="${annee}">
-    <td>${annee}</td>
-    <td>
-      <input type="number"
-             class="editable-comptable"
-             id="resultat-${annee}"
-             value="${(!isNaN(resultatComptable) ? resultatComptable : 0).toFixed(2)}"
-             step="0.01"
-             style="width:90px;"
-             oninput="triggerUpdate(event, '${annee}', 'comptable')" />
-      <span class="reset-cell" onclick="resetCell('${annee}', 'comptable')">↺</span>
-    </td>
-    <td contenteditable="true" class="editable-amort">${(!isNaN(amortEcartes) ? amortEcartes : 0).toFixed(2)}</td>
-    <td contenteditable="true" class="editable-stock">${(!isNaN(stockRestant) ? stockRestant : 0).toFixed(2)}</td>
-    <td>${(!isNaN(rsi) ? rsi : 0).toFixed(2)}</td>
-    <td>${(!isNaN(ir) ? ir : 0).toFixed(2)}</td>
-    <td>${(!isNaN(totalLMP) ? totalLMP : 0).toFixed(2)}</td>
-    <td>${(!isNaN(totalLMNP) ? totalLMNP : 0).toFixed(2)}</td>
-  </tr>
-`;
-
-    totalLMP += parseFloat(totalImpotsLMP);
-    totalLMNP += parseFloat(totalImpotsLMNP);
-    dataLMP.push(totalImpotsLMP);
-    dataLMNP.push(totalImpotsLMNP);
-  });
-
-  // 🧾 Mise à jour des totaux
-  document.getElementById('cumul-lmp').textContent = totalLMP.toFixed(2);
-  document.getElementById('cumul-lmnp').textContent = totalLMNP.toFixed(2);
-  document.getElementById('moy-lmp').textContent = (totalLMP / annees.length).toFixed(2);
-  document.getElementById('moy-lmnp').textContent = (totalLMNP / annees.length).toFixed(2);
-
-  // 📈 Mise à jour du graphique
-  afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
-}
-
-function updateClassements() {
-  const resultatsParBien = {}; // pour classer les biens selon le résultat net cumulé
-  const cashflowsParBien = {}; // pour classer les biens selon le cash flow cumulé
-
-  biens.forEach(bien => {
-    let totalResultat = 0;
-    let totalCashflow = 0;
-
-    annees.forEach(annee => {
-      const net = parseFloat(document.getElementById(`${bien}_${annee}_net`).value) || 0;
-      const interets = parseFloat(document.getElementById(`${bien}_${annee}_interet`).value) || 0;
-      const compta = parseFloat(document.getElementById(`${bien}_${annee}_compta`).value) || 0;
-
-      totalResultat += Math.max(0, net); // on cumule seulement les années "positives"
-      totalCashflow += net - interets - compta; // approximation du vrai cash-flow
-    });
-
-    resultatsParBien[bien] = totalResultat;
-    cashflowsParBien[bien] = totalCashflow;
-  });
-
-  // Génère les TOP 3 triés
-  const topResultats = Object.entries(resultatsParBien)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
-
-  const topCashflow = Object.entries(cashflowsParBien)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
-
-  // Affichage HTML
-  document.getElementById('ranking-fiscal').innerHTML =
-    '<h3>👉 À vendre en priorité (résultat net trop positif)</h3><ol>' +
-    topResultats.map(([bien, val]) => `<li><strong>${bien}</strong> : ${val.toFixed(0)} €</li>`).join('') +
-    '</ol>';
-
-  document.getElementById('ranking-cashflow').innerHTML =
-    '<h3>💸 Meilleur cash flow cumulé (hors intérêts et compta)</h3><ol>' +
-    topCashflow.map(([bien, val]) => `<li><strong>${bien}</strong> : ${val.toFixed(0)} €</li>`).join('') +
-    '</ol>';
-}
-
-    function updateStockInitial() {
+        function updateStockInitial() {
       stockAmort = parseFloat(document.getElementById('stock-initial').value) || 0;
-      computeFiscal();
+      genererResultatsFiscaux();
 ;
     }
 
@@ -2112,81 +1990,17 @@ function rendreCelluleEditable(td, annee, cle, valeurAuto) {
     if (!isNaN(nouvelleValeur)) {
       donneesInitiales[key] = nouvelleValeur;
       saveData(false);
-      computeFiscal();
+      genererResultatsFiscaux();
     }
   });
 
   reset.addEventListener("click", () => {
     delete donneesInitiales[key];
     saveData(false);
-    computeFiscal();
+    genererResultatsFiscaux();
   });
 }
 
-function computeFiscal() {
-  let stockInitial = parseFloat(document.getElementById('stock-initial').value) || 0;
-  const tbody = document.getElementById('fiscal-body');
-  tbody.innerHTML = '';
-
-  const dataLMP = [], dataLMNP = [];
-  let totalLMP = 0, totalLMNP = 0;
-  let stock = stockInitial;
-
-  const formatEuro = v => `${Math.round(v).toLocaleString("fr-FR")} €`;
-
-  annees.forEach(annee => {
-    let resultatNet = 0;
-    biens.forEach(bien => {
-      const val = parseFloat(document.getElementById(`${bien}_${annee}_net`)?.value || donneesInitiales[`${bien}_${annee}_net`] || 0);
-      resultatNet += val;
-    });
-
-    const amortAuto = (resultatNet > 0) ? Math.min(stock, resultatNet) : 0;
-    const resultatCorrige = (resultatNet > 0) ? resultatNet - amortAuto : 0;
-    const stockAuto = (resultatNet > 0) ? stock - amortAuto : stock + Math.abs(resultatNet);
-
-    const amortUtilise = getValeurAmortModifiee(annee, "amortEcartes", amortAuto);
-    const stockRestant = getValeurAmortModifiee(annee, "stockRestant", stockAuto);
-
-    const ecartStock = stockRestant - stockAuto;
-    stock = stockAuto + ecartStock;
-
-    const rsi = resultatCorrige * RSI_RATE;
-    const ir = resultatCorrige * IR_RATE;
-    const totalImpotsLMP = Math.max(rsi + ir, 1245);
-    const totalImpotsLMNP = (resultatCorrige * LMNP_RATE + LMNP_BONUS);
-
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${annee}</td>
-      <td>${formatEuro(resultatNet)}</td>
-      <td class="editable amortEcartes"></td>
-      <td class="editable stockRestant"></td>
-      <td>${formatEuro(rsi)}</td>
-      <td>${formatEuro(ir)}</td>
-      <td>${formatEuro(totalImpotsLMP)}</td>
-      <td>${formatEuro(totalImpotsLMNP)}</td>
-    `;
-
-    const tds = row.querySelectorAll(".editable");
-    rendreCelluleEditable(tds[0], annee, "amortEcartes", amortAuto);
-    rendreCelluleEditable(tds[1], annee, "stockRestant", stockAuto);
-
-    tbody.appendChild(row);
-    totalLMP += totalImpotsLMP;
-    totalLMNP += totalImpotsLMNP;
-    dataLMP.push(totalImpotsLMP);
-    dataLMNP.push(totalImpotsLMNP);
-  });
-
-  document.getElementById('cumul-lmp').textContent = formatEuro(totalLMP);
-  document.getElementById('cumul-lmnp').textContent = formatEuro(totalLMNP);
-  document.getElementById('moy-lmp').textContent = formatEuro(totalLMP / annees.length);
-  document.getElementById('moy-lmnp').textContent = formatEuro(totalLMNP / annees.length);
-
-  afficherGraphiqueFiscal(labels, dataLMP, dataLMNP);
-  updateClassements();
-}
 
 function saveAsMaster() {
   if (!confirm("⚠️ Tu es sur le point d’écraser la sauvegarde MASTER.")) return;
