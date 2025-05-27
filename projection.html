@@ -2621,6 +2621,19 @@ function applyAppDataToDOM() {
   if (typeof updateClassements === "function") updateClassements();
 }
 
+// Synchronisation automatique des inputs de l'onglet Données avec donneesInitiales
+document.getElementById("contenu-biens").addEventListener("input", function(e) {
+  const el = e.target;
+  // On cible les champs avec un id du type Bien_Année_champ (ex: "Ferry 1_2025_loyer")
+  if (el.tagName === "INPUT" && el.id && el.id.match(/^[^_]+_\d{4}_.+/)) {
+    donneesInitiales[el.id] = el.value;
+    // Optionnel: synchroniser appData aussi si tu veux une sauvegarde à chaque frappe
+    // appData.formFields[el.id] = el.value;
+    if (typeof recalculateAll === "function") recalculateAll();
+    if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
+  }
+});
+
 // --- UTILISATION DANS LES BOUTONS ---
 
 function sauvegardeLocale() {
@@ -2670,6 +2683,25 @@ function importerJSON(event) {
   };
   reader.readAsText(file);
 }
+function syncBienInputChange(e) {
+  const el = e.target;
+  if (el.tagName === "INPUT" && el.id && el.id.match(/^[^_]+_\d{4}_.+/)) {
+    // On tente de garder la valeur numérique correcte
+    let val = el.value;
+    if (el.type === "number") {
+      val = val.trim();
+      val = val === "" ? "" : String(Number(val.replace(",", "."))); // gère 12,5 ou 12.5
+      if (isNaN(Number(val))) val = ""; // Ignore les valeurs non numériques
+    }
+    donneesInitiales[el.id] = val;
+    if (typeof recalculateAll === "function") recalculateAll();
+    if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
+  }
+}
+
+// On écoute les deux événements : input et change
+document.getElementById("contenu-biens").addEventListener("input", syncBienInputChange);
+document.getElementById("contenu-biens").addEventListener("change", syncBienInputChange);
 </script>
 </body>
 </html>
