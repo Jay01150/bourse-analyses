@@ -1719,22 +1719,7 @@ biens.forEach((bien, index) => {
   contenuContainer.appendChild(bloc);
 });
 
-    function saveData(exportToFile = false) {
-  const data = {};
-  document.querySelectorAll("input[type='number']").forEach(i => data[i.id] = i.value);
-  localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
-
-  if (exportToFile) {
-    const now = new Date().toISOString().slice(0,19).replace(/[:T]/g, "-");
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `Backup_Projection_LMP_LMNP_${now}.json`;
-    a.click();
-  }
-
-  alert("✅ Données enregistrées localement.\n💡 Une copie de sauvegarde a été téléchargée automatiquement.");
-}
+    
     function restoreData() {
   if (!confirm("⚠️ Voulez-vous vraiment restaurer les données ?")) return;
   if (!confirm("🛑 Dernier avertissement : cette action écrasera toutes les données en cours. Continuer ?")) return;
@@ -1759,32 +1744,7 @@ function injecterDonneesInitiales() {
   });
 }
 
-    function importerJSON(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-donneesInitiales = data;
-      Object.keys(data).forEach(id => {
-        const inp = document.getElementById(id);
-        if (inp) inp.value = data[id];
-      });
-      recalculateAll();
-      genererResultatsFiscaux();
-      updateClassements();
-      alert("✅ Données importées avec succès.");
-    } catch (err) {
-      alert("❌ Erreur lors de l'importation du fichier JSON.");
-      console.error("Erreur JSON:", err);
-    }
-  };
-  reader.readAsText(file);
-}
-
-
+    
             function recalculate(id) {
       
       const loyer = parseFloat(document.getElementById(`${id}_loyer`).value) || 0;
@@ -2670,6 +2630,77 @@ function showTab(id) {
     console.error("❌ Erreur lors de l'initialisation :", e);
   }
 };
+// Récupère toutes les entrées pertinentes
+function collectAllFormData() {
+  const data = {};
+  // Inclut tous les inputs, selects, textareas (pas seulement type number)
+  document.querySelectorAll("input, select, textarea").forEach(el => {
+    if (el.id) data[el.id] = el.value;
+  });
+  return data;
+}
+
+// Export JSON (remplace exporterJSON/saveData)
+function exporterJSON() {
+  const data = collectAllFormData();
+  // Sauvegarde à jour dans localStorage
+  localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
+
+  // Export fichier
+  const now = new Date().toISOString().slice(0,19).replace(/[:T]/g, "-");
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Backup_Projection_LMP_LMNP_${now}.json`;
+  a.click();
+
+  alert("✅ Données enregistrées et exportées (JSON complet).");
+}
+
+// Import JSON (remplace importerJSON/importFromFile)
+function importerJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Sauvegarde de secours de l'état courant AVANT import
+  const backup = collectAllFormData();
+  localStorage.setItem('lmp_lmnp_backup_preimport', JSON.stringify(backup));
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+
+      // Recharge les données du localStorage actuel (pour merger)
+      const localData = JSON.parse(localStorage.getItem('lmp_lmnp_donnees') || '{}');
+
+      // On ÉCRASE les valeurs des champs présents dans le JSON importé,
+      // mais on ne touche pas à celles non incluses (elles restent inchangées)
+      const merged = {...localData, ...imported};
+
+      // On applique dans le DOM
+      Object.entries(imported).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      });
+
+      // On met à jour la variable globale et le localStorage
+      donneesInitiales = merged;
+      localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(merged));
+
+      // Rafraîchis les calculs/affichage (ajuste avec tes fonctions réelles)
+      if (typeof recalculateAll === "function") recalculateAll();
+      if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
+      if (typeof updateClassements === "function") updateClassements();
+
+      alert("✅ Données importées avec succès (ancien état sauvegardé pour restauration).");
+    } catch (err) {
+      alert("❌ Erreur lors de l'importation du fichier JSON.\nAucune donnée n'a été écrasée.");
+      console.error("Erreur JSON:", err);
+    }
+  };
+  reader.readAsText(file);
+}
 </script>
 </body>
 </html>
