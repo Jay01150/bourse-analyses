@@ -1746,8 +1746,6 @@ function injecterDonneesInitiales() {
     }
   });
 }
-
-    
             function recalculate(id) {
       
       const loyer = parseFloat(document.getElementById(`${id}_loyer`).value) || 0;
@@ -2400,11 +2398,6 @@ function createSaveRestoreButtons() {
   return container;
 }
 
-// Ajoute ces alias simples AVANT ton addEventListener DOMContentLoaded
-function sauvegardeLocale() { sauvegardeLocale(false); }
-function restaurationLocale() { restoreData(); }
-function exporterJSON() { sauvegardeLocale(true); }
-function importerJSON(e) { importFromFile(e); }
 
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll('[id^="tab-"]');
@@ -2551,86 +2544,164 @@ function showTab(id) {
   }
 };
 // Récupère toutes les entrées pertinentes
-function collectAllFormData() {
-  const data = {};
-  // Inclut tous les inputs, selects, textareas (pas seulement type number)
-  document.querySelectorAll("input, select, textarea").forEach(el => {
-    if (el.id) data[el.id] = el.value;
+
+function toggleBien(nom) {
+  const bloc = document.getElementById(`${nom}_table`);
+  if (!bloc) return;
+  const titre = document.querySelector(`h3[onclick="toggleBien('${nom}')"]`);
+  const isShown = bloc.style.display !== 'none';
+  bloc.style.display = isShown ? 'none' : 'block';
+  if (titre) titre.textContent = (isShown ? "▶ " : "▼ ") + nom;
+}
+// Déclaration globale
+const appData = {
+  formFields: {},        // Tous les inputs/selects/textarea par id
+  valeursManuelles: {},  // Les valeurs manuelles stockées dans localStorage
+  simuBIC: {},           // Les champs du simulateur BIC
+  modifsAmort: {}        // Les modifs sur amortissements dans donneesInitiales
+};
+
+// Mise à jour de appData à partir du DOM et du localStorage
+function updateAppDataFromDOM() {
+  // 1. Form fields
+  appData.formFields = {};
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.id) appData.formFields[el.id] = el.value;
   });
-  return data;
+
+  // 2. Valeurs manuelles
+  try {
+    appData.valeursManuelles = JSON.parse(localStorage.getItem('valeursManuelles') || '{}');
+  } catch { appData.valeursManuelles = {}; }
+
+  // 3. Simu BIC
+  try {
+    appData.simuBIC = JSON.parse(localStorage.getItem('simu_bic') || '{}');
+  } catch { appData.simuBIC = {}; }
+
+  // 4. Modifs amortissements (dans donneesInitiales, clé qui commence par "modif_")
+  appData.modifsAmort = {};
+  if (window.donneesInitiales) {
+    Object.keys(window.donneesInitiales).forEach(k => {
+      if (k.startsWith("modif_")) appData.modifsAmort[k] = window.donneesInitiales[k];
+    });
+  }
 }
 
-// Export JSON (remplace exporterJSON/saveData)
+// Appliquer les données de appData vers le DOM et les variables JS
+function applyAppDataToDOM() {
+  // 1. Form fields
+  if (appData.formFields) {
+    Object.keys(appData.formFields).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = appData.formFields[id];
+    });
+  }
+
+  // 2. Valeurs manuelles
+  if (appData.valeursManuelles) {
+    localStorage.setItem('valeursManuelles', JSON.stringify(appData.valeursManuelles));
+  }
+
+  // 3. Simu BIC
+  if (appData.simuBIC) {
+    localStorage.setItem('simu_bic', JSON.stringify(appData.simuBIC));
+  }
+
+  // 4. Modifs amortissements
+  if (appData.modifsAmort && window.donneesInitiales) {
+    Object.keys(appData.modifsAmort).forEach(k => {
+      window.donneesInitiales[k] = appData.modifsAmort[k];
+    });
+  }
+
+  // 5. Rafraîchir l'affichage/calculs
+  if (typeof recalculateAll === "function") recalculateAll();
+  if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
+  if (typeof updateClassements === "function") updateClassements();
+}
+
+// Synchronisation automatique des inputs de l'onglet Données avec donneesInitiales
+document.getElementById("contenu-biens").addEventListener("input", function(e) {
+  const el = e.target;
+  // On cible les champs avec un id du type Bien_Année_champ (ex: "Ferry 1_2025_loyer")
+  if (el.tagName === "INPUT" && el.id && el.id.match(/^[^_]+_\d{4}_.+/)) {
+    donneesInitiales[el.id] = el.value;
+    // Optionnel: synchroniser appData aussi si tu veux une sauvegarde à chaque frappe
+    // appData.formFields[el.id] = el.value;
+    if (typeof recalculateAll === "function") recalculateAll();
+    if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
+  }
+});
+
+// --- UTILISATION DANS LES BOUTONS ---
+
+function sauvegardeLocale() {
+  updateAppDataFromDOM();
+  localStorage.setItem('lmp_lmnp_allData', JSON.stringify(appData));
+  alert('Sauvegarde locale réussie !');
+}
+
+function restaurationLocale() {
+  if (!confirm("⚠️ Voulez-vous vraiment restaurer la sauvegarde locale ?")) return;
+  const dataJSON = localStorage.getItem('lmp_lmnp_allData');
+  if (!dataJSON) {
+    alert("Aucune sauvegarde locale trouvée !");
+    return;
+  }
+  Object.assign(appData, JSON.parse(dataJSON));
+  applyAppDataToDOM();
+  alert('Restauration locale réussie !');
+}
+
 function exporterJSON() {
-  const data = collectAllFormData();
-  // Sauvegarde à jour dans localStorage
-  localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
-
-  // Export fichier
-  const now = new Date().toISOString().slice(0,19).replace(/[:T]/g, "-");
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `Backup_Projection_LMP_LMNP_${now}.json`;
+  updateAppDataFromDOM();
+  const dataStr = JSON.stringify(appData, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lmp_lmnp_sauvegarde.json";
+  document.body.appendChild(a);
   a.click();
-
-  alert("✅ Données enregistrées et exportées (JSON complet).");
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
-// Import JSON (remplace importerJSON/importFromFile)
 function importerJSON(event) {
   const file = event.target.files[0];
   if (!file) return;
-
-  // Sauvegarde de secours de l'état courant AVANT import
-  const backup = collectAllFormData();
-  localStorage.setItem('lmp_lmnp_backup_preimport', JSON.stringify(backup));
-
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = function(e) {
     try {
-      const imported = JSON.parse(e.target.result);
-
-      // Recharge les données du localStorage actuel (pour merger)
-      const localData = JSON.parse(localStorage.getItem('lmp_lmnp_donnees') || '{}');
-
-      // On ÉCRASE les valeurs des champs présents dans le JSON importé,
-      // mais on ne touche pas à celles non incluses (elles restent inchangées)
-      const merged = {...localData, ...imported};
-
-      // On applique dans le DOM
-      Object.entries(imported).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
-      });
-
-      // On met à jour la variable globale et le localStorage
-      donneesInitiales = merged;
-      localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(merged));
-
-      // Rafraîchis les calculs/affichage (ajuste avec tes fonctions réelles)
-      if (typeof recalculateAll === "function") recalculateAll();
-      if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
-      if (typeof updateClassements === "function") updateClassements();
-
-      alert("✅ Données importées avec succès (ancien état sauvegardé pour restauration).");
+      Object.assign(appData, JSON.parse(e.target.result));
+      applyAppDataToDOM();
+      alert('Import JSON réussi !');
     } catch (err) {
-      alert("❌ Erreur lors de l'importation du fichier JSON.\nAucune donnée n'a été écrasée.");
-      console.error("Erreur JSON:", err);
+      alert("Erreur lors de l'import JSON : " + err.message);
     }
   };
   reader.readAsText(file);
 }
-function sauvegardeLocale() {
-  const data = collectAllFormData();
-  localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
-  alert("✅ Données enregistrées localement.");
-}
-document.getElementById("tab-donnees").addEventListener("change", function(e) {
-  if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
-    recalculateAll();
+function syncBienInputChange(e) {
+  const el = e.target;
+  if (el.tagName === "INPUT" && el.id && el.id.match(/^[^_]+_\d{4}_.+/)) {
+    // On tente de garder la valeur numérique correcte
+    let val = el.value;
+    if (el.type === "number") {
+      val = val.trim();
+      val = val === "" ? "" : String(Number(val.replace(",", "."))); // gère 12,5 ou 12.5
+      if (isNaN(Number(val))) val = ""; // Ignore les valeurs non numériques
+    }
+    donneesInitiales[el.id] = val;
+    if (typeof recalculateAll === "function") recalculateAll();
+    if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
   }
-});
+}
+
+// On écoute les deux événements : input et change
+document.getElementById("contenu-biens").addEventListener("input", syncBienInputChange);
+document.getElementById("contenu-biens").addEventListener("change", syncBienInputChange);
 </script>
 </body>
 </html>
