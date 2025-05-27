@@ -414,6 +414,8 @@ function calculer() {
 
 let chartFiscal = null;
 
+let logCounter = 0;
+
 function afficherBien(nomBien) {
   biens.forEach(bien => {
     const div = document.getElementById(`bien-${bien}`);
@@ -1869,8 +1871,13 @@ annees.forEach((annee, index) => {
     labels.push(annee.toString());
     dataLMP.push(totalLMP);
     dataLMNP.push(totalLMNP);
+    if (logCounter < 10) {
     console.log("Génération tableau fiscal AVEC input editable");
-
+    logCounter++;
+} else if (logCounter === 10) {
+    console.log("Limite atteinte : pas d'autres logs pour 'Génération tableau fiscal AVEC input editable'");
+    logCounter++;
+}
     tbody.innerHTML += `
       <tr data-annee="${annee}">
         <td>${annee}</td>
