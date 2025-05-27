@@ -1967,8 +1967,7 @@ function manualOverride(id) {
   champsManuels.add(id);
 }
 
-    function toggleBien(n) { const e = document.getElementById(`${n}_table`); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
-   
+    
 
     let chart;
     
@@ -2002,9 +2001,7 @@ function afficherGraphiqueFiscal(newData, newOptions) {
 injecterDonneesInitiales();
     updateStockInitial();
     restaurerSimuBIC();
-function isLocalhost() {
-  return location.hostname === "localhost" || location.protocol === "file:";
-}
+
 function getValeurAmortModifiee(annee, cle, valeurAuto) {
   const modif = donneesInitiales[`modif_${cle}_${annee}`];
   return modif !== undefined ? Number(modif) : Math.round(valeurAuto);
@@ -2029,14 +2026,14 @@ function rendreCelluleEditable(td, annee, cle, valeurAuto) {
     const nouvelleValeur = Math.round(Number(input.value));
     if (!isNaN(nouvelleValeur)) {
       donneesInitiales[key] = nouvelleValeur;
-      saveData(false);
+      sauvegardeLocale(false);
       genererResultatsFiscaux();
     }
   });
 
   reset.addEventListener("click", () => {
     delete donneesInitiales[key];
-    saveData(false);
+    sauvegardeLocale(false);
     genererResultatsFiscaux();
   });
 }
@@ -2414,34 +2411,6 @@ function toggleStrategie() {
   const bloc = document.getElementById("copilot-strategie");
   bloc.style.display = bloc.style.display === "none" ? "block" : "none";
 }
-// === 📝 Copier la synthèse IA en version Notion (texte brut) ===
-function copierSynthesePourNotion() {
-  let texte = "🧠 Analyse IA par bien :\n\n";
-
-  const sections = document.querySelectorAll("#resultats-par-bien > strong");
-  sections.forEach(section => {
-    const bien = section.textContent.trim();
-    const ul = section.nextElementSibling;
-    const lignes = Array.from(ul.querySelectorAll("li")).map(li => "- " + li.textContent.trim());
-    texte += `📌 ${bien}\n${lignes.join("\n")}\n\n`;
-  });
-
-  texte += "📊 Synthèse globale :\n\n";
-  const blocs = document.querySelectorAll("#copilot-synthese > div");
-  blocs.forEach(div => texte += "- " + div.textContent.trim() + "\n");
-
-  navigator.clipboard.writeText(texte).then(() => {
-    alert("✅ Synthèse IA copiée au format Notion (texte brut) !");
-  });
-}
-function copierPlanificationPourNotion() {
-  const contenu = document.getElementById("planification-content").innerText;
-  navigator.clipboard.writeText(contenu).then(() => {
-    alert("📋 Planification copiée dans le presse-papiers.\n💡 Tu peux la coller dans Notion !");
-  }).catch(() => {
-    alert("❌ Impossible de copier le texte. Essaie manuellement.");
-  });
-}
 
 </script>
 
@@ -2477,7 +2446,7 @@ function createSaveRestoreButtons() {
   container.className = "save-restore-bar";
   container.style.textAlign = "center";
   container.innerHTML = `
-    <button class="save-btn" onclick="sauvegardeLocale()">🗂️ Sauvegarde locale</button>
+    <button class="save-btn" onclick="sauvegardeLocale()">💾 Sauvegarde locale</button>
 <button class="save-btn" onclick="restaurationLocale()">♻️ Restauration locale</button>
 <button class="save-btn" onclick="exporterJSON()">📤 Export JSON</button>
 <button class="save-btn" onclick="document.getElementById('import-json').click()">📥 Import JSON</button>
@@ -2488,9 +2457,9 @@ function createSaveRestoreButtons() {
 }
 
 // Ajoute ces alias simples AVANT ton addEventListener DOMContentLoaded
-function sauvegardeLocale() { saveData(false); }
+function sauvegardeLocale() { sauvegardeLocale(false); }
 function restaurationLocale() { restoreData(); }
-function exporterJSON() { saveData(true); }
+function exporterJSON() { sauvegardeLocale(true); }
 function importerJSON(e) { importFromFile(e); }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -2707,6 +2676,11 @@ function importerJSON(event) {
     }
   };
   reader.readAsText(file);
+}
+function sauvegardeLocale() {
+  const data = collectAllFormData();
+  localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
+  alert("✅ Données enregistrées localement.");
 }
 </script>
 </body>
