@@ -1646,38 +1646,7 @@ try {
 } catch(e) {
   console.error("Erreur chargement des données initiales :", e);
 }
-function collectAllData() {
-  // 1. Tous les champs de formulaire (id unique)
-  const formData = {};
-  document.querySelectorAll('input, select, textarea').forEach(el => {
-    if (el.id) formData[el.id] = el.value;
-  });
 
-  // 2. Données manuelles (par année/champ)
-  let valeursManuelles = {};
-  try {
-    valeursManuelles = JSON.parse(localStorage.getItem('valeursManuelles') || '{}');
-  } catch {}
-
-  // 3. Simu BIC
-  let simuBIC = {};
-  try {
-    simuBIC = JSON.parse(localStorage.getItem('simu_bic') || '{}');
-  } catch {}
-
-  // 4. Modifs amortissements (dans donneesInitiales, clé qui commence par "modif_")
-  let modifsAmort = {};
-  Object.keys(donneesInitiales || {}).forEach(k => {
-    if (k.startsWith("modif_")) modifsAmort[k] = donneesInitiales[k];
-  });
-
-  return {
-    formData,
-    valeursManuelles,
-    simuBIC,
-    modifsAmort
-  };
-}
 function updateClassements() {
   // Exemple : met à jour les classements affichés dans les div #ranking-fiscal et #ranking-cashflow
 
@@ -1777,18 +1746,6 @@ function injecterDonneesInitiales() {
     }
   });
 }
-function restaurationLocale() {
-  if (!confirm("⚠️ Voulez-vous vraiment restaurer la sauvegarde locale ?")) return;
-  const dataJSON = localStorage.getItem('lmp_lmnp_allData');
-  if (!dataJSON) {
-    alert("Aucune sauvegarde locale trouvée !");
-    return;
-  }
-  const allData = JSON.parse(dataJSON);
-  applyAllData(allData);
-  alert('Restauration locale réussie !');
-}
-    
             function recalculate(id) {
       
       const loyer = parseFloat(document.getElementById(`${id}_loyer`).value) || 0;
@@ -2441,11 +2398,6 @@ function createSaveRestoreButtons() {
   return container;
 }
 
-// Ajoute ces alias simples AVANT ton addEventListener DOMContentLoaded
-function sauvegardeLocale() { sauvegardeLocale(false); }
-function restaurationLocale() { restoreData(); }
-function exporterJSON() { sauvegardeLocale(true); }
-function importerJSON(e) { importFromFile(e); }
 
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll('[id^="tab-"]');
@@ -2592,53 +2544,74 @@ function showTab(id) {
   }
 };
 // Récupère toutes les entrées pertinentes
-function collectAllFormData() {
-  const data = {};
-  // Sélectionne tous les champs input et select de tous les onglets
+
+function toggleBien(nom) {
+  const bloc = document.getElementById(`${nom}_table`);
+  if (!bloc) return;
+  const titre = document.querySelector(`h3[onclick="toggleBien('${nom}')"]`);
+  const isShown = bloc.style.display !== 'none';
+  bloc.style.display = isShown ? 'none' : 'block';
+  if (titre) titre.textContent = (isShown ? "▶ " : "▼ ") + nom;
+}
+// Déclaration globale
+const appData = {
+  formFields: {},        // Tous les inputs/selects/textarea par id
+  valeursManuelles: {},  // Les valeurs manuelles stockées dans localStorage
+  simuBIC: {},           // Les champs du simulateur BIC
+  modifsAmort: {}        // Les modifs sur amortissements dans donneesInitiales
+};
+
+// Mise à jour de appData à partir du DOM et du localStorage
+function updateAppDataFromDOM() {
+  // 1. Form fields
+  appData.formFields = {};
   document.querySelectorAll('input, select, textarea').forEach(el => {
-    if (el.id) data[el.id] = el.value;
+    if (el.id) appData.formFields[el.id] = el.value;
   });
-  return data;
+
+  // 2. Valeurs manuelles
+  try {
+    appData.valeursManuelles = JSON.parse(localStorage.getItem('valeursManuelles') || '{}');
+  } catch { appData.valeursManuelles = {}; }
+
+  // 3. Simu BIC
+  try {
+    appData.simuBIC = JSON.parse(localStorage.getItem('simu_bic') || '{}');
+  } catch { appData.simuBIC = {}; }
+
+  // 4. Modifs amortissements (dans donneesInitiales, clé qui commence par "modif_")
+  appData.modifsAmort = {};
+  if (window.donneesInitiales) {
+    Object.keys(window.donneesInitiales).forEach(k => {
+      if (k.startsWith("modif_")) appData.modifsAmort[k] = window.donneesInitiales[k];
+    });
+  }
 }
 
-
-
-function collectDonneesTab() {
-  const data = {};
-  document.querySelectorAll("#tab-donnees input, #tab-donnees select").forEach(el => {
-    data[el.id] = el.value;
-  });
-  return data;
-}
-function applyDonneesTab(data) {
-  Object.keys(data).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = data[id];
-  });
-}
-function applyAllData(data) {
-  // 1. Champs de formulaire
-  if (data.formData) {
-    Object.keys(data.formData).forEach(id => {
+// Appliquer les données de appData vers le DOM et les variables JS
+function applyAppDataToDOM() {
+  // 1. Form fields
+  if (appData.formFields) {
+    Object.keys(appData.formFields).forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.value = data.formData[id];
+      if (el) el.value = appData.formFields[id];
     });
   }
 
-  // 2. Données manuelles
-  if (data.valeursManuelles) {
-    localStorage.setItem('valeursManuelles', JSON.stringify(data.valeursManuelles));
+  // 2. Valeurs manuelles
+  if (appData.valeursManuelles) {
+    localStorage.setItem('valeursManuelles', JSON.stringify(appData.valeursManuelles));
   }
 
   // 3. Simu BIC
-  if (data.simuBIC) {
-    localStorage.setItem('simu_bic', JSON.stringify(data.simuBIC));
+  if (appData.simuBIC) {
+    localStorage.setItem('simu_bic', JSON.stringify(appData.simuBIC));
   }
 
   // 4. Modifs amortissements
-  if (data.modifsAmort) {
-    Object.keys(data.modifsAmort).forEach(k => {
-      donneesInitiales[k] = data.modifsAmort[k];
+  if (appData.modifsAmort && window.donneesInitiales) {
+    Object.keys(appData.modifsAmort).forEach(k => {
+      window.donneesInitiales[k] = appData.modifsAmort[k];
     });
   }
 
@@ -2647,19 +2620,30 @@ function applyAllData(data) {
   if (typeof genererResultatsFiscaux === "function") genererResultatsFiscaux();
   if (typeof updateClassements === "function") updateClassements();
 }
-function applyAllFormData(data) {
-  Object.keys(data).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = data[id];
-  });
-  // Tu peux ajouter ici un appel à recalculateAll() si besoin
-  if (typeof recalculateAll === "function") recalculateAll();
+
+// --- UTILISATION DANS LES BOUTONS ---
+
+function sauvegardeLocale() {
+  updateAppDataFromDOM();
+  localStorage.setItem('lmp_lmnp_allData', JSON.stringify(appData));
+  alert('Sauvegarde locale réussie !');
 }
 
-// Export JSON (remplace exporterJSON/saveData)
+function restaurationLocale() {
+  if (!confirm("⚠️ Voulez-vous vraiment restaurer la sauvegarde locale ?")) return;
+  const dataJSON = localStorage.getItem('lmp_lmnp_allData');
+  if (!dataJSON) {
+    alert("Aucune sauvegarde locale trouvée !");
+    return;
+  }
+  Object.assign(appData, JSON.parse(dataJSON));
+  applyAppDataToDOM();
+  alert('Restauration locale réussie !');
+}
+
 function exporterJSON() {
-  const allData = collectAllData();
-  const dataStr = JSON.stringify(allData, null, 2);
+  updateAppDataFromDOM();
+  const dataStr = JSON.stringify(appData, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -2671,40 +2655,20 @@ function exporterJSON() {
   URL.revokeObjectURL(url);
 }
 
-// Import JSON (remplace importerJSON/importFromFile)
 function importerJSON(event) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const allData = JSON.parse(e.target.result);
-      applyAllData(allData);
-      recalculateAll(); // pour tout rafraîchir
+      Object.assign(appData, JSON.parse(e.target.result));
+      applyAppDataToDOM();
       alert('Import JSON réussi !');
     } catch (err) {
       alert("Erreur lors de l'import JSON : " + err.message);
     }
   };
   reader.readAsText(file);
-}
-function sauvegardeLocale() {
-  const allData = collectAllData();
-  localStorage.setItem('lmp_lmnp_allData', JSON.stringify(allData));
-  alert('Sauvegarde locale réussie !');
-}
-document.getElementById("tab-donnees").addEventListener("change", function(e) {
-  if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
-    recalculateAll();
-  }
-});
-function toggleBien(nom) {
-  const bloc = document.getElementById(`${nom}_table`);
-  if (!bloc) return;
-  const titre = document.querySelector(`h3[onclick="toggleBien('${nom}')"]`);
-  const isShown = bloc.style.display !== 'none';
-  bloc.style.display = isShown ? 'none' : 'block';
-  if (titre) titre.textContent = (isShown ? "▶ " : "▼ ") + nom;
 }
 </script>
 </body>
