@@ -2,10 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title> Projection LMP vs LMNP </title>
-<head>
-  <meta charset="UTF-8">
-  <title> Projection LMP vs LMNP </title>
+  <title>Projection LMP vs LMNP</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>📊</text></svg>">
   <style>
 body {
@@ -193,8 +190,11 @@ input:disabled {
     margin-top: 40px;
   }
 </style>
-
-</style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>📊</text></svg>">
+ 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
@@ -411,6 +411,7 @@ function calculer() {
     let stockAmort;
     const biens = ["Ferry 1","Ferry 2","Berard","Eglise T3","Eglise Studio","Sorlin","Acquises 1","Phoenix 1","Phoenix 2","Phoenix 3"];
     const annees = Array.from({ length: 10 }, (_, i) => 2025 + i);
+const champsManuels = new Set();
 
 let chartFiscal = null;
 
@@ -1937,11 +1938,15 @@ annees.forEach((annee, index) => {
 }
 
     function recalculateAll() {
-      biens.forEach(n => annees.forEach(a => recalculate(`${n}_${a}`)));
-    }
-// 🖊️ Champs saisis à la main (on ne les recalcule plus automatiquement)
-const champsManuels = new Set();
+  // <--- AJOUTE CETTE PARTIE
+  document.querySelectorAll("#tab-donnees input, #tab-donnees select").forEach(el => {
+    if (el.id) donneesInitiales[el.id] = el.value;
+  });
+  // <--- FIN AJOUT
 
+  biens.forEach(n => annees.forEach(a => recalculate(`${n}_${a}`)));
+  genererResultatsFiscaux();
+}
 function appliquerDonneesAvecFallback() {
   const dataJSON = localStorage.getItem('lmp_lmnp_donnees');
   if (!dataJSON) {
@@ -2039,30 +2044,6 @@ function rendreCelluleEditable(td, annee, cle, valeurAuto) {
 }
 
 
-function saveAsMaster() {
-  if (!confirm("⚠️ Tu es sur le point d’écraser la sauvegarde MASTER.")) return;
-  if (!confirm("❗ Es-tu ABSOLUMENT certain de vouloir faire ça ?")) return;
-
-  const data = {};
-  document.querySelectorAll("input[type='number']").forEach(i => data[i.id] = i.value);
-
-  // Toujours enregistrer en local
-  localStorage.setItem('lmp_lmnp_master', JSON.stringify(data));
-
-  // Si on est en ligne (pas en local), on envoie aussi au serveur
-  if (!isLocalhost()) {
-    fetch('save_master.php', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(() => alert("✅ Sauvegarde MASTER enregistrée sur le serveur + local."))
-    .catch(() => alert("⚠️ Sauvegarde uniquement en local (erreur serveur)."));
-  } else {
-    alert("💾 Sauvegarde MASTER enregistrée en local (mode hors-ligne).");
-  }
-}
 // === 🔍 Fonction IA : lancerAnalyseCopilot() ===
 function lancerAnalyseCopilot() {
   const seuilAmort = 3000;
@@ -2200,44 +2181,7 @@ function exporterExcel() {
   const now = new Date().toISOString().slice(0,19).replace(/[:T]/g, "-");
   XLSX.writeFile(wb, `Projection_LMP_LMNP_${now}.xlsx`);
 }
-function restoreMaster() {
-  if (!confirm("⚠️ Cette action va restaurer les données MASTER et supprimer toutes les données saisies en cours.")) return;
-  if (!confirm("❗ Es-tu bien sûr ? Cette opération est irréversible.")) return;
 
-  // Si on est en ligne (pas en local), essayer le serveur d’abord
-  if (!isLocalhost()) {
-    fetch('load_master.php')
-      .then(res => {
-        if (!res.ok) throw new Error("Erreur serveur");
-        return res.json();
-      })
-      .then(data => {
-        applyMasterData(data);
-        alert("✅ Données restaurées depuis la sauvegarde MASTER (serveur).");
-      })
-      .catch(() => {
-        fallbackToLocalMaster();
-      });
-  } else {
-    fallbackToLocalMaster();
-  }
-}
-
-function fallbackToLocalMaster() {
-  const data = JSON.parse(localStorage.getItem('lmp_lmnp_master') || '{}');
-  if (!Object.keys(data).length) return alert("❌ Aucune sauvegarde master trouvée en local.");
-  applyMasterData(data);
-  alert("✅ Données restaurées depuis la sauvegarde MASTER locale.");
-}
-
-function applyMasterData(data) {
-  Object.keys(data).forEach(id => {
-    const inp = document.getElementById(id);
-    if (inp) inp.value = data[id];
-  });
-  recalculateAll();
-  updateClassements();
-}
 function sauvegarderSimuBIC() {
   const data = {
     benefice: document.getElementById("benefice").value,
@@ -2682,6 +2626,11 @@ function sauvegardeLocale() {
   localStorage.setItem('lmp_lmnp_donnees', JSON.stringify(data));
   alert("✅ Données enregistrées localement.");
 }
+document.getElementById("tab-donnees").addEventListener("change", function(e) {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") {
+    recalculateAll();
+  }
+});
 </script>
 </body>
 </html>
