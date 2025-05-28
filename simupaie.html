@@ -84,13 +84,13 @@
     <div class="tabs">
       <button class="tab-button active" onclick="showTab('donnees')">📋 Données</button>
       <button class="tab-button" onclick="showTab('resultat')">📈 Résultat</button>
-      <button class="tab-button" onclick="showTab('historique')">📜 Historique</button>
+      <button class="tab-button" onclick="showTab('historique')">📚 Historique</button>
       <button class="tab-button" onclick="showTab('parametres')">⚙️ Paramètres</button>
     </div>
     <div id="donnees" class="tab-content active">
       <div class="card-container">
         <div class="card">
-          <div class="section-title">🗓️ Simulation Paie : Fiches de présence</div>
+          <div class="section-title">📅 Simulation Paie : Fiches de présence</div>
           <input type="file" id="importPresence" accept=".xlsx,.xls,.pdf" multiple onchange="handlePresenceImport(event)">
           <p id="importFeedback"></p>
           <div id="presencePreview"></div>
@@ -164,13 +164,9 @@ function handlePresenceImport(event) {
   });
 }
 
-function handlePaieImport(event) {
-  console.warn("Fonction handlePaieImport à implémenter");
-}
-</script>
-<script>
 function extraireInfosPresence(json) {
   let nom = '?', prenom = '?', age = '?', birthDate = null;
+
   for (let i = 0; i < json.length; i++) {
     const row = json[i];
     const idx = row.findIndex(cell => typeof cell === 'string' && cell.includes("Enfant concerné"));
@@ -179,6 +175,7 @@ function extraireInfosPresence(json) {
       const fullName = ligneNom.split(" ");
       nom = fullName.pop() || '?';
       prenom = fullName.join(" ") || '?';
+
       if (json[i + 1] && json[i + 1][idx + 1]) {
         const dateCell = json[i + 1][idx + 1].toString().trim();
         let m = dateCell.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
@@ -192,21 +189,24 @@ function extraireInfosPresence(json) {
       break;
     }
   }
+
   if (birthDate) {
     const today = new Date();
     age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
   }
+
   let idxPresence = -1, idxRepas = -1;
   for (let i = 0; i < json.length; i++) {
     const row = json[i].map(cell => (cell ? cell.toString() : ""));
-    if (row.some(cell => cell.includes("Jour de présence"))) {
-      idxPresence = row.findIndex(cell => cell.includes("Jour de présence"));
-      idxRepas = row.findIndex(cell => cell.includes("Repas de MIDI"));
+    if (row.some(cell => typeof cell === "string" && cell.includes("Jour de présence Assistant Familial"))) {
+      idxPresence = row.findIndex(cell => typeof cell === "string" && cell.includes("Jour de présence Assistant Familial"));
+      idxRepas = row.findIndex(cell => typeof cell === "string" && cell.includes("Repas de MIDI pris hors de chez vous"));
       break;
     }
   }
+
   let joursPresence = 0, repasDeduits = 0;
   if (idxPresence !== -1 && idxRepas !== -1) {
     for (let i = 1; i < json.length; i++) {
@@ -216,6 +216,7 @@ function extraireInfosPresence(json) {
       if (repasVal !== undefined && repasVal.toString().trim() === '1') repasDeduits++;
     }
   }
+
   return { nom, prenom, age, joursPresence, repasDeduits };
 }
 </script>
