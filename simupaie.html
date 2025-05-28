@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simupaie - Simulateur de Paie</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    #container {
+      max-width: 85%;
+      margin: auto;
+    }
+    header {
+      background: #005f99;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8em;
+      border-radius: 10px;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .tabs button {
+      padding: 12px 18px;
+      border: none;
+      background: #cce5ff;
+      color: #004080;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    .tabs button.active {
+      background: #004080;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .card-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      flex: 1 1 45%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section-title {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #004080;
+    }
+    .line {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <header>📊 Simupaie - Simulateur de Paie</header>
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('donnees')">📋 Données</button>
+      <button class="tab-button" onclick="showTab('resultat')">📈 Résultat</button>
+      <button class="tab-button" onclick="showTab('historique')">📚 Historique</button>
+      <button class="tab-button" onclick="showTab('parametres')">⚙️ Paramètres</button>
+    </div>
+    <div id="donnees" class="tab-content active">
+      <div class="card-container">
+        <div class="card">
+          <div class="section-title">📅 Simulation Paie : Fiches de présence</div>
+          <input type="file" id="importPresence" accept=".xlsx,.xls,.pdf" multiple onchange="handlePresenceImport(event)">
+          <p id="importFeedback"></p>
+          <div id="presencePreview"></div>
+        </div>
+        <div class="card">
+          <div class="section-title">🧾 Vérification Paie : Bulletins de salaires</div>
+          <input type="file" id="importPaie" accept=".pdf" onchange="handlePaieImport(event)">
+          <p id="paieFeedback"></p>
+        </div>
+      </div>
+    </div>
+    <div id="resultat" class="tab-content">
+      <div class="card-container">
+        <div class="card">
+          <div class="section-title">💶 Indemnités</div>
+          <div class="line"><span>Entretien</span><span id="ind_entretien">0.00 €</span></div>
+          <div class="line"><span>7/7</span><span id="ind_7_7">0.00 €</span></div>
+          <div class="line"><span>Repas</span><span id="ind_repas">0.00 €</span></div>
+        </div>
+        <div class="card">
+          <div class="section-title">💼 Paie</div>
+          <div class="line"><span>Salaire brut</span><span id="salaire_brut">0.00 €</span></div>
+          <div class="line"><span>Net avant impôt</span><span id="net_avant_impot">0.00 €</span></div>
+          <div class="line"><span>Net après impôt</span><span id="net_apres_impot">0.00 €</span></div>
+        </div>
+      </div>
+    </div>
+    <div id="historique" class="tab-content">
+      <div class="card">
+        <div class="section-title">🕓 Historique mensuel</div>
+        <div>À venir…</div>
+      </div>
+    </div>
+    <div id="parametres" class="tab-content">
+      <div class="card">
+        <div class="section-title">⚙️ Variables</div>
+        <div class="line"><span>SMIC horaire (€)</span><input type="number" value="11.88" id="smic" step="0.01"></div>
+        <div class="line"><span>MIG (€)</span><input type="number" value="4.22" id="mig" step="0.01"></div>
+        <div class="line"><span>Taux impôt (%)</span><input type="number" value="7" id="taux_impot" step="0.01"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function showTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+
+function handlePresenceImport(event) {
+  const files = Array.from(event.target.files);
+  const feedback = document.getElementById('importFeedback');
+  const preview = document.getElementById('presencePreview');
+  let recapHTML = `<p><strong>${files.length} fichier(s) importé(s)</strong></p><ul>`;
+
+  files.forEach(file => {
+    const fileName = file.name.toLowerCase();
+    if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const feuille = workbook.SheetNames.find(name => name.toLowerCase().includes('avril')) || workbook.SheetNames[0];
+        const sheet = workbook.Sheets[feuille];
+        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const infos = extraireInfosPresence(json);
+        recapHTML += `<li><strong>${infos.prenom} ${infos.nom}</strong> – Âge : ${infos.age} ans – Présence : ${infos.joursPresence} jour(s), Repas déduits : ${infos.repasDeduits}</li>`;
+        preview.innerHTML = recapHTML + '</ul>';
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  });
+}
+
+function extraireInfosPresence(json) {
+  let nom = '?', prenom = '?', age = '?';
+  for (let row of json) {
+    const idx = row.findIndex(cell => typeof cell === 'string' && cell.includes("Enfant concerné"));
+    if (idx !== -1 && row[idx + 1]) {
+      const lignes = row[idx + 1].toString().split(/\n|\r/).map(l => l.trim()).filter(Boolean);
+      const ligneNom = lignes.find(l => /[a-zA-Z]+ [a-zA-Z\-]+/.test(l)) || '';
+      const ligneDate = lignes.find(l => /^\d{2}\/\d{2}\/\d{4}$/.test(l)) || '';
+      const fullName = ligneNom.trim().split(" ");
+      nom = fullName.pop() || '?';
+      prenom = fullName.join(" ") || '?';
+      if (ligneDate) {
+        const [jour, mois, annee] = ligneDate.split("/").map(Number);
+        const birthDate = new Date(annee, mois - 1, jour);
+        const today = new Date();
+        age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+      }
+      break;
+    }
+  }
+  const jours = json.slice(8).filter(row => row[4] === 'x' || row[5] === 1);
+  const repas = jours.filter(row => row[6] === 1).length;
+  return { nom, prenom, age, joursPresence: jours.length, repasDeduits: repas };
+}
+</script>
+</body>
+</html>
