@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simupaie - Simulateur de Paie</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    #container {
+      max-width: 85%;
+      margin: auto;
+    }
+    header {
+      background: #005f99;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8em;
+      border-radius: 10px;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .tabs button {
+      padding: 12px 18px;
+      border: none;
+      background: #cce5ff;
+      color: #004080;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    .tabs button.active {
+      background: #004080;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .card-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      flex: 1 1 45%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #004080;
+    }
+    .line {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+    .line input {
+      width: 100px;
+      text-align: right;
+    }
+    .results-summary {
+      margin-top: 10px;
+      font-size: 1em;
+      color: #333;
+    }
+    .btn-calc {
+      margin-top: 15px;
+      background: #005f99;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 15px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .btn-calc:active {
+      background: #003d66;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    @media (max-width: 900px) {
+      .card-container {
+        flex-direction: column;
+      }
+      .card {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <header>📊 Simupaie - Simulateur de Paie</header>
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('donnees')">📋 Données</button>
+      <button class="tab-button" onclick="showTab('resultat')">📈 Résultat</button>
+      <button class="tab-button" onclick="showTab('historique')">📚 Historique</button>
+      <button class="tab-button" onclick="showTab('parametres')">⚙️ Paramètres</button>
+    </div>
+    <div id="donnees" class="tab-content active">
+      <div class="card-container">
+        <div class="card">
+          <div class="section-title">📅 Simulation Paie : Fiches de présence</div>
+          <input type="file" id="importPresence" accept=".xlsx,.xls,.pdf" multiple onchange="handlePresenceImport(event)">
+          <p id="importFeedback"></p>
+          <div id="presencePreview"></div>
+        </div>
+        <div class="card">
+          <div class="section-title">🧾 Vérification Paie : Bulletins de salaires</div>
+          <input type="file" id="importPaie" accept=".pdf" onchange="handlePaieImport(event)">
+          <p id="paieFeedback"></p>
+        </div>
+      </div>
+    </div>
+    <div id="resultat" class="tab-content">
+      <div class="card-container">
+        <div class="card">
+          <div class="section-title">💶 Indemnités</div>
+          <div class="line"><span>Entretien</span><input id="ind_entretien" type="number" step="0.01" value="0"></div>
+          <div class="line"><span>7/7</span><input id="ind_7_7" type="number" step="0.01" value="0"></div>
+          <div class="line"><span>Repas</span><input id="ind_repas" type="number" step="0.01" value="3.04"></div>
+        </div>
+        <div class="card">
+          <div class="section-title">💼 Paie</div>
+          <div class="line"><span>Salaire brut</span><span id="salaire_brut">0.00 €</span></div>
+          <div class="line"><span>Net avant impôt</span><span id="net_avant_impot">0.00 €</span></div>
+          <div class="line"><span>Net après impôt</span><span id="net_apres_impot">0.00 €</span></div>
+          <button class="btn-calc" onclick="calculerSalaireBrut()">Calculer salaire brut</button>
+          <div class="results-summary" id="resultats_details"></div>
+        </div>
+      </div>
+    </div>
+    <div id="historique" class="tab-content">
+      <div class="card">
+        <div class="section-title">🕓 Historique mensuel</div>
+        <div>À venir…</div>
+      </div>
+    </div>
+    <div id="parametres" class="tab-content">
+      <div class="card">
+        <div class="section-title">⚙️ Variables</div>
+        <div class="line"><span>SMIC horaire (€)</span><input type="number" value="11.88" id="smic" step="0.01"></div>
+        <div class="line"><span>MIG (€)</span><input type="number" value="4.22" id="mig" step="0.01"></div>
+        <div class="line"><span>Taux impôt (%)</span><input type="number" value="7" id="taux_impot" step="0.01"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Stocke la liste des enfants importés avec jours de présence
+let enfantsPresence = [];
+
+// Gestion des onglets
+function showTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+
+// Import des présences (fiches enfants)
+function handlePresenceImport(event) {
+  const files = Array.from(event.target.files);
+  const feedback = document.getElementById('importFeedback');
+  const preview = document.getElementById('presencePreview');
+  enfantsPresence = []; // Réinitialise pour chaque import
+  let recapHTML = `<p><strong>${files.length} fichier(s) importé(s)</strong></p><ul>`;
+  let filesProcessed = 0;
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const data = new Uint8Array(e.target.result);
+      let infos = null;
+      try {
+        const workbook = XLSX.read(data, { type: 'array' });
+        const feuille = workbook.SheetNames.find(name => name.toLowerCase().includes('avril')) || workbook.SheetNames[0];
+        const sheet = workbook.Sheets[feuille];
+        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        infos = extraireInfosPresence(json);
+      } catch (err) {
+        infos = { nom: file.name, prenom: "?", age: "?", joursPresence: "?", repasDeduits: "?", erreur: true };
+      }
+      enfantsPresence.push({ ...infos, fileName: file.name });
+      recapHTML += `<li><strong>${infos.prenom} ${infos.nom}</strong> – Âge : ${infos.age} ans – Présence : ${infos.joursPresence} jour(s), Repas déduits : ${infos.repasDeduits}${infos.erreur ? " <span style='color:red'>(Erreur lecture)</span>" : ""}</li>`;
+      filesProcessed++;
+      if (filesProcessed === files.length) {
+        preview.innerHTML = recapHTML + '</ul>';
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  });
+  feedback.textContent = "";
+}
+
+// Extraction d'infos d'une fiche (tableau 2D)
+function extraireInfosPresence(json) {
+  let nom = '?', prenom = '?', age = '?', birthDate = null;
+  // Recherche nom/prénom
+  for (let i = 0; i < json.length; i++) {
+    const row = json[i];
+    if (!row) continue;
+    const idx = row.findIndex(cell => typeof cell === 'string' && cell.includes("Enfant concerné"));
+    if (idx !== -1 && row[idx + 1]) {
+      const ligneNom = row[idx + 1].toString().trim();
+      const fullName = ligneNom.split(" ");
+      nom = fullName.pop() || '?';
+      prenom = fullName.join(" ") || '?';
+      // Date de naissance (ligne suivante, colonne suivante)
+      if (json[i + 1] && json[i + 1][idx + 1]) {
+        const dateCell = json[i + 1][idx + 1].toString().trim();
+        let m = dateCell.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
+        if (m) {
+          birthDate = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+        } else if (!isNaN(dateCell) && Number(dateCell) > 20000 && Number(dateCell) < 50000) {
+          // Format Excel (nombres de jours depuis 1900)
+          const excelEpoch = new Date(1900, 0, 1);
+          birthDate = new Date(excelEpoch.getTime() + (Number(dateCell) - 2) * 86400000);
+        }
+      }
+      break;
+    }
+  }
+  // Calcul âge
+  if (birthDate) {
+    const today = new Date();
+    age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  }
+  // Recherche colonnes "Jour de présence" et "Repas"
+  let idxPresence = -1, idxRepas = -1;
+  for (let i = 0; i < json.length; i++) {
+    const row = Array.isArray(json[i]) ? json[i].map(cell => (cell ? cell.toString() : "")) : [];
+    if (row.some(cell => typeof cell === "string" && cell.includes("Jour de présence"))) {
+      idxPresence = row.findIndex(cell => typeof cell === "string" && cell.includes("Jour de présence"));
+      idxRepas = row.findIndex(cell => typeof cell === "string" && cell.includes("Repas de MIDI"));
+      break;
+    }
+  }
+  let joursPresence = 0, repasDeduits = 0;
+  if (idxPresence !== -1 && idxRepas !== -1) {
+    for (let i = 1; i < json.length; i++) {
+      const presVal = json[i][idxPresence];
+      if (typeof presVal === 'string' && presVal.trim().toLowerCase() === 'x') joursPresence++;
+      const repasVal = json[i][idxRepas];
+      if (repasVal !== undefined && repasVal.toString().trim() === '1') repasDeduits++;
+    }
+  }
+  return { nom, prenom, age, joursPresence, repasDeduits };
+}
+
+// Fonction de calcul du salaire brut (onglet résultat)
+function calculerSalaireBrut() {
+  // Variables
+  const smic = parseFloat(document.getElementById('smic').value) || 11.88;
+  const tauxImpot = parseFloat(document.getElementById('taux_impot').value) || 7;
+  if (enfantsPresence.length === 0) {
+    alert("Merci d'importer les fiches de présence avant de calculer.");
+    return;
+  }
+
+  // 1. Séparer intermittents et fixes
+  const intermittents = enfantsPresence.filter(e => Number(e.joursPresence) <= 15);
+  const fixes = enfantsPresence.filter(e => Number(e.joursPresence) > 15);
+
+  // 2. Calculs intermittents
+  let salaireIntermittents = 0;
+  let detailsIntermittents = "";
+  intermittents.forEach(e => {
+    const s = 5.06 * smic * Number(e.joursPresence);
+    salaireIntermittents += s;
+    detailsIntermittents += `• ${e.prenom} ${e.nom} (intermittent, ${e.joursPresence} jours): 5,06 × ${smic} × ${e.joursPresence} = <b>${s.toFixed(2)} €</b><br>`;
+  });
+
+  // 3. Calcul fixes (non intermittents)
+  const nbFixes = fixes.length;
+  let multiple = 0;
+  if (nbFixes === 1) multiple = 151.67;
+  else if (nbFixes === 2) multiple = 221.67;
+  else if (nbFixes === 3) multiple = 295.67;
+  else if (nbFixes === 4) multiple = 391.67;
+  else if (nbFixes === 5) multiple = 485.67;
+  else if (nbFixes === 6) multiple = 581.67;
+
+  let salaireFixes = multiple * smic;
+  let detailsFixes = "";
+  if (nbFixes > 0) {
+    detailsFixes = `• ${nbFixes} enfant(s) non intermittent : ${multiple} × ${smic} = <b>${salaireFixes.toFixed(2)} €</b><br>`;
+    fixes.forEach(e => {
+      detailsFixes += `  - ${e.prenom} ${e.nom} (${e.joursPresence} jours)<br>`;
+    });
+  }
+
+  // 4. Total
+  const salaireBrut = salaireIntermittents + salaireFixes;
+
+  // 5. Résumés et affichage
+  document.getElementById('salaire_brut').textContent = salaireBrut.toFixed(2) + " €";
+  // Net avant impôt (estimation simple, à affiner si besoin)
+  const netAvant = salaireBrut * 0.77;
+  document.getElementById('net_avant_impot').textContent = netAvant.toFixed(2) + " €";
+  // Net après impôt
+  const netApres = netAvant * (1 - tauxImpot / 100);
+  document.getElementById('net_apres_impot').textContent = netApres.toFixed(2) + " €";
+
+  // Détails
+  document.getElementById('resultats_details').innerHTML =
+    `<b>Détail du calcul :</b><br>
+    ${detailsIntermittents || ""}
+    ${detailsFixes || ""}
+    <b>Total : ${salaireBrut.toFixed(2)} €</b><br>
+    <small><i>NB : Le calcul du net est une estimation simplifiée (~77% du brut moins impôt).</i></small>`;
+}
+
+function handlePaieImport(event) {
+  // À implémenter selon besoins
+  document.getElementById('paieFeedback').textContent = "Fonction à venir…";
+}
+</script>
+</body>
+</html>
