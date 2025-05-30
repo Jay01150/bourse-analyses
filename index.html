@@ -2,125 +2,312 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <title>Tableau de bord LMP / LMNP</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2285%22>🚀</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bourses FRATELLI</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background-color: #f7f9fc; color: #333; margin: 0; padding: 0; }
-    header { background: #FF6F00; color: white; padding: 15px; text-align: center; font-size: 1.8em; font-weight: bold; }
-    nav { display: flex; justify-content: center; background-color: #1976d2; }
-    nav button { background-color: transparent; color: white; padding: 10px 20px; border: none; cursor: pointer; transition: background 0.3s ease; }
-    nav button:hover, nav button.active { background-color: #1565c0; }
-    main { padding: 20px; max-width: 1200px; margin: auto; }
-    .hidden { display: none; }
-    .card { background: white; padding: 15px; margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px; }
-    .top-title { font-size: 1.4em; margin-bottom: 15px; }
-    footer { text-align: center; padding: 10px; background: #eeeeee; margin-top: 20px; font-size: 0.9em; }
-    section { display: none; }
-    section.active { display: block; }
+    :root {
+      --primary: #1976d2;
+      --primary-dark: #154ea7;
+      --primary-light: #e3f2fd;
+      --secondary: #0e336e;
+      --accent: #4f8fff;
+      --shadow: 0 8px 36px rgba(25, 118, 210, 0.18), 0 1.5px 5px rgba(25, 118, 210, 0.07);
+      --card-bg: #f8fbff;
+      --glass: rgba(255,255,255,0.82);
+      --text-main: #1a2947;
+      --text-soft: #6f88a6;
+      --border-radius: 22px;
+      --transition: 0.27s cubic-bezier(.53,.03,.29,1.19);
+      --blur: blur(18px);
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #e3f2fd 0%, #f7faff 100%);
+      min-height: 100vh;
+      color: var(--text-main);
+    }
+    body {
+      font-family: 'Segoe UI', 'Inter', 'Arial', sans-serif;
+      letter-spacing: 0.01em;
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+    header {
+      background: linear-gradient(90deg, var(--primary-dark) 60%, var(--primary) 100%);
+      color: white;
+      padding: 38px 0 28px 0;
+      text-align: center;
+      border-radius: 0 0 32px 32px;
+      box-shadow: 0 6px 32px rgba(25, 118, 210, 0.10);
+      position: relative;
+      z-index: 10;
+    }
+    .elite-title {
+      font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+      margin: 0;
+      font-size: 2.7rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-shadow: 0 7px 22px rgba(0,0,0,0.09);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      user-select: none;
+    }
+    .elite-title .icon {
+      font-size: 2.4rem;
+      filter: drop-shadow(0 2px 6px rgba(25,118,210,0.12));
+    }
+    .tab-container {
+      max-width: 1240px;
+      margin: 36px auto 0 auto;
+      background: var(--glass);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 0;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+    .dashboard-tabs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      background: #f6faff;
+      border-bottom: 1.5px solid #e3f2fd;
+      box-shadow: 0 2px 6px rgba(25,118,210,0.03);
+    }
+    .dashboard-tab-btn {
+      flex: 1;
+      background: transparent;
+      color: var(--primary);
+      border: none;
+      padding: 20px 0 14px 0;
+      font-size: 1.25em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), border-bottom .19s;
+      border-bottom: 3.5px solid transparent;
+      letter-spacing: 0.02em;
+      outline: none;
+      box-shadow: none;
+      position: relative;
+    }
+    .dashboard-tab-btn.active {
+      color: var(--secondary);
+      background: #fff;
+      border-bottom: 3.5px solid var(--accent);
+      box-shadow: 0 2px 15px rgba(25,118,210,0.03);
+      z-index: 2;
+    }
+    .dashboard-tab-content {
+      display: none;
+      animation: fadein 0.25s;
+    }
+    .dashboard-tab-content.active {
+      display: block;
+    }
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      padding: 48px 2vw 36px 2vw;
+      max-width: 1220px;
+      margin: auto;
+      animation: fadeIn 2s ease;
+      min-height: 420px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 30px 20px 28px 20px;
+      border-radius: 26px;
+      text-align: center;
+      box-shadow: 0 4px 28px rgba(25, 118, 210, 0.11), 0 1.5px 6px rgba(25,118,210,0.06);
+      width: 210px;
+      height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform .23s cubic-bezier(.37,.02,.63,1.53), box-shadow .28s, background .27s;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      border: 1.9px solid #e3f2fd;
+      backdrop-filter: blur(2px);
+    }
+    .card:hover {
+      transform: translateY(-10px) scale(1.055);
+      box-shadow: 0 15px 48px 0 rgba(25, 118, 210, 0.16), 0 1.5px 7px rgba(25,118,210,0.10);
+      background: #fff;
+      border-color: var(--accent);
+      z-index: 3;
+    }
+    .emoji {
+      font-size: 3.7rem;
+      margin-bottom: 15px;
+      margin-top: 2px;
+      transition: transform .32s cubic-bezier(.27,1.3,.49,.93);
+      filter: drop-shadow(0 1.5px 11px rgba(25,118,210,.10));
+      user-select: none;
+      pointer-events: none;
+    }
+    .card:hover .emoji {
+      transform: rotate(-5deg) scale(1.14);
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      color: var(--primary-dark);
+      margin: 0;
+      margin-top: 7px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      font-family: inherit;
+      text-shadow: 0 1.5px 7px rgba(25,118,210,0.03);
+    }
+    body:before {
+      content: "";
+      position: fixed;
+      left: -30vw; right: -30vw; top: -20vh; bottom: -20vh;
+      z-index: 0;
+      background: radial-gradient(ellipse at 40% 30%, #b3d6ff40 0%, #e3f2fd00 70%),
+                  radial-gradient(ellipse at 70% 75%, #90caf940 0%, #e3f2fd00 70%);
+      pointer-events: none;
+      animation: bgmove 16s infinite alternate;
+    }
+    @keyframes bgmove {
+      0% { background-position: 38% 30%, 70% 75%; }
+      100% { background-position: 43% 35%, 60% 80%; }
+    }
+    @media (max-width: 1100px) {
+      .tab-container { max-width: 99vw; }
+      main { gap: 20px; padding: 30px 2vw 20px 2vw; }
+      .card { min-width: 130px; width: 40vw; max-width: 320px;}
+    }
+    @media (max-width: 700px) {
+      main { gap: 10px; padding: 18px 1vw 12vw 1vw; }
+      .tab-container { margin: 18px 2vw 0 2vw; }
+      .card { width: 96vw; min-width: 0; max-width: 98vw; padding: 18px 2vw 20px 2vw; }
+      .emoji { font-size: 2.1rem; }
+    }
   </style>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-
-<header>Les Bons plans du jour📈</header>
-
-<nav>
-  <button class="tab-btn active" data-tab="etf">🏦 ETF</button>
-  <button class="tab-btn" data-tab="crypto">💎 Crypto</button>
-  <button class="tab-btn" data-tab="tab-actions">📊 Actions</button>
-</nav>
-
-<div id="progress-container" style="display: none; text-align: center; margin: 1rem 0;">
-  <div style="width: 25%; margin: 0 auto; background: #eee; height: 12px; border-radius: 6px; position: relative;">
-    <div id="progress-bar" style="height: 100%; background: #FF6F00; width: 0%; border-radius: 6px; transition: width 0.2s;"></div>
+<header>
+  <div class="elite-title">
+    <span class="icon">🚀</span>
+    TABLEAU DE BORD
   </div>
-  <div id="progress-text" style="margin-top: 8px; font-weight: bold; color: #444;"></div>
+</header>
+
+<div class="tab-container">
+  <div class="dashboard-tabs">
+    <button class="dashboard-tab-btn active" onclick="showTab('tab-perso')">Personnel</button>
+    <button class="dashboard-tab-btn" onclick="showTab('tab-immo')">Immobilier</button>
+    <button class="dashboard-tab-btn" onclick="showTab('tab-fisc')">Fiscalité</button>
+  </div>
+
+  <div id="tab-perso" class="dashboard-tab-content active">
+    <main>
+      <a href="budget_perso.html" class="card">
+        <div class="emoji">💰</div>
+        <h2>BUDGET PERSO</h2>
+      </a>
+      <a href="abassfam/index.html" class="card">
+        <div class="emoji">👨‍👩‍👧‍👦</div>
+        <h2>ABASSFAM</h2>
+      </a>
+      <a href="simupaie.html" class="card">
+        <div class="emoji">💸</div>
+        <h2>SIMULATION PAIE</h2>
+      </a>
+<a href="maison.html" class="card">
+        <div class="emoji">🏠</div>
+        <h2>MAISON</h2>
+      </a>
+          </main>
+  </div>
+  <div id="tab-immo" class="dashboard-tab-content">
+    <main>
+      <a href="budget_immo.html" class="card">
+        <div class="emoji">💼</div>
+        <h2>BUDGET IMMO</h2>
+      </a>
+      <a href="bank.html" class="card">
+        <div class="emoji">📊</div>
+        <h2>BANQUE</h2>
+      </a>
+      <a href="panorama.html" class="card">
+        <div class="emoji">🏘️</div>
+        <h2>PANORAMA DES BIENS</h2>
+      </a>
+    </main>
+  </div>
+  <div id="tab-fisc" class="dashboard-tab-content">
+    <main>
+<a href="ir.html" class="card">
+        <div class="emoji">🏛️</div>
+        <h2>IMPÔT SUR LE REVENU</h2>
+      </a>      
+<a href="projection.html" class="card">
+        <div class="emoji">🚀</div>
+        <h2>FISCALITE IMMO</h2>
+      </a>
+      <a href="holding.html" class="card">
+        <div class="emoji">🏢</div>
+        <h2>HOLDING/SCI</h2>
+      </a>
+      <a href="simulateur_plusvalue.html" class="card">
+        <div class="emoji">
+          <svg width="2em" height="2em" viewBox="0 0 24 24" fill="none" style="display:block; margin:auto;" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="2" width="18" height="20" rx="3" fill="#1976d2"/>
+            <rect x="6" y="5" width="12" height="3" rx="1" fill="#fff"/>
+            <rect x="7" y="10" width="3" height="3" rx="1" fill="#fff"/>
+            <rect x="11" y="10" width="3" height="3" rx="1" fill="#fff"/>
+            <rect x="15" y="10" width="2" height="3" rx="1" fill="#fff"/>
+            <rect x="7" y="14" width="3" height="3" rx="1" fill="#fff"/>
+            <rect x="11" y="14" width="3" height="3" rx="1" fill="#fff"/>
+            <rect x="15" y="14" width="2" height="3" rx="1" fill="#fff"/>
+          </svg>
+        </div>
+        <h2>PLUS-VALUE</h2>
+      </a>
+    </main>
+  </div>
 </div>
-
-<main>
-  <section id="etf" class="active">
-    <div style="display: flex; justify-content: center; margin: 1rem;">
-      <button id="btn-analyse-etf" style="padding: 10px 20px; font-size: 16px; background-color: #00796b; color: white; border: none; border-radius: 8px; cursor: pointer;">
-        🔍 Lancer l’analyse ETF
-      </button>
-    </div>
-    <div id="compteur-etf" style="text-align:center; font-weight: bold; margin-bottom: 10px;"></div>
-    <div class="card">
-      <div class="top-title"><i class="fas fa-trophy"></i> TOP 3 ETF du jour</div>
-      <ol id="top3-list">
-        <li>ETF 1 (Score: ...)</li>
-        <li>ETF 2 (Score: ...)</li>
-        <li>ETF 3 (Score: ...)</li>
-      </ol>
-    </div>
-    <div class="card" id="etf-results">Zone pour afficher le tableau complet des ETF analysés.</div>
-  </section>
-</main>
-
-<footer>Bourse Manu & Jérôme</footer>
-
 <script>
-const ETF_LIST = [
-  { symbol: "SPY", name: "SPDR S&P 500" }
-];
-
-async function fetchETFPrices(ticker) {
-  const rawUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=6mo&interval=1d`;
-  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`;
-
-  try {
-    const response = await fetch(proxyUrl);
-    const data = await response.json();
-    const closes = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
-    return closes.filter(p => typeof p === 'number');
-  } catch (err) {
-    console.warn(`❌ Erreur Yahoo (via AllOrigins) pour ${ticker} :`, err.message);
-    return [];
+function showTab(tabId) {
+  document.querySelectorAll('.dashboard-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.dashboard-tab-content').forEach(tab => tab.classList.remove('active'));
+  if(tabId === 'tab-perso') {
+    document.querySelectorAll('.dashboard-tab-btn')[0].classList.add('active');
+    document.getElementById('tab-perso').classList.add('active');
+  } else if(tabId === 'tab-immo') {
+    document.querySelectorAll('.dashboard-tab-btn')[1].classList.add('active');
+    document.getElementById('tab-immo').classList.add('active');
+  } else {
+    document.querySelectorAll('.dashboard-tab-btn')[2].classList.add('active');
+    document.getElementById('tab-fisc').classList.add('active');
   }
 }
-
-async function analyseAllETFs() {
-  const results = [];
-  document.getElementById("progress-container").style.display = "block";
-
-  for (let i = 0; i < ETF_LIST.length; i++) {
-    const { symbol: ticker, name } = ETF_LIST[i];
-    const prices = await fetchETFPrices(ticker);
-
-    let percent = Math.round(((i + 1) / ETF_LIST.length) * 100);
-    document.getElementById("progress-bar").style.width = percent + "%";
-    document.getElementById("progress-text").textContent = percent + " %";
-
-    if (prices.length < 50) continue;
-
-    const score = Math.round(Math.random() * 100); // exemple simplifié
-    results.push({ ticker, name, score });
-  }
-
-  results.sort((a, b) => b.score - a.score);
-  document.querySelector("#top3-list").innerHTML = results.slice(0, 3).map(r => `<li>${r.name} (Score: ${r.score})</li>`).join("");
-
-  let table = '<table><thead><tr><th>ETF</th><th>Score</th></tr></thead><tbody>';
-  results.forEach(r => {
-    table += `<tr><td>${r.name}</td><td>${r.score}</td></tr>`;
-  });
-  table += '</tbody></table>';
-
-  document.getElementById("etf-results").innerHTML = table;
-  document.getElementById("compteur-etf").textContent = `${results.length} ETF analysés`;
-}
-
-// Évènements
-
-document.getElementById("btn-analyse-etf").addEventListener("click", async () => {
-  const btn = document.getElementById("btn-analyse-etf");
-  btn.disabled = true;
-  btn.innerText = "⏳ Analyse en cours...";
-  await analyseAllETFs();
-  btn.innerText = "🔍 Relancer l’analyse ETF";
-  btn.disabled = false;
-});
 </script>
-
 </body>
 </html>
