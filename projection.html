@@ -1831,32 +1831,31 @@ function genererResultatsFiscaux() {
 
   let stock = parseFloat(document.getElementById("stock-initial")?.value || 0);
 
-annees.forEach((annee, index) => {
-    // 1. Calcul résultat comptable avec valeurs manuelles
-    let resultatComptable = Object.keys(donneesInitiales)
-        .filter(k => k.endsWith(annee + "_net"))
-        .reduce((acc, k) => acc + parseFloat(donneesInitiales[k] || 0), 0);
+  annees.forEach((annee, index) => {
+    // *** CORRECTION ICI : somme des résultats nets déjà calculés ***
+    let resultatComptable = biens.reduce((acc, bien) => {
+      return acc + parseFloat(donneesInitiales[`${bien}_${annee}_net`] || 0);
+    }, 0);
+
+    // Si valeur manuelle, on l'applique
     if (valeursManuelles[annee] && valeursManuelles[annee].comptable !== undefined) {
-        resultatComptable = valeursManuelles[annee].comptable;
+      resultatComptable = valeursManuelles[annee].comptable;
     }
 
     // 2. Calcul amortissements avec valeurs manuelles
     let amortEcartes = Math.min(Math.max(0, resultatComptable), stock);
     if (valeursManuelles[annee] && valeursManuelles[annee].amort !== undefined) {
-        amortEcartes = valeursManuelles[annee].amort;
+      amortEcartes = valeursManuelles[annee].amort;
     }
 
     // 3. Calcul du stock restant pour CETTE année (toujours à partir du stock précédent)
     let stockRestant;
     if (valeursManuelles[annee] && valeursManuelles[annee].stock !== undefined) {
-        stockRestant = valeursManuelles[annee].stock;
+      stockRestant = valeursManuelles[annee].stock;
     } else {
-        stockRestant = stock - amortEcartes;
+      stockRestant = stock - amortEcartes;
     }
-
-    // 4. Propagation du stock pour l’année suivante (toujours la valeur calculée ou manuelle de CETTE année)
     stock = stockRestant;
-
 
     const baseImposableLMP = Math.max(0, resultatComptable - amortEcartes);
     const rsi = baseImposableLMP * RSI_RATE;
@@ -1870,13 +1869,7 @@ annees.forEach((annee, index) => {
     labels.push(annee.toString());
     dataLMP.push(totalLMP);
     dataLMNP.push(totalLMNP);
-    if (logCounter < 10) {
-    console.log("Génération tableau fiscal AVEC input editable");
-    logCounter++;
-} else if (logCounter === 10) {
-    console.log("Limite atteinte : pas d'autres logs pour 'Génération tableau fiscal AVEC input editable'");
-    logCounter++;
-}
+
     tbody.innerHTML += `
       <tr data-annee="${annee}">
         <td>${annee}</td>
@@ -1933,9 +1926,7 @@ annees.forEach((annee, index) => {
     cell.removeEventListener("input", triggerUpdate);
     cell.addEventListener("input", triggerUpdate);
   });
-}
-
-    function recalculateAll() {
+}    function recalculateAll() {
   // <--- AJOUTE CETTE PARTIE
   document.querySelectorAll("#tab-donnees input, #tab-donnees select").forEach(el => {
     if (el.id) donneesInitiales[el.id] = el.value;
