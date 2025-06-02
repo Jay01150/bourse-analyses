@@ -438,7 +438,7 @@ try {
   } else {
     // ici seulement tu initialises tes valeurs en dur si rien n'existe
     donneesInitiales = {
-  "Ferry 1_2025_loyer": "7452",
+"Ferry 1_2025_loyer": "7452",
   "Ferry 1_2025_gli": "588.71",
   "Ferry 1_2025_tf": "484",
   "Ferry 1_2025_ass": "258",
@@ -450,7 +450,7 @@ try {
   "Ferry 1_2025_compta": "145",
   "Ferry 1_2025_total": "8342.71",
   "Ferry 1_2025_net": "-890.71",
-  "Ferry 1_2026_loyer": "7452",
+  "Ferry 1_2026_loyer": "7236",
   "Ferry 1_2026_gli": "588.71",
   "Ferry 1_2026_tf": "484",
   "Ferry 1_2026_ass": "258",
@@ -1696,8 +1696,26 @@ function updateClassements() {
       annees.forEach(a => {
         const id = `${nom}_${a}`;
         html += `<tr><td>${a}</td>` +
-          ["loyer","gli","tf","ass","amort","mob","interet","autre","cfe","compta"]
-            .map(f=>`<td><input type='number' step='any' id='${id}_${f}' onchange='manualOverride("${id}_${f}"); recalculate("${id}")'></td>`).join('')+
+          ["loyer",
+ "gli",
+ "tf",
+ "ass",
+ "amort",
+ "mob",
+ "interet",
+ "autre",
+ "cfe",
+ "compta"].map(f => {
+   let changeHandler = `manualOverride("${id}_${f}"); recalculate("${id}")`;
+   if (f === "gli") {
+     // Utilise oninput ici !
+     return `<td>
+       <input type='number' step='any' id='${id}_gli' oninput='manualOverride("${id}_gli"); recalculate("${id}")'>
+       <span class="reset-cell" title="Réinitialiser" onclick='resetGLI("${id}_gli")'>↺</span>
+     </td>`;
+   }
+   return `<td><input type='number' step='any' id='${id}_${f}' onchange='${changeHandler}'></td>`;
+ }).join('')+
           `<td><input type='number' id='${id}_total' onchange='manualOverride("${id}_total")'></td><td><input type='number' id='${id}_net' onchange='manualOverride("${id}_net")'></td></tr>`;
       });
       return html + '</tbody></table></div></div>';
@@ -1858,7 +1876,8 @@ function genererResultatsFiscaux() {
     stock = stockRestant;
 
     const baseImposableLMP = Math.max(0, resultatComptable - amortEcartes);
-    const rsi = baseImposableLMP * RSI_RATE;
+    let rsi = baseImposableLMP * RSI_RATE;
+if (rsi <= 1245) rsi = 1245;
     const ir = baseImposableLMP * IR_RATE;
     const totalLMP = rsi + ir;
 
@@ -1960,9 +1979,12 @@ function appliquerDonneesAvecFallback() {
 function manualOverride(id) {
   champsManuels.add(id);
 }
-
-    
-
+function resetGLI(id) {
+  champsManuels.delete(id);
+  const loyer = parseFloat(document.getElementById(id.replace('_gli','_loyer')).value) || 0;
+  document.getElementById(id).value = (loyer * 0.079).toFixed(2);
+  recalculate(id.replace('_gli',''));
+}
     let chart;
     
 function afficherGraphiqueFiscal(newData, newOptions) {
