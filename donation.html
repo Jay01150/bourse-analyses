@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulateur Patrimonial</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      margin: 0;
+      padding: 1rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #0f172a;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .card {
+      flex: 1 1 300px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      max-width: 400px;
+      position: relative;
+    }
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .button {
+      background: #0ea5e9;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .button:hover {
+      background: #0284c7;
+    }
+    .input, select {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    .summary {
+      font-weight: bold;
+      background: #f1f5f9;
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .progress {
+      height: 20px;
+      border-radius: 10px;
+      background: #e2e8f0;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #38bdf8;
+    }
+    .sticky-buttons {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      padding: 1rem;
+      box-shadow: 0 -4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 100;
+    }
+    canvas {
+      max-width: 100%;
+      height: 150px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>DONATIONS</h1>
+  <div id="app"></div>
+  <script type="text/babel">
+function App() {
+  const biens = [
+    { nom: "FERRY 1", np: 53600 },
+    { nom: "FERRY 2", np: 49600 },
+    { nom: "BERARD", np: 41200 },
+    { nom: "ÉGLISE T3", np: 45600 },
+    { nom: "ÉGLISE STUDIO", np: 34400 },
+    { nom: "SORLIN", np: 70800 },
+    { nom: "ACQUISES 1", np: 54000 },
+    { nom: "PHOENIX 1", np: 48000 },
+    { nom: "PHOENIX 2", np: 60000 },
+    { nom: "PHOENIX 3", np: 48000 }
+  ];
+  const enfants = [
+    { nom: "Tina", plafond: 100000 },
+    { nom: "Enzo", plafond: 100000 },
+    { nom: "Samuel", plafond: 150000 }
+  ];
+  const [dons, setDons] = React.useState({ Tina: [], Enzo: [], Samuel: [] });
+  const [cash, setCash] = React.useState({ Tina: "", Enzo: "", Samuel: "" });
+
+  const exporterJSON = () => {
+    const data = { dons, cash };
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "donations.json";
+    a.click();
+  };
+  const importerJSON = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const data = JSON.parse(reader.result);
+      setDons(data.dons || { Tina: [], Enzo: [], Samuel: [] });
+      setCash(data.cash || { Tina: "", Enzo: "", Samuel: "" });
+    };
+    reader.readAsText(e.target.files[0]);
+  };
+  const sauvegarderLocal = () => {
+    localStorage.setItem("dons", JSON.stringify(dons));
+    localStorage.setItem("cash", JSON.stringify(cash));
+    alert("Sauvegardé en local");
+  };
+  const restaurerLocal = () => {
+    const donsSaved = JSON.parse(localStorage.getItem("dons"));
+    const cashSaved = JSON.parse(localStorage.getItem("cash"));
+    if (donsSaved && cashSaved) {
+      setDons(donsSaved);
+      setCash(cashSaved);
+    } else {
+      alert("Aucune sauvegarde trouvée");
+    }
+  };
+  const reinitialiser = () => {
+    setDons({ Tina: [], Enzo: [], Samuel: [] });
+    setCash({ Tina: "", Enzo: "", Samuel: "" });
+  };
+  const ajouterBien = (enfant, bien) => {
+    if (!dons[enfant].some(b => b.nom === bien.nom)) {
+      setDons({ ...dons, [enfant]: [...dons[enfant], bien] });
+    }
+  };
+  const retirerBien = (enfant, nomBien) => {
+    setDons({ ...dons, [enfant]: dons[enfant].filter(b => b.nom !== nomBien) });
+  };
+  const totalDon = (enfant) => {
+    const cashAmount = parseFloat(cash[enfant]) || 0;
+    const biensNP = dons[enfant].reduce((acc, b) => acc + b.np, 0);
+    return biensNP + cashAmount;
+  };
+  return (
+    <>
+      <div className="container">
+        {enfants.map(({ nom, plafond }) => {
+          const total = totalDon(nom);
+          const percent = Math.min(100, Math.round((total / plafond) * 100));
+          return (
+            <div key={nom} className="card">
+              <h2>👤 {nom}</h2>
+              <div className="flex">
+                {dons[nom].map(bien => (
+                  <button key={bien.nom} className="button" onClick={() => retirerBien(nom, bien.nom)}>{bien.nom} ×</button>
+                ))}
+              </div>
+              <select onChange={e => ajouterBien(nom, biens.find(b => b.nom === e.target.value))}>
+                <option value="">Ajouter un bien</option>
+                {biens.filter(b => !dons[nom].some(d => d.nom === b.nom)).map(bien => (
+                  <option key={bien.nom} value={bien.nom}>{bien.nom} ({bien.np.toLocaleString()} €)</option>
+                ))}
+              </select>
+              <input className="input" type="number" placeholder="Cash (€)" value={cash[nom]} onChange={e => setCash({ ...cash, [nom]: e.target.value })}/>
+              <div className="summary">
+                Total : {total.toLocaleString()} € / Plafond : {plafond.toLocaleString()} €
+              </div>
+              <div className="progress">
+                <div className="progress-bar" style={{ width: `${percent}%` }}></div>
+              </div>
+              <div style={{ textAlign: 'center', fontWeight: 'bold' }}>{percent}%</div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="sticky-buttons">
+<button className="button" onClick={sauvegarderLocal}>💽 Sauvegarder</button>
+        <button className="button" onClick={restaurerLocal}>🔄 Restaurer</button>        
+<button className="button" onClick={exporterJSON}>💾 Export JSON</button>
+        <label className="button">
+          📂 Import JSON
+          <input type="file" accept="application/json" onChange={importerJSON} style={{ display: 'none' }} />
+        </label>
+                <button className="button" onClick={reinitialiser}>🗑️ Réinitialiser</button>
+      </div>
+    </>
+  );
+}
+const root = ReactDOM.createRoot(document.getElementById('app'));
+root.render(<App />);
+  </script>
+</body>
+</html>
