@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>🎯 Devenir Assitant(e) Familial(e)?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts for modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(120deg, #eaf1fa 0%, #d1d9ec 100%);
+      font-family: 'Inter', 'Segoe UI', Verdana, Geneva, Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #18305c;
+    }
+    .container {
+      width: 80%;
+      max-width: 950px;
+      min-width: 320px;
+      margin: 3rem auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 36px rgba(40,82,120,0.14);
+      padding: 2.5rem 2rem 1rem 2rem;
+      position: relative;
+      box-sizing: border-box;
+      border: 1px solid #e2e9f7;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .nav-btn {
+      display: inline-block;
+      font-size: 1.08rem;
+      font-weight: bold;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background .2s, color .2s;
+      box-shadow: 0 2px 8px rgba(60,110,180,0.08);
+    }
+    .nav-btn.home {
+      background: #007bff;
+      color: #fff;
+    }
+    .nav-btn.home:hover {
+      background: #0056b3;
+      color: #fff;
+    }
+    .nav-btn.faq {
+      background: #ffc107;
+      color: #333;
+    }
+    .nav-btn.faq:hover {
+      background: #e0a800;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      color: #224b8d;
+      margin-top: 0;
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.6em;
+    }
+    h1 .icon-main {
+      font-size: 2.1rem;
+      vertical-align: middle;
+      color: #224b8d;
+      margin-right: 0.2em;
+    }
+    .quiz-list {
+      list-style: none;
+      padding: 0;
+      margin: 2rem 0;
+    }
+    .quiz-list li {
+      background: #f4f8fd;
+      margin-bottom: 1.2rem;
+      border-left: 6px solid #3a6cc4;
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      font-size: 1.09rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6em;
+      box-shadow: 0 2px 8px rgba(60,110,180,0.04);
+      position: relative;
+    }
+    .quiz-list li:before {
+      content: "\f0da";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: #3a6cc4;
+      margin-right: 0.7em;
+      position: absolute;
+      left: 1rem;
+      top: 1.1rem;
+      font-size: 1.1em;
+    }
+    .quiz-list label {
+      margin-left: 1.7em;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      display: block;
+    }
+    .icon-colored {
+      margin-right: 0.5em;
+      font-size: 1.25em;
+      vertical-align: -0.12em;
+    }
+    .icon-moon     { color: #8e44ad; }
+    .icon-people   { color: #e67e22; }
+    .icon-balance  { color: #f39c12; }
+    .icon-help     { color: #27ae60; }
+    .icon-link     { color: #e74c3c; }
+    .icon-home     { color: #2980b9; }
+    .icon-smile    { color: #f1c40f; }
+    .icon-calendar { color: #16a085; }
+    .icon-graduation { color: #006fff; }
+    .icon-seedling { color: #27ae60; }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.98em;
+      margin-top: 0.15em;
+      margin-left: 1.7em;
+    }
+    .slider-labels .not-at-all {
+      color: #ff9800 !important;
+      font-weight: 600;
+    }
+    .slider-labels .completely {
+      color: #27ae60 !important;
+      font-weight: 600;
+    }
+    .slider-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    input[type="range"] {
+      width: 67.9%;
+      accent-color: #3a6cc4;
+      margin: 0;
+      display: block;
+    }
+    .result {
+      text-align: center;
+      margin: 2.3rem 0 1.5rem 0;
+      padding: 1.3rem 1rem;
+      border-radius: 15px;
+      font-size: 1.18rem;
+      font-weight: 600;
+      display: none;
+      box-shadow: 0 2px 14px rgba(60,110,180,0.08);
+      border: 2.5px solid #cdd8f3;
+    }
+    .result.low {
+      background: #f1f4fa;
+      color: #b44b4b;
+      border-color: #e3a9a9;
+    }
+    .result.medium {
+      background: #eaf2fd;
+      color: #20539b;
+      border-color: #b5cdf4;
+    }
+    .result.high {
+      background: #eafaf4;
+      color: #217e5b;
+      border-color: #8bd6b8;
+    }
+    .score-indicator {
+      font-size: 1.7rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+    }
+    .score-indicator .fa {
+      font-size: 2rem;
+      margin-right: 0.3em;
+    }
+    .to-improve {
+      margin: 1.2em 0 0.7em 0;
+      background: #f8fafd;
+      color: #20539b;
+      border-left: 4px solid #3a6cc4;
+      border-radius: 7px;
+      padding: 0.7em 1em;
+      font-size: 1.06em;
+      text-align: left;
+      box-shadow: 0 1px 5px rgba(60,110,180,0.04);
+    }
+    .to-improve strong {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    .to-improve strong .fa-circle-info {
+      color: #fbad2c;
+      font-size: 1.16em;
+    }
+    .faq-link {
+      margin-top: 1.2em;
+      display: inline-block;
+      background: #ffc107;
+      color: #333;
+      text-decoration: none;
+      padding: 0.7em 1.6em;
+      border-radius: 6px;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(60,110,180,0.06);
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      font-size: 1.04em;
+      letter-spacing: 0.01em;
+    }
+    .faq-link .fa-circle-question {
+      margin-right: 0.5em;
+      color: #fbad2c;
+    }
+    .faq-link:hover { background: #e0a800; color: #222;}
+    button {
+      display: block;
+      margin: 0 auto;
+      background: linear-gradient(90deg,#224b8d 60%,#3a6cc4 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 1.1rem 2.2rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px rgba(60,110,180,0.08);
+      letter-spacing: 0.01em;
+    }
+    button .fa-arrow-right {
+      margin-left: 0.6em;
+      font-size: 1.1em;
+    }
+    button:hover {
+      background: linear-gradient(90deg,#16335a 60%,#254d84 100%);
+    }
+    .reminder {
+      background: #eaf2fd;
+      border: 1.5px dashed #3a6cc4;
+      color: #20539b;
+      border-radius: 9px;
+      margin: 2.1rem 0 1rem 0;
+      padding: 1.2rem 1.1rem;
+      font-size: 1.06rem;
+      box-shadow: 0 1px 8px rgba(60,110,180,0.03);
+    }
+    .reminder-title {
+      font-weight: 700;
+      font-size: 1.13rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .reminder-title .fa-clipboard-check {
+      color: #4aa03e;
+      font-size: 1.13em;
+    }
+    .reminder ul {
+      margin:0.7rem 0 0 0.5em;
+      padding:0;
+      list-style:none;
+    }
+    .reminder li {
+      margin-bottom: 0.4em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .reminder li .fa-bed { color: #6c3483;}
+    .reminder li .fa-shower { color: #16a085;}
+    .reminder li .fa-calendar-check { color: #f39c12;}
+    @media (max-width: 1000px) {
+      .container {
+        width: 98%;
+        padding: 1.1rem 0.5rem 0.8rem 0.5rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <h1><span class="icon-main"><i class="fa-solid fa-circle-question" style="color:#fbad2c;"></i></span>Test d'auto- positionnement <br><small style="font-size:1rem;color:#5b7db7;font-weight:500;"> </small></h1>
+<div class="nav-buttons">
+      <a href="index.html" class="nav-btn home">🏠 Accueil</a>
+      <a href="faq.html" class="nav-btn faq">❓ Consulter la FAQ</a>
+    </div>
+    <form id="quizForm">
+      <ul class="quiz-list">
+        <li>
+          <label><i class="fa-solid fa-moon icon-colored icon-moon"></i> Êtes-vous prêt(e) à accueillir un enfant à tout moment, y compris la nuit ou en urgence ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q1" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q1-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-people-arrows icon-colored icon-people"></i> Comprenez-vous que ce n’est pas votre enfant, et qu’il convient de respecter son histoire, ses parents, ses repères ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q2" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q2-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-scale-balanced icon-colored icon-balance"></i> Savez-vous adapter un cadre clair, co-construire des règles, sans entrer dans la confrontation ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q3" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q3-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-handshake-angle icon-colored icon-help"></i> Êtes-vous capable de demander de l’aide lorsque cela est nécessaire, et de travailler en équipe avec des professionnels ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q4" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q4-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-link-slash icon-colored icon-link"></i> Pouvez-vous accepter que les liens créés ne durent pas toujours, même s’ils sont forts ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q5" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q5-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-house-user icon-colored icon-home"></i> Êtes-vous à l’aise avec l’idée d’exercer un métier à votre domicile, 24h/24, 7j/7, sans “pause” réelle ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q6" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q6-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-face-smile icon-colored icon-smile"></i> Êtes-vous capable de verbaliser vos émotions et de garder une posture professionnelle, même dans des situations de tension ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q7" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q7-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-calendar-day icon-colored icon-calendar"></i> Avez-vous conscience que votre rôle est de construire un quotidien stable, sans refaire seul(e) l'éducation de l’enfant ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q8" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q8-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-graduation-cap icon-colored icon-graduation"></i> Êtes-vous disposé(e) à suivre des formations, à vous remettre en question et à évoluer régulièrement ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q9" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q9-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+        <li>
+          <label><i class="fa-solid fa-seedling icon-colored icon-seedling"></i> Avez-vous conscience que vous ne ferez pas fortune dans ce métier, mais qu’il a du sens et vous fera grandir également ?</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="10" value="5" name="q10" oninput="updateLabel(this)">
+          </div>
+          <div class="slider-labels">
+            <span class="not-at-all"><i class="fa-regular fa-thumbs-down" style="color:#ff9800;"></i> Pas du tout</span>
+            <span id="q10-val">5</span>
+            <span class="completely">Oui, tout à fait <i class="fa-regular fa-thumbs-up" style="color:#27ae60;"></i></span>
+          </div>
+        </li>
+      </ul>
+      <button type="button" onclick="calculateScore()">Voir mon résultat <i class="fa-solid fa-arrow-right"></i></button>
+    </form>
+    <div id="result" class="result"></div>
+    <div class="reminder">
+      <span class="reminder-title"><i class="fa-solid fa-clipboard-check"></i> À ne pas oublier : les conditions matérielles minimales</span>
+      <ul>
+        <li><i class="fa-solid fa-bed"></i> Disposer d'une chambre de 9 m² minimum par enfant accueilli (chambre personnelle, pas un espace partagé)</li>
+        <li><i class="fa-solid fa-shower"></i> Un espace de vie familial stable, propre, accueillant et conforme</li>
+        <li><i class="fa-solid fa-calendar-check"></i> Être disponible à temps plein pour les accueils (aucune autre activité professionnelle à temps plein)</li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    function updateLabel(slider) {
+      const name = slider.name;
+      document.getElementById(name+"-val").textContent = slider.value;
+    }
+
+    function calculateScore() {
+      const sliders = document.querySelectorAll('.quiz-list input[type="range"]');
+      const questions = [
+        "Être disponible à tout moment pour accueillir un enfant",
+        "Respecter l’histoire et la famille de l’enfant",
+        "Adapter un cadre clair et co-construire des règles sans confrontation",
+        "Demander de l’aide et travailler en équipe",
+        "Accepter que les liens ne durent pas toujours",
+        "Accueillir un métier à domicile, 24h/24, 7j/7",
+        "Verbaliser ses émotions et conserver une posture professionnelle sous tension",
+        "Construire un quotidien stable, sans refaire seul(e) l’éducation de l’enfant",
+        "Être disposé(e) à se former et à évoluer",
+        "Accepter que ce métier a du sens sans être lucratif"
+      ];
+      let score = 0;
+      let lowPoints = [];
+      sliders.forEach((slider, i) => {
+        const val = parseInt(slider.value);
+        score += val;
+        if (val <= 5) lowPoints.push(questions[i]);
+      });
+      const total = sliders.length * 10;
+      const scorePercent = Math.round(score * 100 / total);
+
+      // Résultat visuel
+      const resultDiv = document.getElementById('result');
+      let cls = '', emoji = '', icon = '', msg = '';
+      if (scorePercent < 60) {
+        cls = 'low';
+        emoji = '<i class="fa-solid fa-hourglass-half" style="color:#e67e22;"></i>';
+        msg = `<span class='score-indicator'>${emoji} ${scorePercent} / 100</span><br>
+        Prenez le temps de réfléchir à votre projet&nbsp;: ce métier demande un réel engagement et ne s’improvise pas.<br>
+        N’hésitez pas à solliciter des professionnels pour approfondir votre réflexion.`;
+      } else if (scorePercent < 85) {
+        cls = 'medium';
+        emoji = '<i class="fa-solid fa-thumbs-up" style="color:#27ae60;"></i>';
+        msg = `<span class='score-indicator'>${emoji} ${scorePercent} / 100</span><br>
+        Vous êtes sur la bonne voie. Quelques précisions ou échanges avec des professionnels pourraient vous aider à mûrir votre décision.<br>
+        Restez à l’écoute de vos ressentis et continuez à vous questionner.`;
+      } else {
+        cls = 'high';
+        emoji = '<i class="fa-solid fa-rocket" style="color:#fbad2c;"></i>';
+        msg = `<span class='score-indicator'>${emoji} ${scorePercent} / 100</span><br>
+        Vous semblez avoir le bon état d’esprit&nbsp;!<br>
+        N’hésitez pas à poursuivre vos démarches et à rencontrer des professionnels afin de valider votre projet.`;
+      }
+
+      // Points à creuser
+      if (lowPoints.length > 0) {
+        msg += `<div class="to-improve"><strong><i class="fa-solid fa-circle-info" style="color:#fbad2c;"></i> Points à approfondir :</strong><ul>`;
+        lowPoints.forEach(pt => msg += `<li>${pt}</li>`);
+        msg += `</ul>
+        <a href="faq.html" target="_blank" class="faq-link"><i class="fa-regular fa-circle-question"></i>Consulter la FAQ</a>
+        </div>`;
+      }
+
+      resultDiv.className = 'result ' + cls;
+      resultDiv.innerHTML = msg;
+      resultDiv.style.display = 'block';
+      // scroll to result
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>FAQ Assistants Familiaux – Département de l’Ain</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: linear-gradient(to right, #f8f9fa, #e9ecef); color: #333; }
+    #chatbot {
+  width: 80vw;
+  max-width: 80vw;
+  min-width: 320px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  min-height: 100vh;
+}
+    h1 { text-align: center; color: #007bff; }
+    .ain-box { background: #f0f7ff; border-left: 6px solid #007bff; padding: 16px 20px; margin-bottom: 22px; border-radius: 10px;}
+    .search-bar { margin-bottom: 20px; display: flex; justify-content: center;}
+    .search-bar input { padding: 10px; width: 100%; max-width: 500px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;}
+    .tabs { display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;}
+    .tab-button { padding: 10px 15px; margin: 5px; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background-color 0.2s;}
+    .tab-button.active { background-color: #0056b3;}
+    .question-list { display: none; flex-direction: column; gap: 10px;}
+    .question-list.active { display: flex;}
+    .question-button { padding: 10px 12px; background-color: #f1f1f1; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; text-align: left; font-weight: 500; color: #007bff; transition: background-color 0.2s; position: relative;}
+    .question-button:hover { background-color: #e2e6ea;}
+    .answer-block { background-color: #fefefe; border-left: 5px solid #007bff; padding: 16px 14px; margin-top: 12px; margin-bottom: 12px; border-radius: 10px; font-size: 16px; line-height: 1.7; color: #222; animation: fadeIn 0.2s;}
+    .answer-simple { font-weight: bold; color: #2078c7; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+    .answer-detail { margin-top: 10px; margin-bottom: 8px; color: #333;}
+    .links-list { margin-top: 13px; padding-left: 0; list-style: none;}
+    .links-list li { margin-bottom: 7px; }
+    .btn-detail, .btn-simple { display: inline-block; margin-top: 14px; margin-right: 8px; padding: 7px 16px; background: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 15px; font-weight: bold; transition: background 0.2s;}
+    .btn-detail:hover, .btn-simple:hover { background: #0056b3;}
+    .syno-tip { color: #888; font-size: 13px; margin-top: 8px; margin-bottom: 8px; text-align:center;}
+    @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;}}
+    .faq-section-title { font-size: 20px; margin: 0 0 15px 0; color: #444; letter-spacing: .5px; padding-left: 5px;}
+    .faq-exemple { background: #fff9e3; border-left: 4px solid #ffbe3d; padding: 7px 12px; margin: 16px 0 10px 0; border-radius: 7px; color: #7a6700; font-size: 15px;}
+    .faq-links { margin: 12px 0 0 0; font-size: 15px; }
+    .faq-bold { font-weight: bold; color: #0056b3; }
+    ul.faq-list { margin: 10px 0 10px 25px; padding: 0; }
+    ul.faq-list li { margin-bottom: 7px; }
+    .faq-icon { font-size: 18px; margin-right: 5px;}
+
+.faq-exemple {
+  background: #f9f5d7;
+  border-left: 4px solid #ffbe3d;
+  padding: 7px 12px;
+  margin: 10px 0 5px 0;
+  border-radius: 7px;
+  color: #7a6700;
+  font-size: 15px;
+}
+
+.faq-links {
+  margin: 10px 0 0 0;
+  font-size: 15px;
+}
+
+.faq-bold {
+  font-weight: bold;
+  color: #0056b3;
+}
+  </style>
+</head>
+<body>
+  <div id="chatbot">
+    <h1>🤖 FAQ Assistants familiaux<br><span style="font-size:18px;color:#444;">Département de l'Ain</span></h1>
+    <div class="ain-box">
+    <div class="nav-buttons" style="display:flex;justify-content:center;gap:16px;margin-bottom:18px;">
+  <a href="index.html" class="nav-btn" style="background:#007bff;color:#fff;padding:10px 24px;font-weight:bold;border-radius:8px;text-decoration:none;transition:background .2s;">🏠 Accueil</a>
+  <a href="quizz.html" class="nav-btn" style="background:#ffc107;color:#333;padding:10px 24px;font-weight:bold;border-radius:8px;text-decoration:none;transition:background .2s;">🎯 Passer le Test</a>
+</div> 
+    <div class="search-bar">
+      <input id="searchInput" placeholder="Rechercher une question..." type="text"/>
+    </div>
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('intro')">🗺️ Infos générales</button>
+      <button class="tab-button" onclick="showTab('quotidien')">🛠️ Quotidien</button>
+      <button class="tab-button" onclick="showTab('enfants')">👶 Enfants & Lien affectif</button>
+      <button class="tab-button" onclick="showTab('institutionnel')">🏛️ Cadre institutionnel</button>
+      <button class="tab-button" onclick="showTab('paie')">💰 Rémunération</button>
+      <button class="tab-button" onclick="showTab('coaching')">🧠 Mises en situation</button>
+    </div>
+    <div id="faq-questions"></div>
+  </div>
+<script>
+const synonyms = {
+  "salaire": ["rémunération", "paie", "revenu", "payé", "traitement", "fiche de paie"],
+  "rémunération": ["salaire", "paie", "revenu"],
+  "recrutement": ["embauche", "contrat", "candidature", "postuler"],
+  "congé": ["vacances", "repos", "absence"],
+  "placement": ["accueil", "enfant confié", "accueillir"],
+  "formation": ["apprentissage", "cours", "module", "obligatoire", "diplôme"],
+  "isolement": ["solitude", "seul", "accompagnement", "binôme"],
+  "handicap": ["mdph", "troubles", "autisme", "handicapé", "déficience"],
+  "agrément": ["autorisation", "dossier", "évaluation", "commission"],
+  "famille": ["parent", "enfant", "fratrie", "foyer"],
+  "ain": ["département", "pôle", "ASE", "01", "service enfance", "direction", "territoire"]
+};
+const categories = [
+  { id: "intro", label: "🗺️ Infos générales" },
+  { id: "quotidien", label: "🛠️ Quotidien" },
+  { id: "enfants", label: "👶 Enfants & Lien affectif" },
+  { id: "institutionnel", label: "🏛️ Cadre institutionnel" },
+  { id: "paie", label: "💰 Rémunération" },
+  { id: "coaching", label: "🧠 Coaching" }
+];
+
+const faq = [
+  // -------- INFOS GÉNÉRALES ENRICHI --------
+
+{
+  categorie: "intro",
+  question: "En savoir plus sur le département de l’Ain",
+  reponse: {
+    simple: "<b>🗺️ Présentation :</b> Le Département de l’Ain (01) pilote la protection de l’enfance, l’insertion, l’autonomie, les collèges, les routes et la solidarité. Il accompagne aussi les familles, personnes âgées et en situation de handicap.",
+    detail: `<ul class="faq-list">
+      <li>Le <b>service Enfance et Famille</b> comprend l’ASE : accueil d’urgence, accueil familial, préparation à l’autonomie, prévention, gestion des assistants familiaux.</li>
+      <li>L’Ain compte <b>250 assistants familiaux</b> et accueille plus de <b>400 enfants confiés</b> (tous âges, profils variés, 1/4 avec handicap).</li>
+      <li>Le territoire est organisé en <b>4 pôles de solidarité</b>, avec des référents ASE, travailleurs sociaux, psychologues, médecins et éducateurs spécialisés.</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/solidarite-aide-aux-personnes/" target="_blank">Découvrir l’organisation du département</a>
+    </div>`
+  }
+},
+  {
+    categorie: "intro",
+    question: "Comment se déroule l’embauche dans l’Ain ?",
+    reponse: {
+      simple: "<b>📝 Après agrément :</b> Entretien ASE, signature du contrat, attribution d’un référent et démarrage de la formation initiale.<br>Contrat CDI, visite médicale et livret d’accueil remis.",
+      detail: `<ul class="faq-list">
+        <li><b>👥 Entretien RH</b> et <b>visite médicale</b> obligatoires</li>
+        <li><b>🖊️ Contrat CDI</b> (temps complet/partiel selon agrément)</li>
+        <li><b>👤 Référent ASE</b> attribué dès le début</li>
+        <li><b>🎓 Formation initiale</b> (pré-accueil, puis parcours complet)</li>
+        <li><b>📗 Livret d’accueil</b> remis et inscription à la formation</li>
+      </ul>
+      <div class="faq-exemple"><b>✨ Exemple :</b> Vous obtenez l’agrément en juin, l’employeur vous contacte pour l’entretien RH en juillet, et vous démarrez la formation en septembre.</div>
+      <div class="faq-links">
+        🔗 <a href="https://www.ain.fr/assistants-familiaux/devenir-assistant-familial/" target="_blank">Ain.fr : devenir assistant familial</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Quel est le rôle du référent ASE dans l’Ain ?",
+    reponse: {
+      simple: "<b>👤 Référent ASE :</b> Votre interlocuteur principal : suivi de l’enfant, lien équipe, médiation avec la famille d’origine, gestion des situations de crise.",
+      detail: `<ul class="faq-list">
+        <li><b>🧭 Coordonne</b> le projet pour l’enfant</li>
+        <li><b>📅 Organise</b> les réunions de suivi</li>
+        <li><b>💬 Répond</b> à vos questions du quotidien</li>
+        <li><b>🤝 Fait le lien</b> avec l’équipe pluridisciplinaire</li>
+      </ul>
+      <div class="faq-links">
+        🔗 <a href="https://www.ain.fr/assistants-familiaux/organisation-ase/" target="_blank">Fonction du référent ASE (guide Ain)</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Comment signaler une difficulté rencontrée en dehors des horaires de bureau ?",
+    reponse: {
+      simple: "<b>☎️ Astreinte :</b> Joignable soir, nuit, week-end. En urgence grave : police (17) ou 119 Enfance en danger.",
+      detail: `<ul class="faq-list">
+        <li><b>📞 Numéro d’astreinte</b> communiqué à l’embauche</li>
+        <li><b>🚨 Danger immédiat</b> : 17 (police) ou 119 (Enfance en danger)</li>
+        <li><b>📝 Informer</b> l’ASE dès la reprise du service</li>
+      </ul>
+      <div class="faq-links">
+        🔗 <a href="https://www.allo119.gouv.fr/" target="_blank">119 Enfance en danger</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Quelles sont les étapes d’obtention de l’agrément ?",
+    reponse: {
+      simple: "<b>📄 Étapes :</b> Dossier, visite à domicile, entretiens, décision départementale sous 4 mois maximum.",
+      detail: `<ul class="faq-list">
+        <li><b>🗂️ Dossier administratif</b> à constituer</li>
+        <li><b>🏠 Visite</b> d’un travailleur social et d’un médecin</li>
+        <li><b>👩‍👦 Échange</b> sur votre projet familial</li>
+        <li><b>🕒 Décision</b> départementale (ou tacite après 4 mois)</li>
+      </ul>
+      <div class="faq-links">
+        🔗 <a href="https://www.ain.fr/assistants-familiaux/obtenir-lagrement/" target="_blank">Procédure d’agrément Ain</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Quel logement faut-il pour accueillir un enfant ?",
+    reponse: {
+      simple: "<b>🏡 Logement :</b> Sain, sécurisé, chambre individuelle par enfant accueilli sauf fratrie.",
+      detail: `<ul class="faq-list">
+        <li><b>🔒 Sécurité</b> (fenêtres, escaliers, produits dangereux)</li>
+        <li><b>🛏️ Intimité</b> (chambre séparée, sauf fratrie)</li>
+        <li><b>🧼 Hygiène correcte</b> et espaces communs accessibles</li>
+        <li><b>🕒 Réévaluation</b> lors du renouvellement d’agrément</li>
+      </ul>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Combien d’assistants familiaux dans l’Ain ? Combien d’enfants confiés ?",
+    reponse: {
+      simple: "<b>👨‍👩‍👧‍👦 Chiffres clés :</b> Environ 250 assistants familiaux pour 400 enfants confiés dans l’Ain.",
+      detail: `<ul class="faq-list">
+        <li><b>👥 Plus de 250 assistants familiaux</b></li>
+        <li><b>👶 Près de 400 enfants</b> de tous âges</li>
+        <li>Part croissante avec <b>handicap</b> ou besoins spécifiques</li>
+      </ul>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Existe-t-il des formations obligatoires ?",
+    reponse: {
+      simple: "<b>🎓 Formation :</b> Oui : formation initiale (pré-accueil, puis parcours de 240h) et formation continue chaque année.",
+      detail: `<ul class="faq-list">
+        <li><b>🚦 Formation initiale</b> avant tout accueil</li>
+        <li><b>⏳ Parcours de 240h</b> sur plusieurs mois</li>
+        <li><b>🔄 Modules</b> de formation continue chaque année</li>
+      </ul>
+      <div class="faq-links">
+        🔗 <a href="https://www.ain.fr/assistants-familiaux/formation/" target="_blank">Formation assistant familial (Ain)</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Quels sont les autres services utiles dans l’Ain (PMI, handicap, associations…) ?",
+    reponse: {
+      simple: "<b>💡 Services utiles :</b> PMI : santé 0-6 ans ; MDPH : handicap ; associations de soutien parentalité et handicap.",
+      detail: `<ul class="faq-list">
+        <li><b>👶 PMI</b> : santé des 0-6 ans</li>
+        <li><b>♿ MDPH</b> : dossiers handicap</li>
+        <li><b>🤝 Associations</b> : parentalité, relais, activités adaptées</li>
+      </ul>
+      <div class="faq-links">
+        🔗 <a href="https://www.ain.fr/solidarite-aide-aux-personnes/pmi-protection-maternelle-et-infantile/" target="_blank">PMI Ain</a><br>
+        🔗 <a href="https://www.mdph01.fr/" target="_blank">MDPH Ain</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Le département propose-t-il un accompagnement psychologique pour les assistants familiaux ?",
+    reponse: {
+      simple: "<b>🧑‍⚕️ Accompagnement :</b> Oui : groupes de parole, supervisions, accompagnement individuel possible.",
+      detail: `<ul class="faq-list">
+        <li><b>🧠 Analyse de pratique</b> en groupe</li>
+        <li><b>👩‍⚕️ Accompagnement psychologique individuel</b></li>
+        <li><b>🧑‍⚕️ Supervisions externes</b> et médecine du travail</li>
+      </ul>
+      <div class="faq-links">
+        🔗 <a href="https://www.ain.fr/solidarite-aide-aux-personnes/accompagnement-psychologique/" target="_blank">Allo Psy 01</a>
+      </div>`
+    }
+  },
+  {
+    categorie: "intro",
+    question: "Qu’est-ce qu’un accueil d’urgence ?",
+    reponse: {
+      simple: "<b>🚨 Accueil d’urgence :</b> Accueil immédiat, souvent sans préparation. Durée : quelques jours à semaines.",
+      detail: `<ul class="faq-list">
+        <li><b>⏰ Mise à l’abri immédiate</b> en cas de danger</li>
+        <li><b>🕒 Temporaire</b> : évaluation de la situation familiale</li>
+        <li><b>🔄 Recherche de solution stable</b> ensuite</li>
+      </ul>`
+    }
+  },  
+// -------- QUOTIDIEN ENRICHI --------
+{
+  categorie: "quotidien",
+  question: "À quoi ressemble une journée type d’assistant familial ?",
+  reponse: {
+    simple: "<b>🗓️ Journée type :</b> Lever, repas, école, rendez-vous, coucher : l’assistant familial accompagne l’enfant à chaque étape et assure le lien avec l’ASE et l’école.",
+    detail: `<ul class="faq-list">
+      <li><b>⏰ Organisation du lever</b>, des repas, hygiène</li>
+      <li><b>🏫 Préparation et accompagnement à l’école</b></li>
+      <li><b>📚 Aide aux devoirs</b></li>
+      <li><b>🩺 Rendez-vous médicaux</b></li>
+      <li><b>💬 Temps d’échange avec l’enfant</b></li>
+      <li><b>📞 Communication régulière avec l’équipe ASE</b></li>
+    </ul>
+    <div class="faq-exemple"><b>✨ Exemple :</b> Un mercredi : lever, petit-déjeuner, devoirs, rendez-vous psychologue, repas, temps de jeux, préparation du dîner.</div>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment préparer sa famille à l’accueil d’un enfant ?",
+  reponse: {
+    simple: "<b>🏠 Préparation :</b> Informer tous les membres du foyer, préparer la chambre, anticiper les changements de vie et dialoguer régulièrement.",
+    detail: `<ul class="faq-list">
+      <li><b>🗣️ Expliquer le projet</b> à vos enfants (même petits)</li>
+      <li><b>🤝 Impliquer conjoint & enfants</b> dès la demande d’agrément</li>
+      <li><b>🛏️ Préparer la chambre</b> et les espaces de vie</li>
+      <li><b>⏳ Anticiper les changements</b> dans la vie familiale</li>
+      <li><b>🗓️ Organiser des moments dédiés</b> à chacun</li>
+    </ul>
+    <div class="faq-exemple"><b>✨ Exemple :</b> Faites une réunion familiale pour présenter le futur accueil et répondre à toutes les questions de vos proches.</div>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment organiser la scolarité de l’enfant accueilli ?",
+  reponse: {
+    simple: "<b>🏫 Scolarité :</b><br>L'enfant est inscrit dans l'école du secteur. L'assistant familial gère les trajets, le suivi scolaire, le lien avec l’école.",
+    detail: `<ul class="faq-list">
+      <li><b>📚 Inscription</b> à l’école ou collège du secteur</li>
+      <li><b>🤝 Suivi</b> avec enseignants et équipe ASE</li>
+      <li><b>🔎 Accompagnement</b> possible : AVS, PAI, inclusion…</li>
+    </ul>
+    <div class="faq-exemple"><b>Exemple&nbsp;:</b> Si l’enfant a un PAI pour allergies, l’ASE et l’école se concertent pour l’accueil à la cantine.</div>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Qui gère les rendez-vous médicaux et administratifs ?",
+  reponse: {
+    simple: "<b>🩺 Rendez-vous :</b> L’assistant familial prend les rendez-vous et accompagne l’enfant. Certains actes nécessitent l’accord ASE ou parental.",
+    detail: `<ul class="faq-list">
+      <li><b>📆 Organisation</b> des visites médicales, suivi vaccins</li>
+      <li><b>🗂️ Conservation</b> des documents médicaux</li>
+      <li><b>📝 Information de l’ASE</b> en cas de traitement lourd ou opération</li>
+      <li><b>💳 Carte vitale</b> et mutuelle fournies par l’employeur</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Quels outils pour suivre l’évolution de l’enfant ?",
+  reponse: {
+    simple: "<b>📒 Outil :</b> Un carnet de suivi individuel permet de noter faits importants, progrès et difficultés.",
+    detail: `<ul class="faq-list">
+      <li><b>📝 Carnet de suivi</b> : faits marquants, progrès, difficultés</li>
+      <li><b>🗂️ Utilisé lors des réunions de projet</b></li>
+      <li><b>🔗 Sert de lien</b> avec ASE, école, famille d’origine</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment sont organisés les temps de vacances et de répit ?",
+  reponse: {
+    simple: "<b>🏖️ Vacances/Répit :</b> Des relais permettent de prendre des congés. L’enfant peut partir en séjour ASE ou chez une autre famille temporairement.",
+    detail: `<ul class="faq-list">
+      <li><b>📅 Relais planifiés</b> avec l’équipe ASE</li>
+      <li><b>💶 Congés payés et décomptés</b> selon le statut</li>
+      <li><b>👨‍👩‍👧 Accueil</b> possible chez une autre famille ou en séjour organisé par ASE</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Peut-on partir en vacances avec l’enfant accueilli ?",
+  reponse: {
+    simple: "<b>✈️ Départ en vacances :</b> Oui, avec accord ASE ; accord écrit obligatoire pour les déplacements hors département ou à l’étranger.",
+    detail: `<ul class="faq-list">
+      <li><b>✅ Informer l’ASE</b> avant tout départ</li>
+      <li><b>🌍 Autorisation écrite</b> requise pour l’étranger</li>
+      <li><b>📝 Parfois accord des parents ou du juge</b> nécessaire</li>
+      <li><b>🏠 Attestation d’hébergement</b> fournie si besoin</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment gérer les situations d’isolement ou d’épuisement professionnel ?",
+  reponse: {
+    simple: "<b>🧑‍🤝‍🧑 Soutien :</b> Sollicitez le référent ASE, participez à des groupes de parole, demandez un relai ou un accompagnement psychologique.",
+    detail: `<ul class="faq-list">
+      <li><b>👥 Binôme d’accompagnement</b> possible</li>
+      <li><b>🧠 Groupes d’analyse de pratique</b></li>
+      <li><b>🏥 Médecine du travail</b> accessible</li>
+      <li><b>🕊️ Relais temporaire ou pause</b> organisable en cas d’épuisement</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment gérer les situations de crise (violence, fugue, hospitalisation) ?",
+  reponse: {
+    simple: "<b>🚨 Crise :</b> Prévenez le référent ASE immédiatement ; en urgence, appelez le 17 ou le 119.",
+    detail: `<ul class="faq-list">
+      <li><b>🆘 Protocole d’urgence</b> prévu</li>
+      <li><b>📞 Réunion de crise</b> organisée par l’ASE</li>
+      <li><b>📖 Notez et transmettez</b> tous les faits à l’équipe</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment se passent les passages d’un enfant à un autre (fin de placement, nouvel accueil) ?",
+  reponse: {
+    simple: "<b>🔄 Passage :</b> Réunion de bilan et de transmission avec l’ASE, l’enfant et l’assistant familial.",
+    detail: `<ul class="faq-list">
+      <li><b>🛏️ Réaménagement de la chambre</b></li>
+      <li><b>📋 Nouveau projet d’accueil</b> élaboré avec l’équipe</li>
+      <li><b>🤲 Accompagnement de la transition</b> par l’équipe</li>
+      <li><b>🧑‍🤝‍🧑 Séparation anticipée et expliquée à l’enfant</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment sont gérés l’argent de poche et les achats pour l’enfant ?",
+  reponse: {
+    simple: "<b>💶 Argent de poche :</b> L’ASE verse une allocation d’argent de poche et une indemnité d’habillement chaque mois.",
+    detail: `<ul class="faq-list">
+      <li><b>💸 Montants selon l’âge</b></li>
+      <li><b>🧾 Argent de poche</b> pour apprentissage budgétaire</li>
+      <li><b>👕 Indemnité habillement</b> pour vêtements</li>
+      <li><b>🎟️ Capital social</b> pour activités extrascolaires</li>
+      <li><b>🧑‍🤝‍🧑 Accompagnement</b> à la gestion par l’assistant familial</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Quel rôle auprès de la famille d’origine ?",
+  reponse: {
+    simple: "<b>👨‍👩‍👧‍👦 Famille d’origine :</b> L’assistant familial facilite le maintien du lien et prépare les visites, toujours en lien avec l’ASE.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍⚕️ Relation professionnelle</b></li>
+      <li><b>📆 Visites organisées par l’ASE</b> (lieu neutre ou au domicile)</li>
+      <li><b>📣 Transmission des infos importantes</b> à l’équipe</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment prévenir ou gérer les conflits avec l’enfant accueilli ?",
+  reponse: {
+    simple: "<b>😌 Conflits :</b> Privilégiez le dialogue ; posez un cadre stable ; sollicitez l’équipe ASE si le conflit persiste.",
+    detail: `<ul class="faq-list">
+      <li><b>🤝 Dialogue et cadre stable</b></li>
+      <li><b>💬 Réunions de médiation</b> possibles</li>
+      <li><b>🧑‍⚕️ Soutien psychologique ou relai</b> proposé si besoin</li>
+      <li><b>🗣️ Communication non violente et écoute active</b> recommandées</li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Comment préserver l’équilibre avec ses propres enfants ou conjoint ?",
+  reponse: {
+    simple: "<b>⚖️ Équilibre familial :</b> Dialoguez, préparez l’arrivée de chaque enfant confié, gardez des temps pour votre famille.",
+    detail: `<ul class="faq-list">
+      <li><b>👨‍👩‍👦 Impliquer et écouter ses proches</b></li>
+      <li><b>🎲 Maintenir des activités familiales</b></li>
+      <li><b>🚫 Ne pas donner de responsabilités éducatives</b> à ses enfants</li>
+      <li><b>🩺 Suivi lors de l’agrément et du suivi</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "quotidien",
+  question: "Peut-on se former ou se spécialiser (handicap, adolescents, fratries…) ?",
+  reponse: {
+    simple: "<b>📚 Spécialisation :</b> Oui : formations continues et modules de spécialisation sont proposés chaque année.",
+    detail: `<ul class="faq-list">
+      <li><b>♿ Accueil d’enfants porteurs de handicap</b></li>
+      <li><b>🧠 Troubles du comportement, fratries, ados</b></li>
+      <li><b>📅 Formations prises en charge par le département</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/formation/" target="_blank">Formations assistant familial Ain</a>
+    </div>`
+  }
+},
+  // -------- ENFANTS & LIEN AFFECTIF ENRICHI --------
+{
+  categorie: "enfants",
+  question: "Quels profils d’enfants peut-on accueillir ?",
+  reponse: {
+    simple: "<b>👶 Profils :</b> Tous profils : nourrissons, enfants, ados, fratries, enfants avec ou sans handicap, jeunes majeurs.",
+    detail: `<ul class="faq-list">
+      <li><b>🍼 De 0 à 18 ans</b> (voire au-delà en contrat jeune majeur)</li>
+      <li><b>👦👧 Seuls, en fratrie</b>, avec ou sans besoin particulier</li>
+      <li><b>♿ Avec ou sans handicap</b>, troubles, maladies, adolescents</li>
+      <li><b>📝 Dépend de votre agrément et projet familial</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Quelles sont les principales raisons de placement des enfants ?",
+  reponse: {
+    simple: "<b>🚸 Raisons placement :</b> Danger, maltraitance, carence éducative, maladie, précarité : 95 % des placements sont protecteurs.",
+    detail: `<ul class="faq-list">
+      <li><b>⚠️ Danger immédiat</b> : violence, négligence, abus</li>
+      <li><b>🏥 Maladie ou incapacité parentale</b></li>
+      <li><b>⏳ Précarité</b> ou absence de logement</li>
+      <li><b>🔒 Protection de l’enfant</b> le temps d’un retour ou d’un projet durable</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment accueillir un enfant avec un handicap ou des besoins spécifiques ?",
+  reponse: {
+    simple: "<b>♿ Handicap :</b> L’Ain mobilise la MDPH et propose des aides : accompagnement, matériel adapté, indemnité majorée.",
+    detail: `<ul class="faq-list">
+      <li><b>👩‍⚕️ Suivi par la MDPH</b></li>
+      <li><b>🛠️ Matériel ou accompagnement adapté</b></li>
+      <li><b>💶 Indemnité d’entretien majorée</b></li>
+      <li><b>🤝 Projet personnalisé avec l’équipe ASE</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.mdph01.fr/" target="_blank">MDPH Ain</a><br>
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/accueillir-un-enfant-en-situation-de-handicap/" target="_blank">Ain - Accueil enfants handicapés</a>
+    </div>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment faciliter l’intégration dans la famille d’accueil ?",
+  reponse: {
+    simple: "<b>🤗 Intégration :</b> Préparez votre famille, expliquez les règles, instaurez des routines, gardez le lien avec l’ASE.",
+    detail: `<ul class="faq-list">
+      <li><b>👨‍👩‍👧 Préparer chaque membre du foyer</b></li>
+      <li><b>📜 Expliquer l’arrivée et les règles</b></li>
+      <li><b>🔄 Instaurer des routines</b> (repas, jeux, sorties...)</li>
+      <li><b>🤝 Soutien de l’ASE</b> (surtout les premières semaines)</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment accompagner un adolescent placé ?",
+  reponse: {
+    simple: "<b>🧑‍🎓 Adolescents :</b> Cadre bienveillant, respect de la vie privée, dialogue, adaptation du projet à son âge.",
+    detail: `<ul class="faq-list">
+      <li><b>🔑 Besoin d’autonomie et d’écoute</b></li>
+      <li><b>🏠 Respecter la vie privée</b> et les espaces personnels</li>
+      <li><b>💬 Dialogue sur organisation, études, loisirs</b></li>
+      <li><b>🧑‍🏫 Suivi éducatif renforcé</b> souvent nécessaire</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment gérer la scolarisation de l’enfant accueilli ?",
+  reponse: {
+    simple: "<b>🏫 Scolarisation :</b> Inscription à l’école du secteur, suivi des devoirs, travail avec enseignants et ASE.",
+    detail: `<ul class="faq-list">
+      <li><b>📚 Inscription</b> à l’école ou collège du secteur</li>
+      <li><b>🤝 Suivi</b> avec enseignants et équipe ASE</li>
+      <li><b>🔎 Accompagnement</b> possible (AVS, PAI, inclusion…)</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "L’enfant accueilli a-t-il un suivi psychologique ?",
+  reponse: {
+    simple: "<b>🧑‍⚕️ Suivi psy :</b> Oui, suivi par psychologue ASE, CMP ou pédopsychiatre systématiquement proposé.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍⚕️ Suivi psychologique organisé</b> selon les besoins</li>
+      <li><b>🛡️ Prévention des troubles de l’attachement</b></li>
+      <li><b>💬 Aide à exprimer ses difficultés et son histoire</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment gérer la relation avec ses propres enfants et l’enfant accueilli ?",
+  reponse: {
+    simple: "<b>👨‍👩‍👦‍👦 Équilibre :</b> Valorisez la parole de tous, gardez l’équilibre, ne donnez pas de rôle éducatif à vos enfants.",
+    detail: `<ul class="faq-list">
+      <li><b>👂 Écoute de chaque membre de la famille</b></li>
+      <li><b>🗓️ Préserver des temps individuels</b></li>
+      <li><b>🚫 Pas de rôle d’adulte pour vos enfants</b></li>
+      <li><b>💬 Réunions familiales et séances d’écoute</b> recommandées</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment aider l’enfant à parler de son histoire ou de ses difficultés ?",
+  reponse: {
+    simple: "<b>🗣️ Expression :</b> Climat de confiance ; respectez ses silences ; proposez des temps d’expression adaptés.",
+    detail: `<ul class="faq-list">
+      <li><b>🎨 Parole, dessin, jeu</b> pour s’exprimer</li>
+      <li><b>👥 Groupes de parole organisés par l’ASE</b></li>
+      <li><b>🧑‍⚕️ Accompagnement psychologique</b> utile pour verbaliser</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment se passent les visites avec la famille d’origine ?",
+  reponse: {
+    simple: "<b>👨‍👩‍👦 Visites famille d’origine :</b> Définies dans le projet de l’enfant, organisées par l’ASE, en lieu neutre ou au domicile.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍🤝‍🧑 Préparer l’enfant</b> et faciliter la logistique</li>
+      <li><b>🧸 Objets personnels</b> à prévoir si besoin</li>
+      <li><b>📣 Transmission des infos</b> à l’équipe éducative</li>
+      <li><b>👀 Visites adaptées à chaque situation</b>, sous supervision ASE</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Que faire si l’enfant refuse d’aller voir ses parents ?",
+  reponse: {
+    simple: "<b>🚫 Refus de visite :</b> Respectez sa parole ; l’ASE et le juge décident du maintien ou non des visites.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍⚕️ Accompagnement psychologique</b> possible pour l’enfant</li>
+      <li><b>🤝 L’assistant familial reste neutre</b></li>
+      <li><b>📣 Informer l’équipe ASE</b> qui réévalue le projet de visite</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Comment gérer la séparation à la fin du placement ?",
+  reponse: {
+    simple: "<b>👋 Séparation :</b> Anticipez, expliquez à l’enfant, soyez accompagné par l’ASE, prenez soin de vos émotions.",
+    detail: `<ul class="faq-list">
+      <li><b>🗓️ Préparation en réunion de projet</b></li>
+      <li><b>🧑‍⚕️ Suivi psychologique possible</b> pour l’enfant et la famille</li>
+      <li><b>🤝 Temps d’échange ou retrouvailles</b> peuvent être organisés</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Les enfants accueillis gardent-ils des liens après la fin du placement ?",
+  reponse: {
+    simple: "<b>🔗 Liens après placement :</b> Oui, des liens perdurent souvent (visites, échanges, événements familiaux).",
+    detail: `<ul class="faq-list">
+      <li><b>💌 Contacts réguliers</b> selon le projet et la relation</li>
+      <li><b>🔄 Lien accompagné par l’ASE</b> selon les situations</li>
+    </ul>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "L’enfant peut-il participer à des activités ou partir en vacances ?",
+  reponse: {
+    simple: "<b>🎉 Activités/Vacances :</b> Oui : activités et vacances encouragées, aides financières possibles, accord ASE.",
+    detail: `<ul class="faq-list">
+      <li><b>🎟️ L’ASE valide les projets</b></li>
+      <li><b>📝 Autorisations pour voyages</b> ou séjours</li>
+      <li><b>💶 Financements possibles</b> selon la situation de l’enfant</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/activites-vacances/" target="_blank">Ain - Activités et vacances ASE</a>
+    </div>`
+  }
+},
+{
+  categorie: "enfants",
+  question: "Quels sont les droits de l’enfant accueilli ?",
+  reponse: {
+    simple: "<b>📜 Droits :</b> Droit à la protection, à la santé, à l’éducation, au respect de ses origines, à l’expression.",
+    detail: `<ul class="faq-list">
+      <li><b>🛡️ Protection et épanouissement</b></li>
+      <li><b>🩺 Droit à la santé</b></li>
+      <li><b>🔎 Droit à l’information adaptée</b> à son âge</li>
+      <li><b>📖 Respect de son histoire et de sa vie privée</b></li>
+      <li><b>🗣️ Participation aux décisions</b></li>
+      <li><b>📗 Livret d’accueil</b> remis à chaque enfant</li>
+    </ul>`
+  }
+},
+    // -------- INSTITUTIONNEL ENRICHI --------
+{
+  categorie: "institutionnel",
+  question: "Qui décide du placement d’un enfant en famille d’accueil ?",
+  reponse: {
+    simple: "<b>⚖️ Décision placement :</b> Décision prise par l’ASE ou le juge des enfants selon l’urgence et la situation.",
+    detail: `<ul class="faq-list">
+      <li><b>👩‍⚖️ Majoritairement judiciaire</b> (juge des enfants après signalement/enquête)</li>
+      <li><b>🏥 Placement administratif</b> possible par l’ASE avec accord parental (urgence/mise à l’abri)</li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Quel est le cadre légal du métier d’assistant familial ?",
+  reponse: {
+    simple: "<b>📚 Légal :</b> Code de l’Action Sociale et des Familles (CASF), Code du Travail, conventions collectives spécifiques.",
+    detail: `<ul class="faq-list">
+      <li><b>📕 CASF (L421-1 à L423-23)</b></li>
+      <li><b>⚖️ Code du Travail</b></li>
+      <li><b>📝 Conventions collectives</b></li>
+      <li><b>📜 Règles sur agrément, droits, devoirs, rémunération…</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031737858/" target="_blank">Législation nationale (Legifrance)</a>
+    </div>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Quels sont les droits et devoirs principaux de l’assistant familial ?",
+  reponse: {
+    simple: "<b>📋 Droits/devoirs :</b> Garantir sécurité, bien-être, respect, éducation ; secret professionnel ; suivre la formation obligatoire.",
+    detail: `<ul class="faq-list">
+      <li><b>🛡️ Garantir sécurité, bien-être, respect</b></li>
+      <li><b>📚 Secret professionnel</b></li>
+      <li><b>🎓 Formation obligatoire à suivre</b></li>
+      <li><b>💬 Participer aux réunions de suivi</b></li>
+      <li><b>💰 Droits à la rémunération, protection sociale, retraite</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Comment se déroulent les réunions de suivi de l’enfant ?",
+  reponse: {
+    simple: "<b>📆 Réunions de suivi :</b> Réunions régulières avec référent ASE, assistant familial, équipe éducative et parfois les parents.",
+    detail: `<ul class="faq-list">
+      <li><b>🗓️ Réunions de synthèse : PPE (Projet pour l’Enfant)</b></li>
+      <li><b>💬 Point sur l’évolution, besoins particuliers, relais</b></li>
+      <li><b>👨‍👩‍👦 Ajustement du projet</b>, retour en famille ou relais</li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Que faire en cas de désaccord avec l’ASE ou l’employeur ?",
+  reponse: {
+    simple: "<b>🤝 Désaccord :</b> En parler d’abord avec le référent ; médiateur, représentants du personnel ou syndicats en cas de blocage.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍💼 Saisir le responsable de territoire</b> ou le défenseur des droits</li>
+      <li><b>🩺 Médecine du travail</b> ou syndicats également possibles</li>
+      <li><b>🔗 Médiateur</b> pour faciliter la résolution</li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Est-il possible d’accueillir des enfants d’autres départements ?",
+  reponse: {
+    simple: "<b>📦 Autres départements :</b> Oui, avec accord du département employeur, surtout pour fratries ou rapprochement familial.",
+    detail: `<ul class="faq-list">
+      <li><b>🗂️ Accord du département employeur obligatoire</b></li>
+      <li><b>💰 Suivi et rémunération</b> toujours par le département employeur</li>
+      <li><b>📋 Cas particuliers étudiés au cas par cas</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Y a-t-il des visites inopinées ou des inspections ?",
+  reponse: {
+    simple: "<b>🔍 Visites/Contrôles :</b> Oui : visites à domicile possibles, sans préavis, par l’ASE ou l’employeur.",
+    detail: `<ul class="faq-list">
+      <li><b>🏠 Visites à domicile sans préavis</b></li>
+      <li><b>🔒 Vérifier sécurité et qualité de l’accueil</b></li>
+      <li><b>📝 Respect du projet pour l’enfant</b></li>
+      <li><b>⚖️ Obligations prévues par la loi</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Comment se passe le renouvellement d’agrément ?",
+  reponse: {
+    simple: "<b>🔁 Renouvellement :</b> Tous les 5 ans après évaluation du projet familial, du logement, de l’activité et de la formation.",
+    detail: `<ul class="faq-list">
+      <li><b>📄 Dossier à remplir</b></li>
+      <li><b>👥 Entretien et visite sur place</b></li>
+      <li><b>🧑‍🏫 Possibles conditions : formation complémentaire, adaptation logement…</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Peut-on choisir le nombre d’enfants confiés ?",
+  reponse: {
+    simple: "<b>🔢 Nombre d’enfants :</b> Fixé par l’agrément et le contrat de travail, selon logement, expérience et projet familial.",
+    detail: `<ul class="faq-list">
+      <li><b>📝 Nombre maximal inscrit sur l’agrément</b></li>
+      <li><b>🔄 Possibilité d’évolution sur demande</b></li>
+      <li><b>🏡 Dépend de la situation familiale et professionnelle</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "institutionnel",
+  question: "Qu’est-ce que le PPE (Projet pour l’Enfant) ?",
+  reponse: {
+    simple: "<b>📝 PPE :</b> Document obligatoire : objectifs, besoins, modalités de suivi, visites et projet de vie de l’enfant.",
+    detail: `<ul class="faq-list">
+      <li><b>🗂️ Actualisé lors des réunions de synthèse</b></li>
+      <li><b>🔗 Partagé avec tous les acteurs du placement</b></li>
+      <li><b>🎯 Précise objectifs éducatifs, modalités d’accueil, relais, visites, projet à moyen terme…</b></li>
+    </ul>`
+  }
+},
+
+    // -------- PAIE (RÉMUNÉRATION) ENRICHI --------
+{
+  categorie: "paie",
+  question: "Comment la rémunération de l’assistant familial est-elle calculée ?",
+  reponse: {
+    simple: "<b>💰 Calcul salaire :</b> En 2025 dans l’Ain : 1 enfant = 1400 € net/mois, 2 = 2300 €, jusqu’à 5700 € pour 6 enfants. À cela s’ajoutent 450 à 510 €/mois/enfant (indemnité d’entretien) et des primes.",
+    detail: `<ul class="faq-list">
+      <li><b>👶 1 enfant :</b> 1400 € net/mois</li>
+      <li><b>👧👦 2 enfants :</b> 2300 €, 3 : 3000 €, 4 : 3900 €, 5 : 4800 €, 6 : 5700 €</li>
+      <li><b>💶 Indemnité d’entretien</b> (450 à 510 €/mois/enfant)</li>
+      <li><b>🎁 Primes d’ancienneté, majorations 7j/7, handicap, accueil complexe</b></li>
+      <li><b>🧾 Indemnité d’habillement, argent de poche, capital social</b></li>
+    </ul>
+    <div class="faq-exemple"><b>Exemple :</b> 2 enfants de 7 et 14 ans = 2300 € + 450 € + 510 € + 140 € (7j/7) + 30 € (ancienneté) ≈ 3430 €/mois.</div>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/remuneration" target="_blank">Ain – Guide rémunération assistant familial</a><br>
+      🔗 <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031737858/" target="_blank">Législation nationale</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Quels sont les montants nets mensuels pour 1 à 6 enfants ?",
+  reponse: {
+    simple: "<b>📊 Barème :</b> 1 enfant : 1400 € ; 2 : 2300 € ; 3 : 3000 € ; 4 : 3900 € ; 5 : 4800 € ; 6 : 5700 € nets mensuels hors indemnités.",
+    detail: `<ul class="faq-list">
+      <li><b>💶 Indemnités</b> (entretien, habillement…) à ajouter</li>
+      <li><b>✍️ Exemple pour 3 enfants (3, 10, 15 ans)</b> : 3000 € net + 450 € + 480 € + 510 € d’entretien + 210 € (7j/7) + 45 € (ancienneté) ≈ 4245 €/mois.</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/remuneration" target="_blank">Ain – Barème assistant familial</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Quels compléments et majorations existent ?",
+  reponse: {
+    simple: "<b>➕ Compléments :</b> Prime d’ancienneté (15 €/an/enfant), majoration 7j/7 (70 €/semaine/enfant), indemnités pour accueil complexe, handicap, primes exceptionnelles.",
+    detail: `<ul class="faq-list">
+      <li><b>🎂 Prime d’ancienneté :</b> 15 €/an/enfant</li>
+      <li><b>⏰ Majoration 7j/7 :</b> 70 €/semaine/enfant</li>
+      <li><b>♿ Indemnités accueil complexe/handicap</b></li>
+      <li><b>🎁 Primes exceptionnelles possibles</b> selon la situation ou le PPE</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/remuneration" target="_blank">Ain – Majoration et primes</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Que se passe-t-il en cas d’absence d’enfant temporaire ?",
+  reponse: {
+    simple: "<b>🕒 Absence :</b> Vous touchez 80 % du montant prévu pour le poste vacant (sauf refus non justifié d’accueil).",
+    detail: `<ul class="faq-list">
+      <li><b>💸 Indemnisation partielle</b> (80 %) si pas d’enfant confié alors que le contrat le prévoit</li>
+      <li><b>❌ Pas d’indemnité</b> en cas de refus d’accueil non justifié</li>
+      <li><b>📄 Absence décidée par ASE :</b> rémunération partielle maintenue</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/remuneration" target="_blank">Ain – Indemnité d’attente</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Les indemnités sont-elles imposables ?",
+  reponse: {
+    simple: "<b>💶 Fiscalité :</b> Indemnités (entretien, habillement…) non imposables ; seule une partie du salaire l’est (abattement fiscal).",
+    detail: `<ul class="faq-list">
+      <li><b>🧾 10 à 15 % du salaire brut</b> imposé (régime spécifique)</li>
+      <li><b>📄 Fiche spéciale</b> à remplir pour la déclaration d’impôts</li>
+      <li><b>🚫 Indemnités d’entretien, d’habillement, d’argent de poche exonérées</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.impots.gouv.fr/assistants-familiaux" target="_blank">Impôts : fiche assistant familial</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Comment sont payés les congés et absences ?",
+  reponse: {
+    simple: "<b>🏖️ Congés :</b> Congés payés ; absences maladie/accident indemnisées selon le statut (public/privé).",
+    detail: `<ul class="faq-list">
+      <li><b>💶 Congés rémunérés</b> selon la convention collective</li>
+      <li><b>🤒 Maladie/accident : indemnisation partielle</b></li>
+      <li><b>🔄 Relais par ASE possible pendant l’absence</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/conges-droits/" target="_blank">Droits aux congés</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Quand et comment reçoit-on le salaire ?",
+  reponse: {
+    simple: "<b>📅 Paiement :</b> Salaire versé mensuellement (fin de mois) par virement. Bulletin de paie détaillé remis.",
+    detail: `<ul class="faq-list">
+      <li><b>📄 Bulletin de paie :</b> inclut salaire, indemnités, primes, absences, retenues</li>
+      <li><b>🏦 Paiement par le département ou l’employeur agréé</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Peut-on cumuler une pension de retraite et l’activité d’assistant familial ?",
+  reponse: {
+    simple: "<b>👵👴 Retraite :</b> Oui, cumul possible sous conditions (régime retraite, nombre d’enfants accueillis).",
+    detail: `<ul class="faq-list">
+      <li><b>🧮 Cumul total ou partiel</b> selon le régime de retraite</li>
+      <li><b>🧑‍🤝‍🧑 Limite de nombre d’enfants ou plafond de revenus possible</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.service-public.fr/particuliers/vosdroits/F13243" target="_blank">Info cumul emploi-retraite</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Quel est l’impact d’un accueil d’urgence ou temporaire sur le salaire ?",
+  reponse: {
+    simple: "<b>⏱️ Urgence/temporaire :</b> Rémunération au prorata temporis, avec les mêmes indemnités qu’un accueil classique.",
+    detail: `<ul class="faq-list">
+      <li><b>💶 Prorata temporis</b> si accueil court ou d’urgence</li>
+      <li><b>🟩 Majoration pour accueil de nuit, d’urgence, courte durée</b> selon convention collective</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/accueil-durgence/" target="_blank">Ain – Accueil d’urgence</a>
+    </div>`
+  }
+},
+{
+  categorie: "paie",
+  question: "Comment sont gérés les frais exceptionnels (ex : lunettes, orthodontie, voyages scolaires) ?",
+  reponse: {
+    simple: "<b>🧾 Frais exceptionnels :</b> Pris en charge par l’ASE après validation du référent, sur présentation de justificatifs.",
+    detail: `<ul class="faq-list">
+      <li><b>📝 Anticiper les démarches et transmettre les factures</b></li>
+      <li><b>✅ Validation par l’ASE</b> selon le projet pour l’enfant</li>
+      <li><b>💸 Prise en charge selon les besoins spécifiques</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/frais-specifiques/" target="_blank">Ain – Frais exceptionnels</a>
+    </div>`
+  }
+},
+
+   // -------- COACHING ENRICHI --------
+{
+  categorie: "coaching",
+  question: "Peut-on refuser un accueil proposé ?",
+  reponse: {
+    simple: "<b>🙅‍♂️ Refus accueil :</b> Oui, vous pouvez refuser un accueil si la situation ne correspond pas à votre projet ou votre famille. Aucun refus motivé n’est sanctionné.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍🤝‍🧑 Raisons acceptées :</b> âge, profil, composition du foyer, fatigue, disponibilité, projet familial</li>
+      <li><b>🤝 Confiance et transparence</b> avec l’équipe ASE essentielles</li>
+      <li><b>📝 Refus non motivé ou répété</b> doit être expliqué</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/droits-et-obligations/" target="_blank">Droits des assistants familiaux Ain</a>
+    </div>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment réagir en cas de crise grave (violence, fugue, hospitalisation) ?",
+  reponse: {
+    simple: "<b>🚨 Crise grave :</b> Prévenez immédiatement le référent ASE ; en urgence, contactez le 119 ou la police (17).",
+    detail: `<ul class="faq-list">
+      <li><b>🆘 Sécurité de tous prioritaire</b></li>
+      <li><b>📞 Alertez l’ASE dès que possible</b></li>
+      <li><b>📝 Consignez les faits importants</b></li>
+      <li><b>👩‍⚕️ Réunions de crise</b> pour adapter le projet, organiser un relais ou soutenir l’assistant familial</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.allo119.gouv.fr/" target="_blank">119 Enfance en danger</a>
+    </div>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Que faire en cas d’épuisement professionnel ou de burn-out ?",
+  reponse: {
+    simple: "<b>🔥 Épuisement :</b> Prévenez rapidement le référent ASE ou la médecine du travail. Un relais ou une pause peut être mis en place.",
+    detail: `<ul class="faq-list">
+      <li><b>🧑‍🤝‍🧑 Sollicitez un binôme expérimenté</b></li>
+      <li><b>💬 Participez à des groupes d’analyse de pratique</b></li>
+      <li><b>🧑‍⚕️ Demandez un soutien psychologique</b></li>
+      <li><b>🔄 Supervisions et relais temporaires</b> selon la gravité</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/accompagnement-psychologique/" target="_blank">Prévention burn-out (Ain)</a>
+    </div>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment signaler une suspicion de maltraitance ?",
+  reponse: {
+    simple: "<b>🚩 Maltraitance :</b> Transmettez toute suspicion au référent ASE. En cas de danger immédiat, appelez le 119.",
+    detail: `<ul class="faq-list">
+      <li><b>📞 Signalement possible à la police</b></li>
+      <li><b>🛡️ L’assistant familial est protégé contre les représailles</b> même si le signalement n’est pas confirmé</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.allo119.gouv.fr/" target="_blank">Signaler une maltraitance</a>
+    </div>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment développer ses compétences et progresser dans le métier ?",
+  reponse: {
+    simple: "<b>📈 Progresser :</b> Formez-vous régulièrement, participez aux groupes d’analyse de pratique, échangez avec l’équipe éducative.",
+    detail: `<ul class="faq-list">
+      <li><b>🎓 Formations continues et modules de spécialisation</b></li>
+      <li><b>🤝 Échanges entre pairs</b></li>
+      <li><b>🗣️ Possibilité d’animer des ateliers</b> ou de devenir tuteur dans l’Ain</li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/formation/" target="_blank">Formations assistant familial Ain</a>
+    </div>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "L’assistant familial peut-il donner son avis sur le projet de l’enfant ?",
+  reponse: {
+    simple: "<b>🗣️ Avis :</b> Oui, l’avis de l’assistant familial est pris en compte lors des réunions de synthèse.",
+    detail: `<ul class="faq-list">
+      <li><b>📝 Observations du quotidien essentielles</b> pour ajuster le projet</li>
+      <li><b>🔗 Décision finale ASE ou juge</b> mais la parole de l’assistant familial est précieuse</li>
+    </ul>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment préparer la séparation avec un enfant accueilli ?",
+  reponse: {
+    simple: "<b>👋 Préparer séparation :</b> Anticipez la séparation, expliquez-la à l’enfant, organisez le passage avec l’ASE.",
+    detail: `<ul class="faq-list">
+      <li><b>🤝 Équipe ASE accompagne la préparation</b></li>
+      <li><b>🧑‍⚕️ Suivi psychologique possible</b> pour l’enfant ou l’assistant familial</li>
+      <li><b>💬 Temps d’échange après le départ</b> pour faciliter l’après-placement</li>
+    </ul>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment gérer les situations de rivalité ou de jalousie dans le foyer ?",
+  reponse: {
+    simple: "<b>🤼‍♂️ Rivalité/jalousie :</b> Valorisez chaque enfant, posez des règles équitables, prenez du temps individuel avec chacun.",
+    detail: `<ul class="faq-list">
+      <li><b>🎭 Ateliers et jeux de rôle</b> pour apaiser les tensions</li>
+      <li><b>🧑‍⚕️ Intervention d’un psychologue possible</b></li>
+      <li><b>🗣️ Dialogue régulier</b> avec chaque membre du foyer</li>
+      <li><b>🆘 Solliciter l’ASE si conflit persistant</b></li>
+    </ul>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment accompagner un jeune majeur vers l’autonomie ?",
+  reponse: {
+    simple: "<b>🧑‍🎓 Autonomie jeune majeur :</b> Aide pour le budget, le logement, l’emploi et les démarches administratives ; dispositifs d’accompagnement jeunes majeurs.",
+    detail: `<ul class="faq-list">
+      <li><b>💶 Gestion du budget</b></li>
+      <li><b>🏠 Recherche de logement</b></li>
+      <li><b>💼 Insertion professionnelle</b></li>
+      <li><b>📝 Contrats jeunes majeurs, missions locales, soutiens sociaux</b></li>
+    </ul>
+    <div class="faq-links">
+      🔗 <a href="https://www.ain.fr/assistants-familiaux/transition-autonomie/" target="_blank">Accompagnement jeunes majeurs</a>
+    </div>`
+  }
+},
+{
+  categorie: "coaching",
+  question: "Comment gérer la relation avec la famille d’origine en cas de tension ?",
+  reponse: {
+    simple: "<b>⚡ Tension famille d’origine :</b> Restez professionnel, favorisez le dialogue, transmettez les informations par l’ASE.",
+    detail: `<ul class="faq-list">
+      <li><b>🤝 Médiations organisées par l’ASE</b></li>
+      <li><b>⛔ Ne jamais s’interposer dans un conflit parental</b></li>
+      <li><b>📞 Toute communication passe par le référent ou l’équipe ASE</b> en cas de difficulté directe</li>
+    </ul>`
+  }
+}
+];
+
+let currentTab = "intro";
+let searchQuery = "";
+
+// Recherche intelligente
+function getSearchTerms(query) {
+  let terms = [query];
+  for (const [word, syns] of Object.entries(synonyms)) {
+    if (query.includes(word)) {
+      terms = terms.concat(syns);
+    }
+    syns.forEach(syn => {
+      if (query.includes(syn)) {
+        terms.push(word);
+      }
+    });
+  }
+  return [...new Set(terms.map(x => x.toLowerCase()))];
+}
+
+// Affiche les questions filtrées par catégorie et recherche
+function renderQuestions() {
+  const container = document.getElementById('faq-questions');
+  container.innerHTML = "";
+
+  let filtered = faq.filter(q => q.categorie === currentTab);
+
+  let synoMatch = false;
+  if (searchQuery) {
+    const terms = getSearchTerms(searchQuery);
+    filtered = faq.filter(q =>
+      (q.categorie === currentTab) && (
+        terms.some(t =>
+          q.question.toLowerCase().includes(t) ||
+          (q.reponse.simple && q.reponse.simple.toLowerCase().includes(t)) ||
+          (q.reponse.detail && q.reponse.detail.toLowerCase().includes(t))
+        )
+      )
+    );
+    if (filtered.length === 0) {
+      filtered = faq.filter(q =>
+        terms.some(t =>
+          q.question.toLowerCase().includes(t) ||
+          (q.reponse.simple && q.reponse.simple.toLowerCase().includes(t)) ||
+          (q.reponse.detail && q.reponse.detail.toLowerCase().includes(t))
+        )
+      );
+      synoMatch = true;
+    }
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = "<div style='text-align:center;color:#b00;margin-top:20px;'>Aucune question trouvée.</div>";
+    return;
+  }
+
+  if (synoMatch) {
+    container.innerHTML = `<div class="syno-tip">Résultats trouvés dans d'autres catégories.</div>`;
+  }
+
+  filtered.forEach((item, idx) => {
+    const qBtn = document.createElement('div');
+    qBtn.className = 'question-button';
+    qBtn.tabIndex = 0;
+    qBtn.innerHTML = `❓ ${item.question}`;
+
+    qBtn.onclick = () => {
+      document.querySelectorAll('.answer-block').forEach(el => el.remove());
+      if (qBtn.answerOpen) {
+        qBtn.answerOpen = false;
+        return;
+      }
+      // Réponse simple enrichie
+      const answer = document.createElement('div');
+      answer.className = 'answer-block';
+      answer.innerHTML = `
+        <div class="answer-simple"><span class="faq-icon">💡</span>${item.reponse.simple.replace(/\*\*(.*?)\*\*/g, '<span class="faq-bold">$1</span>')}</div>
+        <button class="btn-detail">Voir plus</button>
+      `;
+      qBtn.parentNode.insertBefore(answer, qBtn.nextSibling);
+      qBtn.answerOpen = true;
+
+      answer.querySelector('.btn-detail').onclick = function(e) {
+        e.stopPropagation();
+        // Réponse détaillée enrichie
+        let detail = item.reponse.detail
+          .replace(/\*\*(.*?)\*\*/g, '<span class="faq-bold">$1</span>') // **gras**
+          .replace(/\n{2,}/g, '<br><br>') // Double sauts pour aérer
+          .replace(/\n/g, '<br>'); // Simple saut
+
+        // Détache les exemples, listes, liens s'ils existent
+        let exempleHTML = '';
+        if (item.reponse.exemple) {
+          exempleHTML = `<div class="faq-exemple">✨ <b>Exemple&nbsp;:</b> ${item.reponse.exemple}</div>`;
+        }
+
+        let linksHTML = '';
+        if (item.liens) {
+          linksHTML = `<div class="faq-links">${item.liens.map(l => `🔗 <a href="${l.url}" target="_blank">${l.texte}</a>`).join("<br>")}</div>`;
+        }
+
+        // Si la réponse contient déjà des balises ul/li pour une liste, laisse tel quel
+        answer.innerHTML = `
+          <div class="answer-simple"><span class="faq-icon">💡</span>${item.reponse.simple.replace(/\*\*(.*?)\*\*/g, '<span class="faq-bold">$1</span>')}</div>
+          <div class="answer-detail">${detail}</div>
+          ${exempleHTML}
+          ${linksHTML}
+          <button class="btn-simple">Voir moins</button>
+        `;
+        answer.querySelector('.btn-simple').onclick = function(e2) {
+          e2.stopPropagation();
+          answer.innerHTML = `
+            <div class="answer-simple"><span class="faq-icon">💡</span>${item.reponse.simple.replace(/\*\*(.*?)\*\*/g, '<span class="faq-bold">$1</span>')}</div>
+            <button class="btn-detail">Voir plus</button>
+          `;
+          answer.querySelector('.btn-detail').onclick = arguments.callee.caller;
+        };
+      };
+    };
+
+    container.appendChild(qBtn);
+  });
+}
+
+// Navigation par onglets
+function showTab(tabId) {
+  currentTab = tabId;
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    if (btn.getAttribute('onclick').includes(tabId)) btn.classList.add('active');
+  });
+  renderQuestions();
+}
+
+// Recherche
+document.getElementById('searchInput').addEventListener('input', function () {
+  searchQuery = this.value.trim().toLowerCase();
+  renderQuestions();
+});
+
+// Initialisation
+renderQuestions();
+</script>
+</body>
+</html>
