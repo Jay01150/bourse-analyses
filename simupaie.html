@@ -4,173 +4,333 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simupaie - Simulateur de Paie</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      background: linear-gradient(120deg, #e3f2fd 0%, #ffffff 100%);
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      color: #17263a;
     }
     #container {
-      max-width: 85%;
-      margin: auto;
+      max-width: 920px;
+      margin: 30px auto 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,80,160,0.08), 0 1.5px 3px rgba(0,80,160,0.05);
+      padding: 32px 24px 34px 24px;
     }
     header {
-      background: #005f99;
+      background: linear-gradient(90deg, #1976d2 60%, #63a4ff 100%);
       color: white;
-      padding: 20px;
+      padding: 24px 0 18px 0;
       text-align: center;
-      font-size: 1.8em;
-      border-radius: 10px;
+      font-size: 2em;
+      font-weight: 700;
+      border-radius: 12px 12px 0 0;
+      letter-spacing: 0.02em;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(24,81,168,0.10);
     }
     .tabs {
       display: flex;
-      gap: 10px;
-      margin: 20px 0;
+      gap: 0;
+      margin: 0 0 30px 0;
+      border-radius: 9px 9px 0 0;
+      overflow: hidden;
+      box-shadow: 0 1.5px 6px rgba(0,80,160,0.07);
     }
-    .tabs button {
-      padding: 12px 18px;
+    .tab-button {
+      flex: 1;
+      padding: 16px 0;
+      background: #e3f2fd;
+      color: #1976d2;
       border: none;
-      background: #cce5ff;
-      color: #004080;
+      font-size: 1.13em;
+      font-weight: 500;
       cursor: pointer;
-      border-radius: 8px;
-      font-size: 1em;
+      transition: background 0.15s, color 0.15s;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      letter-spacing: 0.01em;
     }
-    .tabs button.active {
-      background: #004080;
-      color: white;
+    .tab-button.active {
+      color: #17417e;
+      background: #fff;
+      border-bottom: 3px solid #1976d2;
+      font-weight: 600;
     }
     .tab-content {
       display: none;
+      animation: fadein 0.3s;
     }
     .tab-content.active {
       display: block;
     }
-    .card-container {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      flex: 1 1 45%;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     .section-title {
-      font-weight: bold;
-      font-size: 1.2em;
-      margin-bottom: 15px;
-      color: #004080;
-    }
-    .line {
+      font-weight: 600;
+      font-size: 1.18em;
+      margin: 18px 0 12px 0;
+      color: #17417e;
+      letter-spacing: 0.01em;
       display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
+      align-items: center;
+      gap: 8px;
     }
-    .line input {
+    label {
+      display: block;
+      margin: 10px 0 2px;
+      color: #13406a;
+      font-weight: 500;
+    }
+    input[type="number"], input[type="text"] {
       width: 100px;
-      text-align: right;
-    }
-    .results-summary {
-      margin-top: 10px;
+      padding: 6px 7px;
       font-size: 1em;
-      color: #333;
+      border-radius: 6px;
+      border: 1.5px solid #bbdefb;
+      background: #fafdff;
+      color: #17417e;
+      margin-left: 5px;
+      box-shadow: 0 0.5px 2px rgba(25,118,210,0.06);
+      transition: border 0.15s;
+    }
+    input[type="number"]:focus, input[type="text"]:focus {
+      outline: none;
+      border: 1.5px solid #1976d2;
+      background: #e3f2fd;
+    }
+    .enfant-block {
+      border: 1.3px solid #bbdefb;
+      margin: 12px 0 18px 0;
+      padding: 16px 18px 12px;
+      border-radius: 9px;
+      background: #f4faff;
+      box-shadow: 0 2.5px 8px rgba(25,118,210,0.06);
+    }
+    .enfant-block legend {
+      font-weight: 600;
+      color: #1976d2;
+      font-size: 1.08em;
+      padding: 0 7px;
+      letter-spacing: 0.01em;
+    }
+    .enfant-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .toggle-btn, .result-toggle-btn {
+      background: #e3f2fd;
+      color: #17417e;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 1em;
+      margin: 10px 7px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 1px 2px rgba(25,118,210,0.08);
+      font-weight: 500;
+    }
+    .toggle-btn:hover, .result-toggle-btn:hover {
+      background: #bbdefb;
+      color: #1565c0;
+    }
+    .toggle-content, .result-toggle-content {
+      display: none;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      background: #e9f4fd;
+      border-radius: 7px;
+      padding: 10px 14px 7px 14px;
+      box-shadow: 0 0.5px 2.5px rgba(25,118,210,0.04);
+    }
+    .toggle-content.show, .result-toggle-content.show {
+      display: block;
+      animation: fadein 0.2s;
+    }
+    .indem-list {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .indem-list label {
+      display: block;
+      margin: 0 0 2px;
+      font-size: 1em;
+      color: #17417e;
     }
     .btn-calc {
-      margin-top: 15px;
-      background: #005f99;
+      margin-top: 18px;
+      background: linear-gradient(90deg,#1976d2 60%,#63a4ff 100%);
       color: white;
       border: none;
       border-radius: 7px;
-      padding: 10px 15px;
-      font-size: 1em;
+      padding: 12px 30px;
+      font-size: 1.12em;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 2px 10px rgba(25,118,210,0.11);
+      letter-spacing: 0.01em;
+      transition: background 0.18s, transform 0.12s;
     }
     .btn-calc:active {
-      background: #003d66;
+      background: #1976d2;
+      transform: scale(0.97);
     }
-    ul {
-      padding-left: 20px;
+    .results-summary {
+      margin-top: 18px;
+      font-size: 1.08em;
+      color: #233f62;
+      background: #f5faff;
+      border-radius: 9px;
+      padding: 17px 14px 10px 18px;
+      box-shadow: 0 1.5px 8px rgba(25,118,210,0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
     }
-    @media (max-width: 900px) {
-      .card-container {
-        flex-direction: column;
-      }
-      .card {
-        flex: 1 1 100%;
-      }
+    .result-col-gauche {
+      flex: 1 1 350px;
+      min-width: 270px;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .result-col-droite {
+      flex: 0 0 290px;
+      min-width: 230px;
+      max-width: 330px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+    }
+    .bulletin-total {
+      background: linear-gradient(90deg, #1976d2 60%, #63a4ff 100%);
+      color: #fff;
+      font-size: 1.31em;
+      font-weight: 700;
+      border-radius: 11px;
+      padding: 20px 24px 12px 24px;
+      margin-left: 18px;
+      box-shadow: 0 2.5px 15px rgba(25,118,210,0.14);
+      text-align: center;
+      letter-spacing: 0.01em;
+      line-height: 1.25;
+      min-width: 180px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .bulletin-total-label {
+      font-size: 0.96em;
+      font-weight: 500;
+      color: #e3f2fd;
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+    }
+    .results-summary b {
+      color: #1976d2;
+    }
+    .result-bold { font-weight: bold; color: #0d356e; }
+    @media (max-width: 860px) {
+      .results-summary { flex-direction: column; }
+      .result-col-gauche, .result-col-droite { margin:0; min-width: 0; max-width: 100%; }
+      .bulletin-total { margin: 20px 0 0 0; min-width: 0; width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <header>📊 Simupaie - Simulateur de Paie</header>
-    <div class="tabs">
-      <button class="tab-button active" onclick="showTab('donnees')">📋 Données</button>
-      <button class="tab-button" onclick="showTab('resultat')">📈 Résultat</button>
-      <button class="tab-button" onclick="showTab('historique')">📚 Historique</button>
-      <button class="tab-button" onclick="showTab('parametres')">⚙️ Paramètres</button>
-    </div>
-    <div id="donnees" class="tab-content active">
-      <div class="card-container">
-        <div class="card">
-          <div class="section-title">📅 Simulation Paie : Fiches de présence</div>
-          <input type="file" id="importPresence" accept=".xlsx,.xls,.pdf" multiple onchange="handlePresenceImport(event)">
-          <p id="importFeedback"></p>
-          <div id="presencePreview"></div>
-        </div>
-        <div class="card">
-          <div class="section-title">🧾 Vérification Paie : Bulletins de salaires</div>
-          <input type="file" id="importPaie" accept=".pdf" onchange="handlePaieImport(event)">
-          <p id="paieFeedback"></p>
-        </div>
-      </div>
-    </div>
-    <div id="resultat" class="tab-content">
-      <div class="card-container">
-        <div class="card">
-          <div class="section-title">💶 Indemnités</div>
-          <div class="line"><span>Entretien</span><input id="ind_entretien" type="number" step="0.01" value="0"></div>
-          <div class="line"><span>7/7</span><input id="ind_7_7" type="number" step="0.01" value="0"></div>
-          <div class="line"><span>Repas</span><input id="ind_repas" type="number" step="0.01" value="3.04"></div>
-        </div>
-        <div class="card">
-          <div class="section-title">💼 Paie</div>
-          <div class="line"><span>Salaire brut</span><span id="salaire_brut">0.00 €</span></div>
-          <div class="line"><span>Net avant impôt</span><span id="net_avant_impot">0.00 €</span></div>
-          <div class="line"><span>Net après impôt</span><span id="net_apres_impot">0.00 €</span></div>
-          <button class="btn-calc" onclick="calculerSalaireBrut()">Calculer salaire brut</button>
-          <div class="results-summary" id="resultats_details"></div>
-        </div>
-      </div>
-    </div>
-    <div id="historique" class="tab-content">
-      <div class="card">
-        <div class="section-title">🕓 Historique mensuel</div>
-        <div>À venir…</div>
-      </div>
-    </div>
-    <div id="parametres" class="tab-content">
-      <div class="card">
-        <div class="section-title">⚙️ Variables</div>
-        <div class="line"><span>SMIC horaire (€)</span><input type="number" value="11.88" id="smic" step="0.01"></div>
-        <div class="line"><span>MIG (€)</span><input type="number" value="4.22" id="mig" step="0.01"></div>
-        <div class="line"><span>Taux impôt (%)</span><input type="number" value="7" id="taux_impot" step="0.01"></div>
-      </div>
-    </div>
+<div id="container">
+  <header>
+    <span style="vertical-align:middle;font-size:1.2em; margin-right:10px;">&#128202;</span>
+    Simupaie – Simulateur de Paie
+  </header>
+  <div class="tabs">
+    <button class="tab-button active" onclick="showTab('simulateur')">
+      <span style="font-size:1.2em;">&#128200;</span> Simulateur
+    </button>
+    <button class="tab-button" onclick="showTab('parametres')">
+      <span style="font-size:1.2em;">&#9881;&#65039;</span> Paramètres
+    </button>
   </div>
+<div style="text-align: center; margin-top: 20px;">
+  <a href="index.html" style="
+    display: inline-block;
+    background: #00796b;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: background 0.3s;">
+    🏠 Retour à l'accueil
+  </a>
+</div>
+  <form id="formSimupaie" autocomplete="off" onsubmit="event.preventDefault(); calculerSalaire();">
+    <div id="simulateur" class="tab-content active">
+      <div class="section-title"><span style="font-size:1.1em;">&#128100;</span>Nombre d’enfants accueillis</div>
+      <label>
+        <input type="number" id="nbEnfants" value="1" min="1" max="6" onchange="genererEnfants();">
+        (1 à 6)
+      </label>
+      <div class="enfants-list" id="enfantsList"></div>
+      <button class="btn-calc" type="submit">
+        <span style="font-size:1.1em;vertical-align:middle">&#128295;</span> Calculer
+      </button>
+      <div class="results results-summary" id="resultats" style="display:none"></div>
+    </div>
+
+    <div id="parametres" class="tab-content">
+      <div class="section-title"><span style="font-size:1.07em">&#9881;&#65039;</span> Paramètres généraux</div>
+      <label>SMIC horaire (€)
+        <input type="number" id="smic" value="11.88" step="0.01">
+      </label>
+      <label>MIG (€)
+        <input type="number" id="mig" value="4.22" step="0.01">
+      </label>
+      <label>Montant du repas (€)
+        <input type="number" id="repas" value="3.04" step="0.01">
+      </label>
+      <label>Montant de l’indemnité 7/7 (€)
+        <input type="number" id="ind_77" value="17.72" step="0.01">
+        <span style="color:#666;font-size:0.95em;">(= 4,2 × MIG prérempli)</span>
+      </label>
+      <label>Prime d’ancienneté (€/mois)
+        <input type="number" id="anciennete" value="71.28" step="0.01">
+      </label>
+      <label>Indemnité compensatrice CSG (€/mois)
+        <input type="number" id="csg" value="31.06" step="0.01">
+      </label>
+      <label>Taux d’impôt (%) 
+        <input type="number" id="tauximpot" value="3" step="0.01">
+      </label>
+    </div>
+  </form>
+</div>
 
 <script>
-// Stocke la liste des enfants importés avec jours de présence
-let enfantsPresence = [];
-
-// Gestion des onglets
 function showTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
   document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -178,165 +338,174 @@ function showTab(tabId) {
   document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
 }
 
-// Import des présences (fiches enfants)
-function handlePresenceImport(event) {
-  const files = Array.from(event.target.files);
-  const feedback = document.getElementById('importFeedback');
-  const preview = document.getElementById('presencePreview');
-  enfantsPresence = []; // Réinitialise pour chaque import
-  let recapHTML = `<p><strong>${files.length} fichier(s) importé(s)</strong></p><ul>`;
-  let filesProcessed = 0;
+function genererEnfants() {
+  const nb = Math.max(1, Math.min(6, parseInt(document.getElementById('nbEnfants').value)));
+  const list = document.getElementById('enfantsList');
+  const mig = parseFloat(document.getElementById('mig').value) || 4.22;
+  list.innerHTML = "";
+  for (let i = 0; i < nb; i++) {
+    let age = 10;
+    let coef = age < 13 ? 3.5 : 4.2;
+    let jours = 20;
+    let entretienDef = (coef*mig*jours).toFixed(2);
+    list.innerHTML += `
+      <fieldset class="enfant-block">
+        <legend>Enfant ${i+1}</legend>
+        <div class="enfant-inline">
+          <label>Âge <input type="number" name="age${i}" min="0" max="21" value="${age}" required onchange="updateEntretien(${i})"></label>
+          <label>Jours de présence <input type="number" name="jours${i}" min="0" max="31" value="${jours}" required onchange="updateEntretien(${i})"></label>
+          <label>Repas déduits <input type="number" name="repas${i}" min="0" max="31" value="0"></label>
+          <label>Primes 7/7 (0 à 4) <input type="number" name="nb77_${i}" min="0" max="4" value="0"></label>
+        </div>
+        <button type="button" class="toggle-btn" onclick="toggleIndem(${i})">➕ Indémnités</button>
+        <div class="toggle-content" id="indemToggle${i}">
+          <div class="indem-list">
+            <label>Indemnité d’entretien (€)
+              <input type="number" name="entretien${i}" step="0.01" value="${entretienDef}" style="width:80px" readonly>
+              <span style="font-size:0.96em;color:#555">(calculé auto selon âge et jours)</span>
+            </label>
+            <label>Habillement (€)
+              <input type="number" name="hab${i}" step="0.01" value="62.10" style="width:80px">
+            </label>
+            <label>Argent de poche (€)
+              <input type="number" name="poche${i}" step="0.01" value="36.50" style="width:80px">
+            </label>
+            <label>Capital social (€)
+              <input type="number" name="capital${i}" step="0.01" value="12.50" style="width:80px">
+            </label>
+          </div>
+        </div>
+      </fieldset>
+    `;
+  }
+}
+window.addEventListener('DOMContentLoaded', () => {
+  genererEnfants();
+  document.getElementById('nbEnfants').addEventListener('input', genererEnfants);
+  document.getElementById('mig').addEventListener('input', genererEnfants);
+});
 
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const data = new Uint8Array(e.target.result);
-      let infos = null;
-      try {
-        const workbook = XLSX.read(data, { type: 'array' });
-        const feuille = workbook.SheetNames.find(name => name.toLowerCase().includes('avril')) || workbook.SheetNames[0];
-        const sheet = workbook.Sheets[feuille];
-        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        infos = extraireInfosPresence(json);
-      } catch (err) {
-        infos = { nom: file.name, prenom: "?", age: "?", joursPresence: "?", repasDeduits: "?", erreur: true };
-      }
-      enfantsPresence.push({ ...infos, fileName: file.name });
-      recapHTML += `<li><strong>${infos.prenom} ${infos.nom}</strong> – Âge : ${infos.age} ans – Présence : ${infos.joursPresence} jour(s), Repas déduits : ${infos.repasDeduits}${infos.erreur ? " <span style='color:red'>(Erreur lecture)</span>" : ""}</li>`;
-      filesProcessed++;
-      if (filesProcessed === files.length) {
-        preview.innerHTML = recapHTML + '</ul>';
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  });
-  feedback.textContent = "";
+function toggleIndem(i) {
+  const div = document.getElementById('indemToggle'+i);
+  div.classList.toggle('show');
+  const btn = div.previousElementSibling;
+  btn.innerHTML = div.classList.contains('show') ? '➖ Indémnités' : '➕ Indémnités';
 }
 
-// Extraction d'infos d'une fiche (tableau 2D)
-function extraireInfosPresence(json) {
-  let nom = '?', prenom = '?', age = '?', birthDate = null;
-  // Recherche nom/prénom
-  for (let i = 0; i < json.length; i++) {
-    const row = json[i];
-    if (!row) continue;
-    const idx = row.findIndex(cell => typeof cell === 'string' && cell.includes("Enfant concerné"));
-    if (idx !== -1 && row[idx + 1]) {
-      const ligneNom = row[idx + 1].toString().trim();
-      const fullName = ligneNom.split(" ");
-      nom = fullName.pop() || '?';
-      prenom = fullName.join(" ") || '?';
-      // Date de naissance (ligne suivante, colonne suivante)
-      if (json[i + 1] && json[i + 1][idx + 1]) {
-        const dateCell = json[i + 1][idx + 1].toString().trim();
-        let m = dateCell.match(/^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/);
-        if (m) {
-          birthDate = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-        } else if (!isNaN(dateCell) && Number(dateCell) > 20000 && Number(dateCell) < 50000) {
-          // Format Excel (nombres de jours depuis 1900)
-          const excelEpoch = new Date(1900, 0, 1);
-          birthDate = new Date(excelEpoch.getTime() + (Number(dateCell) - 2) * 86400000);
-        }
-      }
-      break;
-    }
+function toggleResultDetails(id) {
+  const div = document.getElementById(id);
+  div.classList.toggle('show');
+  const btn = div.previousElementSibling;
+  if (btn) {
+    btn.innerHTML = div.classList.contains('show')
+      ? btn.dataset.less
+      : btn.dataset.more;
   }
-  // Calcul âge
-  if (birthDate) {
-    const today = new Date();
-    age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-  }
-  // Recherche colonnes "Jour de présence" et "Repas"
-  let idxPresence = -1, idxRepas = -1;
-  for (let i = 0; i < json.length; i++) {
-    const row = Array.isArray(json[i]) ? json[i].map(cell => (cell ? cell.toString() : "")) : [];
-    if (row.some(cell => typeof cell === "string" && cell.includes("Jour de présence"))) {
-      idxPresence = row.findIndex(cell => typeof cell === "string" && cell.includes("Jour de présence"));
-      idxRepas = row.findIndex(cell => typeof cell === "string" && cell.includes("Repas de MIDI"));
-      break;
-    }
-  }
-  let joursPresence = 0, repasDeduits = 0;
-  if (idxPresence !== -1 && idxRepas !== -1) {
-    for (let i = 1; i < json.length; i++) {
-      const presVal = json[i][idxPresence];
-      if (typeof presVal === 'string' && presVal.trim().toLowerCase() === 'x') joursPresence++;
-      const repasVal = json[i][idxRepas];
-      if (repasVal !== undefined && repasVal.toString().trim() === '1') repasDeduits++;
-    }
-  }
-  return { nom, prenom, age, joursPresence, repasDeduits };
 }
 
-// Fonction de calcul du salaire brut (onglet résultat)
-function calculerSalaireBrut() {
-  // Variables
+function updateEntretien(i) {
+  const age = parseInt(document.querySelector(`[name=age${i}]`).value) || 0;
+  const jours = parseInt(document.querySelector(`[name=jours${i}]`).value) || 0;
+  const mig = parseFloat(document.getElementById('mig').value) || 4.22;
+  const coef = age < 13 ? 3.5 : 4.2;
+  document.querySelector(`[name=entretien${i}]`).value = (coef * mig * jours).toFixed(2);
+}
+
+function calculerSalaire() {
   const smic = parseFloat(document.getElementById('smic').value) || 11.88;
-  const tauxImpot = parseFloat(document.getElementById('taux_impot').value) || 7;
-  if (enfantsPresence.length === 0) {
-    alert("Merci d'importer les fiches de présence avant de calculer.");
-    return;
+  const mig = parseFloat(document.getElementById('mig').value) || 4.22;
+  const montantRepas = parseFloat(document.getElementById('repas').value) || 3.04;
+  const montant77 = parseFloat(document.getElementById('ind_77').value) || (4.2*mig);
+  const anciennete = parseFloat(document.getElementById('anciennete').value) || 71.28;
+  const csg = parseFloat(document.getElementById('csg').value) || 31.06;
+  const tauximpot = parseFloat(document.getElementById('tauximpot').value) || 3;
+
+  const nb = Math.max(1, Math.min(6, parseInt(document.getElementById('nbEnfants').value)));
+  let totalEntretien = 0, totalHabillement = 0, totalPoche = 0, totalCapital = 0;
+  let intermittents = [], fixes = [];
+  let totalRepas = 0, total77 = 0;
+
+  for (let i = 0; i < nb; i++) {
+    let age = parseInt(document.querySelector(`[name=age${i}]`).value) || 0;
+    let jours = parseInt(document.querySelector(`[name=jours${i}]`).value) || 0;
+    let repas = parseInt(document.querySelector(`[name=repas${i}]`).value) || 0;
+    let nb77 = parseInt(document.querySelector(`[name=nb77_${i}]`).value) || 0;
+    let coef = age < 13 ? 3.5 : 4.2;
+    let entretien = coef * mig * jours;
+    document.querySelector(`[name=entretien${i}]`).value = entretien.toFixed(2);
+    let hab = parseFloat(document.querySelector(`[name=hab${i}]`).value) || 0;
+    let poche = parseFloat(document.querySelector(`[name=poche${i}]`).value) || 0;
+    let capital = parseFloat(document.querySelector(`[name=capital${i}]`).value) || 0;
+
+    totalEntretien += entretien;
+    totalHabillement += hab;
+    totalPoche += poche;
+    totalCapital += capital;
+    totalRepas += repas * montantRepas;
+    total77 += nb77 * montant77;
+
+    if (jours <= 15) intermittents.push({jours});
+    else fixes.push({jours});
   }
 
-  // 1. Séparer intermittents et fixes
-  const intermittents = enfantsPresence.filter(e => Number(e.joursPresence) <= 15);
-  const fixes = enfantsPresence.filter(e => Number(e.joursPresence) > 15);
-
-  // 2. Calculs intermittents
-  let salaireIntermittents = 0;
-  let detailsIntermittents = "";
-  intermittents.forEach(e => {
-    const s = 5.06 * smic * Number(e.joursPresence);
-    salaireIntermittents += s;
-    detailsIntermittents += `• ${e.prenom} ${e.nom} (intermittent, ${e.joursPresence} jours): 5,06 × ${smic} × ${e.joursPresence} = <b>${s.toFixed(2)} €</b><br>`;
-  });
-
-  // 3. Calcul fixes (non intermittents)
-  const nbFixes = fixes.length;
-  let multiple = 0;
-  if (nbFixes === 1) multiple = 151.67;
-  else if (nbFixes === 2) multiple = 221.67;
-  else if (nbFixes === 3) multiple = 295.67;
-  else if (nbFixes === 4) multiple = 391.67;
-  else if (nbFixes === 5) multiple = 485.67;
-  else if (nbFixes === 6) multiple = 581.67;
-
-  let salaireFixes = multiple * smic;
-  let detailsFixes = "";
-  if (nbFixes > 0) {
-    detailsFixes = `• ${nbFixes} enfant(s) non intermittent : ${multiple} × ${smic} = <b>${salaireFixes.toFixed(2)} €</b><br>`;
-    fixes.forEach(e => {
-      detailsFixes += `  - ${e.prenom} ${e.nom} (${e.joursPresence} jours)<br>`;
-    });
+  let salaireIntermittents = intermittents.reduce((sum, e) => sum + 5.06 * smic * e.jours, 0);
+  const forfaits = [0, 151.67, 221.67, 295.67, 391.67, 485.67, 581.67];
+  let salaireFixes = 0;
+  if (fixes.length > 0 && fixes.length <= 6) {
+    salaireFixes = forfaits[fixes.length] * smic;
   }
 
-  // 4. Total
-  const salaireBrut = salaireIntermittents + salaireFixes;
+  let salaireBrut = salaireIntermittents + salaireFixes + total77 + anciennete + csg;
+  let netAvant = salaireBrut * 0.775;
+  let netApres = netAvant * (1 - tauximpot/100);
 
-  // 5. Résumés et affichage
-  document.getElementById('salaire_brut').textContent = salaireBrut.toFixed(2) + " €";
-  // Net avant impôt (estimation simple, à affiner si besoin)
-  const netAvant = salaireBrut * 0.77;
-  document.getElementById('net_avant_impot').textContent = netAvant.toFixed(2) + " €";
-  // Net après impôt
-  const netApres = netAvant * (1 - tauxImpot / 100);
-  document.getElementById('net_apres_impot').textContent = netApres.toFixed(2) + " €";
+  // Indemnités liées au salaire
+  let indemSal = totalEntretien + total77 + anciennete + csg;
 
-  // Détails
-  document.getElementById('resultats_details').innerHTML =
-    `<b>Détail du calcul :</b><br>
-    ${detailsIntermittents || ""}
-    ${detailsFixes || ""}
-    <b>Total : ${salaireBrut.toFixed(2)} €</b><br>
-    <small><i>NB : Le calcul du net est une estimation simplifiée (~77% du brut moins impôt).</i></small>`;
+  // Indemnités à dépenser pour l'enfant
+  let indemEnfant = totalHabillement + totalPoche + totalCapital;
+
+  // Montant prévisible du bulletin de salaire
+  let montantBulletin = netApres + indemSal + indemEnfant;
+
+  let html = `
+    <div class="result-col-gauche">
+      <div>
+        <b>Salaire BRUT soumis à cotisation :</b>
+        <span class="result-bold">${salaireBrut.toFixed(2)} €</span>
+      </div>
+      <div>
+        <b>Indémnités liées au salaire :</b> <span class="result-bold">${indemSal.toFixed(2)} €</span>
+        <button type="button" class="result-toggle-btn" data-more="&#x25BC; Détail" data-less="&#x25B2; Masquer le détail" onclick="toggleResultDetails('detailsSal')">&#x25BC; Détail</button>
+        <div class="result-toggle-content" id="detailsSal" style="margin-bottom:8px;">
+          - Entretien : <span class="result-bold">${totalEntretien.toFixed(2)} €</span><br>
+          - Indemnités 7/7 : <span class="result-bold">${total77.toFixed(2)} €</span><br>
+          - Prime d'ancienneté : <span class="result-bold">${anciennete.toFixed(2)} €</span><br>
+          - Indemnité compensatrice CSG : <span class="result-bold">${csg.toFixed(2)} €</span><br>
+        </div>
+      </div>
+      <div>
+        <b>Indémnités à dépenser pour l'enfant :</b> <span class="result-bold">${indemEnfant.toFixed(2)} €</span>
+        <button type="button" class="result-toggle-btn" data-more="&#x25BC; Détail" data-less="&#x25B2; Masquer le détail" onclick="toggleResultDetails('detailsEnfant')">&#x25BC; Détail</button>
+        <div class="result-toggle-content" id="detailsEnfant" style="margin-bottom:8px;">
+          - Habillement : <span class="result-bold">${totalHabillement.toFixed(2)} €</span><br>
+          - Argent de poche : <span class="result-bold">${totalPoche.toFixed(2)} €</span><br>
+          - Capital social : <span class="result-bold">${totalCapital.toFixed(2)} €</span><br>
+        </div>
+      </div>
+    </div>
+    <div class="result-col-droite">
+      <div class="bulletin-total">
+        <span class="bulletin-total-label">Montant prévisible du bulletin de salaire</span>
+        <span style="font-size:1.35em;" class="result-bold">${montantBulletin.toFixed(2)} €</span>
+      </div>
+    </div>
+  `;
+  document.getElementById('resultats').innerHTML = html;
+  document.getElementById('resultats').style.display = '';
 }
 
-function handlePaieImport(event) {
-  // À implémenter selon besoins
-  document.getElementById('paieFeedback').textContent = "Fonction à venir…";
-}
+window.toggleResultDetails = toggleResultDetails;
 </script>
 </body>
 </html>
